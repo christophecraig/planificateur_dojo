@@ -1,0 +1,56 @@
+.group {
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* fake select */
+
+.selected-item {
+    position: relative;
+    &::after {
+        content: url(../images/sort_arrows.svg);
+        text-align: center;
+        line-height: 18px;
+        background-color: #606060;
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+    }
+}
+
+.option-wrap {
+    display: none;
+    margin-top: 5px;
+}
+
+input[type="radio"] {
+  cursor: pointer
+}
+
+.option {
+    color: #454545;
+    position: relative;
+    padding: 0 30px;
+    background: #fff;
+
+    &:hover {
+      color: #303030;
+    }
+
+    & input {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+.active {
+    display: block;
+}
