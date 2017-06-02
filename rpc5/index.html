@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Planificateur de tâches</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    var dojoConfig = {
+      parseOnLoad: true,
+      packages: [{
+        name: "project",
+        location: "http://localhost/rpc5/js/project"
+      }],
+      deps: ['project/dojorpc']
+    };
+  </script>
+  <script src="//unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/2.1.1/vuex.min.js"></script>
+  <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
+</head>
+
+<body id="body" class="loading">
+  <div id="app" @click="close">
+    <div id="sub-container">
+      <div @click="increment">Bonsoir {{$store.state.count}}</div>
+      <div>Ajout texte via action ? {{$store.state.project}}</div>
+      <loader></loader>
+      <!--<line-chart></line-chart>-->
+      <projects></projects>
+      <le-menu></le-menu>
+      <div id="bottom">
+        <component :is="currentView" transition="fade" transition-mode="out-in"></component>
+      </div>
+    </div>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
+  <script src="js/styleselect/customSelect.js"></script>
+  <!-- TEMPLATE ZONE -->
+  <template id="calendar_tpl">
+    <div id="graph">
+      {{data.test}}
+    </div>
+  </template>
+  <template id="load_tpl">
+    <div id="loader" v-if="this.$root.isLoading">
+      <div class="demo">
+        <svg class="loader">
+          <circle cx="25" cy="25" r="16" fill="transparent" stroke="#ABABAB" stroke-width="5" stroke-linecap="round" stroke-dasharray="385"
+            stroke-dashoffset="385"></circle>
+        </svg>
+      </div>
+    </div>
+  </template>
+  <template id="projects">
+    <transition name="fade">
+      <div id="projects-slider">
+        <div id="data">
+          <div id="scroll_container">
+            <div class="project" v-for="project in data.project" @click="$root.currentView='detailedProject'">
+              <!-- PROJECT COLOR ICI -->{{project}}</div>
+            <div class="project" @click="addProj">Ajouter un projet</div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </template>
+  <template id="menu_tpl">
+    <nav id='menu'>
+      <div class="back fa fa-angle-left" @click.stop="$root.currentView=''"></div>
+      <ul class="center">
+        <li><a href="#" @click.stop="$root.currentView='detailedProject'">Développements</a></li>
+        <li><a href="#" @click.stop="$root.currentView='resource'">Ressources</a></li>
+        <li><a href="#">Infos Pratiques</a></li>
+        <li><a href="#" @click.stop="$root.currentView='customers'">Clients</a></li>
+        <li><a href="#">Ressources</a></li>
+      </ul>
+      <div id="settings">
+        <span class="fa fa-gear"></span>
+        <span class="text">Paramètres</span>
+      </div>
+    </nav>
+  </template>
+  <template id="resource_tpl">
+    <div class="resources" ref="res">
+      <div class="resource" :res-id="resource.id" v-for="resource in data.resources" @click="getDetailedResource">
+        <span class="color" :res-id="resource.id"></span><span class="name" :res-id="resource.id">{{resource.firstName}} {{resource.name}}</span>
+      </div>
+            <detailed-res></detailed-res>
+      <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+    </div>
+  </template>
+  <template id="detailed_resource">
+    <div class="detailed_res" :key="this.data.res.id" v-if="this.data.isOpen">
+      <!--<sweet-modal>-->
+        <div id="photo">
+          <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
+        </div>
+        <div @click="getHolidays">{{this.data.res.holidays}}</div>
+      <h4>{{this.fullName}}</h4>
+      <!--</sweet-modal>-->
+    </div>
+  </template>
+  <template id="detailed_project">
+    <transition name="fade">
+      <div id="detailed-project" v-if="data.detailedProject.id">
+        <modal-form></modal-form>
+        <div class="project-infos">
+          <div class="project-top-infos">
+            <div class="project_name">
+              <div id="color" class="color"></div>
+              {{data.detailedProject.name}}
+            </div>
+            <img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
+              alt="Humeur moyenne">
+            <img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
+            <img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
+
+          </div>
+          <div id="add_dev" @click="addDev">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+          <development></development>
+          {{data.notification}}</div>
+      </div>
+    </transition>
+  </template>
+  <template id="modal_form">
+    <transition name="fade">
+      <div v-if="this.data.isOpen" @click.stop class="modal-form">
+        <div class="btn close fa fa-window-close" @click="close"></div>
+        <form name="addDev">
+          <div>
+            <label for="addDev_title">Titre
+              <input type="text" name="addDev_title">
+            </label>
+            <label>Client
+              <input type="text" name="addDev_client">
+            </label>
+            <label>Au plus tôt
+              <input type="date" name="addDev_earlyStartDate">
+              <input type="date" name="addDev_earlyEndDate">
+            </label>
+            <label>Au plus tard
+              <input type="date" name="addDev_lateStart">
+              <input type="date" name="addDev_lateEnd">
+            </label>
+            <label>Prévu
+              <input type="date" name="addDev_plannedStart">
+              <input type="date" name="addDev_plannedEnd">
+            </label>
+            <label>Réel
+              <input type="date" name="addDev_realStart">
+              <input type="date" name="addDev_realEnd">
+            </label>
+          </div>
+          <div class="skills">
+            <h4>Compétences</h4>
+            <label v-for="skill in this.data.skills">{{skill.id}}
+              <input type="checkbox" name="skills" :id="skill.id">
+            </label>
+          </div>
+          <div id="saveDev" class="btn" @click="submitNewDev">Ajouter</div>
+        </form>
+      </div>
+    </transition>
+  </template>
+  <template id="development">
+    <div id="developments">
+      <div @click.stop="orderByAZ">Sort</div>
+      <edit-dev></edit-dev>
+      <transition-group name="fade">
+        <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev.name">
+          <div class="align-left">
+            <span class="dev_name">{{dev.name}}</span>
+          </div>
+          <div class="align-right">
+            <span class="skill-tag" v-for="skills in dev.skillTags">{{skills.id}}</span>
+            <span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
+            <span class="edit fa fa-pencil" @click.stop="openEditModal"></span>
+            <span class="delete fa fa-trash" @click.stop="deleteDev"></span>
+          </div>
+        </div>
+      </transition-group>
+    </div>
+  </template>
+  <template id="edit_the_dev">
+    <transition name="fade">
+      <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
+        <div class="btn close fa fa-window-close" @click="close"></div>
+        <form name="editDev">
+          <label>Titre
+            <input type="text" v-model="dev.name" placeholder="Titre" @change="">
+            <!--{{data.dev.name}}-->
+          </label>
+          <label>Au plus tôt : <br>
+            du <input type="date" v-model="dev.earlyStart" @change="">
+            au <input type="date" v-model="dev.earlyEnd" @change="">
+          </label>
+          <label>Prévu : <br>
+            du <input type="date" v-model="dev.plannedStart" @change="">
+            au <input type="date" v-model="dev.plannedEnd" @change="">
+          </label>
+          <label>Dates réelles : <br>
+            du <input type="date" v-model="dev.realStart" @change="">
+            au <input type="date" v-model="dev.realEnd" @change="">
+          </label>
+          <label>Au plus tard : <br>
+            du <input type="date" v-model="dev.lateStart">
+            au <input type="date" v-model="dev.lateEnd">
+          </label>
+          <label>Ressources
+            <div class="resource" v-for="resource in dev.resources" key="resource">
+              <label>{{resource}}<input type="checkbox" :checked="resource"></label>
+            </div>
+          </label>
+          <div id="saveDev" class="btn">Sauvegarder</div>
+      </div>
+      </form>
+    </transition>
+  </template>
+  <template id="clients_tpl">
+    <transition-group name="fade">
+      <div class="client" v-for="client in data.customers" key="client.id">
+        {{client.firstName}}<span v-if="client.firstName !== client.name">{{client.name}}</span>
+      </div>
+    </transition-group>
+  </template>
+</body>
+
+</html>

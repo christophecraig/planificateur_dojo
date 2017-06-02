@@ -1,0 +1,316 @@
+// Imports
+@import "partials/base";
+@import "partials/customSelect";
+@import "partials/modal";
+@import "partials/scrollbar";
+@import "partials/animations";
+// Règles CSS
+body {
+    background: #fff;
+    font-family: Ubuntu, sans-serif;
+    margin: 0;
+}
+
+a {
+    all: unset;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#bottom {
+    position: relative;
+    height: calc(50% - 60px);    
+}
+
+.btn {
+    padding: 12px;
+    background: #333;
+    color: #ddd;
+    cursor: pointer;
+    border-radius: 3px;
+    &.close {
+        padding: 0;
+        font-size: 1.25em;
+        position: absolute;
+        background-color: transparent;
+        color: #333;
+        top: 0;
+        right: 0;
+    }
+}
+
+#developments {
+    position: relative;
+}
+
+.back,
+#settings {
+    align-self: center;
+    cursor: pointer;
+    height: 100%;
+} 
+
+.back.fa {
+    font-weight: 500;
+    font-size: 1.75em;
+}
+
+.center {
+    display: flex;
+    text-align: center;
+}
+
+#settings .fa {
+    font-size: 1.5em;
+    font-weight: 100;
+    margin-right: 8px;
+}
+
+#settings .text {
+    font-size: 0
+}
+
+#projects-slider {
+    background: $bg;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#data {
+    overflow: hidden;
+    overflow-x: scroll;
+    height: 70px;
+    padding: 10px;
+}
+
+#scroll_container {
+    overflow: hidden;
+}
+
+.loading {
+    display: none;
+}
+
+#menu {
+    clear: both;
+    display: flex;
+    justify-content: space-between;
+    background-color: #454545;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    overflow: hidden;
+    height: 60px;
+    line-height: 60px;
+    &>div {
+
+    }
+    & li {
+        display: block;
+    }
+    & a, .back, #settings {
+        position: relative;
+        display: block;
+        color: inherit;
+        line-height: 60px;
+        padding: 0 20px;
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: #fff;
+            bottom: 0;
+            left: 50%;
+            z-index: 1;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            transition: .25s;
+        }
+        &:hover {
+            color: #fff;
+            &::after {
+                height: 4px;
+                width: 30px;
+            }
+        }
+    }
+}
+
+.project {
+    cursor: pointer;
+    display: flex;
+    float: left;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0 12px;
+    height: 60px;
+    margin-bottom: 10px;
+    color: #454545;
+    background: $projectsInSlider;
+    transition: .15s;
+    &:not(:last-child) {
+        margin-right: 8px;
+    }
+    &:hover {
+        color: #101010;
+    }
+    // &::before {
+    //     content: '';
+    //     display: block;
+    //     float: left;
+    //     margin-top: 4px;
+    //     margin-right: 5px;
+    //     width: 12px;
+    //     height: 12px;
+    //     border-radius: 6px;
+    // }
+    // @for $i from 1 through length($projects_Color) {
+    //      &:nth-child(#{$i}n) {
+    // &::before {
+    // background-color: nth($projects_Color, $i);
+    // }
+    // }
+    // } 
+}
+
+.project-infos {
+    padding: 12px 25px;
+}
+
+.project-top-infos {
+    margin: 10px 0 18px;
+    display: flex;
+}
+
+.project_name {
+    font-size: 1.35em
+}
+
+.color-circle {
+    border-radius: 50%;
+    background-color: nth($projects_Color, 1);
+    width: 12px;
+    height: 12px;
+    margin-top: 5px;
+    margin-right: 4px;
+    float: left;
+}
+
+#mood {
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+}
+
+#sort {
+    border: none;
+    &:focus {
+        outline: none;
+    }
+}
+
+.dev {
+    background-color: $textColor_light;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    &:hover {
+        cursor: pointer;
+        background-color: #b13030;
+        color: $textColor_light;
+    }
+    & .align-right,
+    .align-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+#add_dev {
+    cursor: pointer;
+    color: $bg_dark;
+}
+
+.resource {
+    font-size: .75em;
+}
+
+.date,
+.edit {
+    margin-right: 10px;
+    display: flex;
+}
+
+.edit,
+.delete {
+    font-size: 0;
+    display: flex;
+    &.fa {
+        font-size: 20px;
+    }
+}
+
+.dev_name {
+    line-height: 30px;
+    color: inherit;
+}
+
+.skill-tag {
+    background-color: $bg_dark;
+    color: $textColor_light;
+    padding: 0 8px;
+    display: inline-block;
+    margin-right: 5px;
+    line-height: 28px;
+    border-radius: 4px;
+}
+
+// LOADER 
+.demo {
+    width: 50px;
+    height: 50px;
+    float: right
+}
+
+#loader {
+    position: absolute;
+    right: 0
+}
+
+.loader {
+    position: absolute;
+    opacity: .7;
+    width: 50px;
+    height: 50px;
+}
+
+.loader circle {
+    animation: draw 1.45s infinite ease-in-out;
+    transform-origin: center;
+    transform: rotate(-90deg);
+}
+
+@keyframes draw {
+    50% {
+        stroke-dashoffset: 0;
+        transform: scale(.65);
+    }
+}
+
+@media #{$md_screen} {
+    #settings .text {
+    font-size: initial;
+    }
+}
