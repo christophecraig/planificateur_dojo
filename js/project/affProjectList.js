@@ -2,7 +2,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
   return declare(null, {
     constructor(compName) { // affProject ne prend que l'élément en argument
       this.compName = compName
-      this.template = '#projects'
+      this.template = '#projects_tpl'
       this.data = {
         project: {},
         notification: '',

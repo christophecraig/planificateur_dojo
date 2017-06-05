@@ -25,7 +25,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       topic.subscribe('gotResources', lang.hitch(this, 'showResources'))
     },
     showResources(resources) {
-      console.log('test')
       this.data.resources = resources
       setTimeout(topic.publish('loaded'), 200)
     },
