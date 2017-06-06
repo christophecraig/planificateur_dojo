@@ -1,75 +1,72 @@
 define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/projectStore', 'project/devStore', 'dojo/when'], function (declare, topic, lang, JsonService, projectStore, devStore, when) {
   return declare(null, {
-    constructor() {
-      this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
-      this.sliderProjects = []
-      this.color = ''
-      this.projectStore = new projectStore(this.project)
-      this.devStore = new devStore(this.project)
-      this.getProjects()
-      this.ids = []
-      this.projectIsLoading = false
-      topic.subscribe('addDev', lang.hitch(this, 'submitNewDev'))
-      topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
-      topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
-      topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
-      topic.subscribe('getResources', lang.hitch(this, 'getResources'))
-      topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
-      topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
-      topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
-      // this.project.getDetailedDevelopment('IIM2.2').then(function() { topic.publish('gotDevelopment') }, lang.hitch(this, 'reportError'))
-    },
-    getProjects() {
-      topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
-      this.project.getListOfProjects().then(lang.hitch(this, 'gotProjects'), lang.hitch(this, 'reportError'))
-      when(this.projectStore.query({
-        short: true
-      }), function (list) {
-        console.log('getProjects marche', list)
-      })
-    },
-    gotProjects(proj) {
-      topic.publish('loaded') // cet évènement indique que le chargement est terminé
-      topic.publish('gotProjects', proj)
-      // On rassemble les ids des projets dans un tableau pour pouvoir les réutiliser pour le
-      // getDetailedProject(idDuProjet)
-      this.sliderWidth = 0
-      for (var prop in proj) {
-        this.ids.push(prop)
-      }
-      setTimeout(lang.hitch(this, function () { // setTimeout pour laisser le temps au tableau ids de se construire
-        this.sliderProjects = document.querySelectorAll('.project')
-        // tableau des divs .projet
-        for (var i = 0; i < this.sliderProjects.length; i++) {
-          this.sliderProjects[i].addEventListener('click', lang.hitch(this, 'getDetailedProject'))
-          this.sliderProjects[i].nb = i // On ajoute la propriété
-          this.sliderWidth += this.sliderProjects[i].clientWidth + 8 // Pour ajouter la marge
+      constructor() {
+        this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        this.sliderProjects = []
+        this.color = ''
+        this.projectStore = new projectStore(this.project)
+        this.devStore = new devStore(this.project)
+        this.getProjects()
+        this.ids = []
+        this.projectIsLoading = false
+        topic.subscribe('addDev', lang.hitch(this, 'submitNewDev'))
+        topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
+        topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
+        topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
+        topic.subscribe('getResources', lang.hitch(this, 'getResources'))
+        topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
+        topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
+        topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
+        // this.project.getDetailedDevelopment('IIM2.2').then(function() { topic.publish('gotDevelopment') }, lang.hitch(this, 'reportError'))
+      },
+      getProjects() {
+        topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
+        this.project.getListOfProjects().then(lang.hitch(this, 'gotProjects'), lang.hitch(this, 'reportError'))
+        when(this.projectStore.query({
+          short: true
+        }), function (list) {
+          console.log('getProjects marche', list)
+        })
+      },
+      gotProjects(proj) {
+        topic.publish('loaded') // cet évènement indique que le chargement est terminé
+        topic.publish('gotProjects', proj)
+        // On rassemble les ids des projets dans un tableau pour pouvoir les réutiliser pour le
+        // getDetailedProject(idDuProjet)
+        this.sliderWidth = 0
+        for (var prop in proj) {
+          this.ids.push(prop)
         }
-        document.getElementById('scroll_container').style = 'width: ' + (this.sliderWidth) + 'px;'
-      }), 400);
-    },
-    getDetailedProject(id) {
-      topic.publish('loading')
-      this.currentProject = id.target.nb
-      if (!this.projectIsLoading) {
-        this.projectIsLoading = true
-        this.project.getDetailedProject(this.ids[this.currentProject]).then(lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
-      }
-      when(this.projectStore.get(this.ids[this.currentProject]), function (proj) {
-        console.log('le getDetailedProject marche aussi', proj)
-      })
+        setTimeout(lang.hitch(this, function () { // setTimeout pour laisser le temps au tableau ids de se construire
+          this.sliderProjects = document.querySelectorAll('.project')
+          // tableau des divs .projet
+          for (var i = 0; i < this.sliderProjects.length; i++) {
+            this.sliderProjects[i].addEventListener('click', lang.hitch(this, 'getDetailedProject'))
+            this.sliderProjects[i].nb = i // On ajoute la propriété
+            this.sliderWidth += this.sliderProjects[i].clientWidth + 8 // Pour ajouter la marge
+          }
+          document.getElementById('scroll_container').style = 'width: ' + (this.sliderWidth) + 'px;'
+        }), 400);
+      },
+      getDetailedProject(id) {
+        topic.publish('loading')
+        this.currentProject = id.target.nb
+        // this.project.getDetailedProject(this.ids[this.currentProject]).then(lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
+        when(this.projectStore.get(this.ids[this.currentProject]), lang.hitch(this, 'gotDetailedProject'))
+
+        // function (proj) {
+        // console.log('le getDetailedProject marche aussi', proj)
+        // })  
     },
     gotDetailedProject(proj) {
       topic.publish('gotDetailedProject', proj)
       topic.publish('refreshDevs')
-      topic.publish('loaded')
-      for (var i = 0; i < proj.developments.length; i++) {
-        this.project.getDetailedDevelopment(proj.developments[i]).then(lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
-        this.developmentsIds.push(proj.developments[i])  
-      }
-      when(this.devStore.get(developmentsIds), function(devs) {
-        console.log('les développements aussi marchent', devs)
-      })
+      this.developmentsIds = []
+      // for (var i = 0; i < proj.developments.length; i++) {
+      //   this.project.getDetailedDevelopment(proj.developments[i]).then(lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
+      //   this.developmentsIds.push(proj.developments[i])
+      // }
+      when(this.devStore.get(this.developmentsIds), topic.publish('loaded'))
       this.projectIsLoading = false
     },
     gotDevelopment(dev) {

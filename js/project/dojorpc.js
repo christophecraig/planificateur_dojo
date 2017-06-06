@@ -20,7 +20,7 @@ require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/calendar',
         },
         methods: {
           close() {
-            topic.publish('closeModal')          
+            topic.publish('closeModal')
           },
           loading() {
             this.isLoading = true
