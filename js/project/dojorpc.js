@@ -1,5 +1,5 @@
-require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/calendar', 'project/affProjectList', 'project/menu', 'project/affDetailedProject', 'project/development', 'project/resource', 'project/detailedResource', 'project/addNewDev', 'project/editDev', 'project/eventLoad', 'dojo/ready'],
-  function (project, lang, topic, calendar, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, ready) {
+require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/clients', 'project/affProjectList', 'project/menu', 'project/affDetailedProject', 'project/development', 'project/resource', 'project/detailedResource', 'project/addNewDev', 'project/editDev', 'project/eventLoad', 'dojo/ready'],
+  function (project, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, ready) {
     ready(function () {
       var call = new project() // nouvel appel Json RPC
       var projList = new affProjectList('projects') // nouveau component qui gère la liste des projets
@@ -11,7 +11,7 @@ require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/calendar',
       var modalAdd = new addNewDev('modalForm')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
-      // var graph           = new calendar('line-chart')
+      var clientsPanel = new clients('clients')
       new Vue({
         el: '#app',
         data: {
