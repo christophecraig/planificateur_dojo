@@ -1,4 +1,5 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/projectStore', 'project/devStore', 'dojo/when'], function (declare, topic, lang, JsonService, projectStore, devStore, when) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'], 
+function (declare, topic, lang, JsonService, projectStore, devStore, resourceStore, when) {
   return declare(null, {
       constructor() {
         this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
@@ -6,6 +7,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         this.color = ''
         this.projectStore = new projectStore(this.project)
         this.devStore = new devStore(this.project)
+        this.resourceStore = new resourceStore(this.project)
         this.getProjects()
         this.ids = []
         this.projectIsLoading = false
