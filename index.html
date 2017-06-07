@@ -81,10 +81,10 @@
   </template>
   <template id="resource_tpl">
     <div class="resources" ref="res">
-      <div class="resource" :res-id="resource.id" v-for="resource in data.resources" @click.capture="getDetailedResource">
-        <span class="color" :res-id="resource.id"></span><span class="name" :res-id="resource.id">{{resource.firstName}} {{resource.name}}</span>
+      <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
+        <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
       </div>
-      <detailed-res></detailed-res>
+      <!--<detailed-res></detailed-res>-->
       <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
     </div>
   </template>
@@ -163,7 +163,8 @@
   </template>
   <template id="development">
     <div id="developments">
-      <div @click.stop="orderByAZ">Sort</div>
+      <div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
+      <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
       <edit-dev></edit-dev>
       <transition-group name="fade">
         <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev.name">

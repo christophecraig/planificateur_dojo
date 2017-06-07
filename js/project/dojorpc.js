@@ -28,13 +28,19 @@ require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/clients', 
           loaded() {
             this.isLoading = false
           },
-          compare(a, b) {
-            console.log('on est bien dans le compare')
+          alpha(a, b) {
             if (a.name < b.name)
               return -1;
             if (a.name > b.name)
               return 1;
             return 0;
+          },
+          date(a, b) {
+            if (a.date < b.date) 
+              return -1
+            if (a.date > b.date)
+              return 1
+            return 0
           }
         },
         created() {

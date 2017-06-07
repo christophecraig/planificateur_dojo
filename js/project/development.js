@@ -22,8 +22,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           topic.publish('deleteDev', this)
         },
         orderByAZ() {
-          console.log('ok')
-          this.data.developments.sort(lang.hitch(this, this.$root.compare));
+          this.data.developments.sort(lang.hitch(this, this.$root.alpha));
+        },
+        orderByDate() {
+          this.data.developments.sort(lang.hitch(this, this.$root.date))
         }
       }
       this.createComponent()
