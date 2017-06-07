@@ -1,7 +1,6 @@
 define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
   return declare(null, {
     constructor(compName) {
-      // var lodash = require('lodash')
       this.compName = compName
       topic.subscribe('refreshDevs', lang.hitch(this, 'refreshDevs'))
       topic.subscribe('gotDevelopment', lang.hitch(this, 'gotDev'))
@@ -12,7 +11,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.methods = {
         openEditModal(e) {
           topic.publish('openEdit', e)
-          console.log(e)
           setTimeout(lang.hitch(this, function () {
             this.$children[0].data.isOpen = true
           }), 10)

@@ -119,7 +119,7 @@ function (declare, topic, lang, JsonService, projectStore, devStore, resourceSto
     },
     getResources() {
       topic.publish('loading')
-      this.project.getResources().then(lang.hitch(this, 'gotResources'), lang.hitch(this, 'reportError'))
+      when(this.resourceStore.query(), lang.hitch(this, 'gotResources'), lang.hitch(this, 'reportError'))
     },
     gotResources(resources) {
       topic.publish('gotResources', resources)
