@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/style.css">
   <script>
     var dojoConfig = {
-      parseOnLoad: true,
       packages: [{
         name: "project",
         location: "http://localhost/rpc5/js/project"
@@ -56,8 +55,8 @@
       <div id="projects-slider">
         <div id="data">
           <div id="scroll_container">
-            <div class="project" v-for="project in data.project" @click="$root.currentView='detailedProject'">
-              <!-- PROJECT COLOR ICI -->{{project}}</div>
+            <div class="project" v-for="project in data.project" :proj-id="project.id" @click="openDev(project.id)">
+              <!-- PROJECT COLOR ICI -->{{project.name}}</div>
             <div class="project" @click="addProj">Ajouter un projet</div>
           </div>
         </div>
@@ -179,6 +178,7 @@
           </div>
         </div>
       </transition-group>
+      
     </div>
   </template>
   <template id="edit_the_dev">

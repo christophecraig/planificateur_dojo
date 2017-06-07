@@ -14,6 +14,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         },
         addProj() {
           topic.publish('addProj')
+        },
+        openDev(id) {
+          topic.publish('getDetailedProject', id)
+          this.$root.currentView='detailedProject'
         }
       }
       this.createComponent()

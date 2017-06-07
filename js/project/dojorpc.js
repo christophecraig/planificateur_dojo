@@ -27,6 +27,14 @@ require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/calendar',
           },
           loaded() {
             this.isLoading = false
+          },
+          compare(a, b) {
+            console.log('on est bien dans le compare')
+            if (a.name < b.name)
+              return -1;
+            if (a.name > b.name)
+              return 1;
+            return 0;
           }
         },
         created() {

@@ -14,6 +14,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
+        topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
         topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
         topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
         topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
@@ -21,12 +22,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       },
       getProjects() {
         topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
-        this.project.getListOfProjects().then(lang.hitch(this, 'gotProjects'), lang.hitch(this, 'reportError'))
         when(this.projectStore.query({
           short: true
-        }), function (list) {
-          console.log('getProjects marche', list)
-        })
+        }), 
+        lang.hitch(this, 'gotProjects'), 
+        lang.hitch(this, 'reportError'))
       },
       gotProjects(proj) {
         topic.publish('loaded') // cet évènement indique que le chargement est terminé
@@ -41,7 +41,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
           this.sliderProjects = document.querySelectorAll('.project')
           // tableau des divs .projet
           for (var i = 0; i < this.sliderProjects.length; i++) {
-            this.sliderProjects[i].addEventListener('click', lang.hitch(this, 'getDetailedProject'))
             this.sliderProjects[i].nb = i // On ajoute la propriété
             this.sliderWidth += this.sliderProjects[i].clientWidth + 8 // Pour ajouter la marge
           }
@@ -50,9 +49,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       },
       getDetailedProject(id) {
         topic.publish('loading')
-        this.currentProject = id.target.nb
         // this.project.getDetailedProject(this.ids[this.currentProject]).then(lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
-        when(this.projectStore.get(this.ids[this.currentProject]), lang.hitch(this, 'gotDetailedProject'))
+        when(this.projectStore.get(id), lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
 
         // function (proj) {
         // console.log('le getDetailedProject marche aussi', proj)
@@ -62,15 +60,15 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       topic.publish('gotDetailedProject', proj)
       topic.publish('refreshDevs')
       this.developmentsIds = []
-      // for (var i = 0; i < proj.developments.length; i++) {
-      //   this.project.getDetailedDevelopment(proj.developments[i]).then(lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
-      //   this.developmentsIds.push(proj.developments[i])
-      // }
-      when(this.devStore.get(this.developmentsIds), topic.publish('loaded'))
+      for (var i = 0; i < proj.developments.length; i++) {
+        this.developmentsIds.push(proj.developments[i])
+      }
+        when(this.devStore.get(proj.developments), lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
       this.projectIsLoading = false
     },
     gotDevelopment(dev) {
       topic.publish('gotDevelopment', dev)
+      console.log(dev)
     },
     deleteDev() {
       // this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))

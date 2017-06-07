@@ -1,4 +1,4 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function(declare, topic, lang, vueComponent) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
   return declare(null, {
     constructor(compName) {
       // var lodash = require('lodash')
@@ -6,14 +6,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       topic.subscribe('refreshDevs', lang.hitch(this, 'refreshDevs'))
       topic.subscribe('gotDevelopment', lang.hitch(this, 'gotDev'))
       this.data = {
-        developments: [{}]
+        developments: null
       }
       this.template = '#development'
       this.methods = {
         openEditModal(e) {
           topic.publish('openEdit', e)
           console.log(e)
-          setTimeout(lang.hitch(this, function() {
+          setTimeout(lang.hitch(this, function () {
             this.$children[0].data.isOpen = true
           }), 10)
         },
@@ -22,15 +22,15 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           topic.publish('deleteDev', this)
         },
         orderByAZ() {
-          var devs = this.data.developments
-          console.log(this.data.developments)
-          // this.data.developments = _.sortBy(devs, ['name'])
+          console.log('ok')
+          this.data.developments.sort(lang.hitch(this, this.$root.compare));
         }
       }
       this.createComponent()
     },
     gotDev(dev) {
-      this.data.developments.push(dev)
+      console.log('le dev tel quil est recu', dev)
+      this.data.developments = dev
     },
     refreshDevs() {
       this.data.developments = []
@@ -38,5 +38,5 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     createComponent() {
       this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted)
     }
-  });
-});
+  })
+})
