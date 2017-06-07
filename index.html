@@ -70,7 +70,7 @@
         <li><a href="#" @click.stop="$root.currentView='detailedProject'">Développements</a></li>
         <li><a href="#" @click.stop="$root.currentView='resource'">Ressources</a></li>
         <li><a href="#">Infos Pratiques</a></li>
-        <li><a href="#">Clients</a></li>
+        <li><a href="#" @click.stop="$root.currentView='customers'">Clients</a></li>
         <li><a href="#">Ressources</a></li>
       </ul>
       <div id="settings">
@@ -91,9 +91,9 @@
   <template id="detailed_resource">
     <div id="detailed_res" v-if="this.data.isOpen">
       <!--<sweet-modal>-->
-        <div id="photo">
-          <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
-        </div>
+      <div id="photo">
+        <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
+      </div>
 
       <h4>{{this.fullName}}</h4>
       <!--</sweet-modal>-->
@@ -178,7 +178,7 @@
           </div>
         </div>
       </transition-group>
-      
+
     </div>
   </template>
   <template id="edit_the_dev">
@@ -204,6 +204,11 @@
       </div>
       </form>
     </transition>
+  </template>
+  <template id="clients_tpl">
+    <div>
+      {{data.clients}}
+    </div>
   </template>
 </body>
 

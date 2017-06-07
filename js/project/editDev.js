@@ -32,7 +32,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.data.dev = dev
     },
     createComponent() {
-      this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted)
+      this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
     }
   })
 })
