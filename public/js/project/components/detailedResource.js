@@ -19,9 +19,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           return this.data.res.firstName + ' ' + this.data.res.name
         }
       }
-      this.mounted = function() {
-        console.log(this.template)
-      }
       topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
       this.createComponent()
     },
