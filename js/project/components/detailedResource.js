@@ -5,12 +5,22 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       this.template = '#detailed_resource'
       this.data = {
         isOpen: false,
-        res: {}
+        res: {
+          id: '',
+          name: '',
+          firstName: '',
+          baseEfficiency: 0,
+          holidays: [],
+          skillEfficiency: []
+        }
       }
       this.computed = {
         fullName() {
           return this.data.res.firstName + ' ' + this.data.res.name
         }
+      }
+      this.mounted = function() {
+        console.log(this.template)
       }
       topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
       this.createComponent()

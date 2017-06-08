@@ -6,6 +6,7 @@
   <title>Planificateur de tâches</title>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
+  <link rel="stylesheet" href="css/sweetmodal/jquery.sweet-modal.css" />
   <link rel="stylesheet" href="css/style.css">
   <script>
     var dojoConfig = {
@@ -33,6 +34,7 @@
     </div>
   </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
+  <script src="js/sweetmodal/jquery.sweet-modal.js"></script>
   <script src="js/styleselect/customSelect.js"></script>
   <!-- TEMPLATE ZONE -->
   <template id="calendar_tpl">
@@ -84,7 +86,7 @@
       <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
         <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
       </div>
-      <!--<detailed-res></detailed-res>-->
+      <detailed-res></detailed-res>
       <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
     </div>
   </template>
@@ -94,7 +96,6 @@
       <div id="photo">
         <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
       </div>
-
       <h4>{{this.fullName}}</h4>
       <!--</sweet-modal>-->
     </div>

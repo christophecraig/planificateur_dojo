@@ -10,9 +10,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         addRes() {
           topic.publish('addRes')
         },
-        getDetailedResource(e) {
-          this.attr = e.target.attributes
-          topic.publish('getDetailedResource', this.attr[0].value)          
+        editRes(id) {
+          topic.publish('editRes')
+        },
+        getDetailedResource(id) {
+          topic.publish('getDetailedResource', id)          
         }
       }
       // this.mounted = function() {

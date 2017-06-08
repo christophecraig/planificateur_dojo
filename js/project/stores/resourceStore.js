@@ -16,7 +16,9 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       return def
     },
     put() {
-
+      var def = new Deferred()
+      this.ws.editResource().then(lang.hitch(this, 'resourceEdited'), lang.hitch(this, 'reportError'))
+      return def
     },
     add() {
       var def = new Deferred()
@@ -28,16 +30,14 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       return def
     },
     gotDetailedResource(def, res) {
-      console.log('Resource détaillée', res)
-      def.resolve(this.data)
+      def.resolve(res)
     },
     gotResources(def, res) {
-      console.log('Resources au pluriel', res)
       def.resolve(res)
     },
     resourceAdded(def, res) {
 
-    }
+    },
     reportError() {
       def.reject('not found')
     }

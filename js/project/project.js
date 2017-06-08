@@ -126,8 +126,7 @@ function (declare, topic, lang, JsonService, projectStore, devStore, resourceSto
       topic.publish('loaded')
     },
     getDetailedResource(id) {
-      console.log(id)
-      this.project.getAResource(id).then(lang.hitch(this, 'gotDetailedResource'), lang.hitch(this, 'reportError'))
+      when(this.resourceStore.get(id), lang.hitch(this,'gotDetailedResource'), lang.hitch(this, 'reportError'))
     },
     gotDetailedResource(res) {
       topic.publish('gotDetailedResource', res)

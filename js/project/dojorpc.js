@@ -7,7 +7,7 @@ require(['project/project', 'dojo/_base/lang', 'dojo/topic', 'project/components
       var loadWatcher = new eventLoad('loader') // Surveille les évènements et donc le chargement des données demandées
       var detailedProject = new affDetailedProject('detailedProject')
       var resources = new resource('resource')
-      // var detailedRes     = new detailedResource('detailedRes')
+      var detailedRes     = new detailedResource('detailedRes')
       var modalAdd = new addNewDev('modalForm')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
