@@ -9,27 +9,27 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       }
       this.template = '#development'
       this.methods = {
-        openEditModal(e) {
-          topic.publish('openEdit', e)
+        openEditModal(dev) {
+          topic.publish('openEdit', dev)
           setTimeout(lang.hitch(this, function () {
             this.$children[0].data.isOpen = true
           }), 10)
         },
-        deleteDev(e) {
-          console.log('suppression du développement ayant l\'id :', e.target.parentElement.parentElement.id)
-          topic.publish('deleteDev', this)
+        deleteDev(dev) {
+          console.log('suppression du développement ayant l\'id :', dev)
+          topic.publish('deleteDev', dev)
         },
         orderByAZ() {
           this.data.developments.sort(lang.hitch(this, this.$root.alpha));
         },
         orderByDate() {
+          // ne marche pas pour le moment
           this.data.developments.sort(lang.hitch(this, this.$root.date))
         }
       }
       this.createComponent()
     },
     gotDev(dev) {
-      console.log('le dev tel quil est recu', dev)
       this.data.developments = dev
     },
     refreshDevs() {

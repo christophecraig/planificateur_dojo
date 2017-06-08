@@ -7,21 +7,26 @@ var peopleConnected = 0
 
 app.use(express.static(path.join(__dirname, 'public'))) // Cette ligne permet de lire le contenu du dossier 'public'
 
-app.get('/', function (req, res) {
+// Cela fait que peu importe ce qu'il y a après le '/', on retombera sur la page 'index.html'
+app.get('*', function (req, res) {
   res.sendFile(__dirname + '/index.html')
 })
 
 io.on('connection', function (socket) {
+
   peopleConnected++
   console.log('Il y a ' + peopleConnected + 'personnes connectées')
   var edited = []
+
   socket.on('editing', function (dev) {
-    edited.push(dev)
+    console.log('someone is editing ' + dev)
   })
+
   socket.on('disconnect', function () {
     peopleConnected--
     console.log('Il y a ' + peopleConnected + 'personnes connectées')
   })
+
 })
 
 http.listen(8080, function () {

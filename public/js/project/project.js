@@ -1,6 +1,6 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'], 
-function (declare, topic, lang, JsonService, projectStore, devStore, resourceStore, when) {
-  return declare(null, {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/clientStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'],
+  function (declare, topic, lang, JsonService, clientStore, projectStore, devStore, resourceStore, when) {
+    return declare(null, {
       constructor() {
         this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
@@ -8,6 +8,7 @@ function (declare, topic, lang, JsonService, projectStore, devStore, resourceSto
         this.projectStore = new projectStore(this.project)
         this.devStore = new devStore(this.project)
         this.resourceStore = new resourceStore(this.project)
+        this.clientStore = new clientStore(this.project)
         this.getProjects()
         this.ids = []
         this.projectIsLoading = false
@@ -16,19 +17,20 @@ function (declare, topic, lang, JsonService, projectStore, devStore, resourceSto
         topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
+        topic.subscribe('getClients', lang.hitch(this, 'getClients'))
+        topic.subscribe('getDetailedDevelopment', lang.hitch(this, 'getDetailedDevelopment'))
         topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
         topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
         topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
         topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
-        // this.project.getDetailedDevelopment('IIM2.2').then(function() { topic.publish('gotDevelopment') }, lang.hitch(this, 'reportError'))
       },
       getProjects() {
         topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
         when(this.projectStore.query({
-          short: true
-        }), 
-        lang.hitch(this, 'gotProjects'), 
-        lang.hitch(this, 'reportError'))
+            short: true
+          }),
+          lang.hitch(this, 'gotProjects'),
+          lang.hitch(this, 'reportError'))
       },
       gotProjects(proj) {
         topic.publish('loaded') // cet évènement indique que le chargement est terminé
@@ -57,83 +59,94 @@ function (declare, topic, lang, JsonService, projectStore, devStore, resourceSto
         // function (proj) {
         // console.log('le getDetailedProject marche aussi', proj)
         // })  
-    },
-    gotDetailedProject(proj) {
-      topic.publish('gotDetailedProject', proj)
-      topic.publish('refreshDevs')
-      this.developmentsIds = []
-      for (var i = 0; i < proj.developments.length; i++) {
-        this.developmentsIds.push(proj.developments[i])
-      }
-        when(this.devStore.get(proj.developments), lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
-      this.projectIsLoading = false
-    },
-    gotDevelopment(dev) {
-      topic.publish('gotDevelopment', dev)
-      console.log(dev)
-    },
-    deleteDev() {
-      // this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))
-    },
-    submitNewDev() {
-      // On aura besoin d'une vérification de la validité des données.
-      this.project.addDevelopment().then(lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
-    },
-    submitNewRes() {
-      console.log('ajout dune ressource')
-      this.project.addResource({
-        "id": 'ccraig',
-        "name": 'Craig',
-        "firstName": 'Christophe'
-      }).then(lang.hitch(this, function () {
-        topic.publish('success', this)
-      }), lang.hitch(this, 'reportError'))
-    },
-    submitNewProj(project) {
-      // Impeccable, ça fonctionne, à remplacer par des données récupérées sur le serveur
-      this.project.addProject(project).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
+      },
+      gotDetailedProject(proj) {
+        topic.publish('gotDetailedProject', proj)
+        topic.publish('refreshDevs')
+        this.developmentsIds = []
+        for (var i = 0; i < proj.developments.length; i++) {
+          this.developmentsIds.push(proj.developments[i])
+        }
+        when(this.devStore.query(proj.developments), lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
+        this.projectIsLoading = false
+      },
+      getDetailedDevelopment(devId) {
+        console.log(devId)
+        when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
+      },
+      gotDevelopment(dev) {
+        console.log(dev)
+        topic.publish('gotDevelopment', dev)
+      },
+      gotDetailedDevelopment(dev) {
+        console.log(dev)
+        topic.publish('gotDetailedDevelopment', dev)
+      },
+      deleteDev() {
+        // this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))
+      },
+      submitNewDev() {
+        // On aura besoin d'une vérification de la validité des données.
+        this.project.addDevelopment().then(lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
+      },
+      submitNewRes() {
+        console.log('ajout dune ressource')
+        this.project.addResource({
+          "id": 'ccraig',
+          "name": 'Craig',
+          "firstName": 'Christophe'
+        }).then(lang.hitch(this, function () {
+          topic.publish('success', this)
+        }), lang.hitch(this, 'reportError'))
+      },
+      submitNewProj(project) {
+        // Impeccable, ça fonctionne, à remplacer par des données récupérées sur le serveur
+        this.project.addProject(project).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
 
-      // this.project.addProject({
-      //   "id":"",
-      //   "name":"",
-      //   "priority":"",
-      //   "customerMind":{
-      //     "customer":"",
-      //     "mind":""
-      //   },
-      //   "developersMind":""
-      // }).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
-    },
-    projAdded() {
-      // On actualise la liste des projets après en avoir ajouté un pour qu'il apparaisse directement
-      this.getProjects()
-    },
-    getSkills() {
-      this.project.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
-    },
-    gotSkills(skills) {
-      topic.publish('gotSkills', skills)
-    },
-    isAdded() {
-      console.log('Développement ajouté (normalement)')
-    },
-    getResources() {
-      topic.publish('loading')
-      when(this.resourceStore.query(), lang.hitch(this, 'gotResources'), lang.hitch(this, 'reportError'))
-    },
-    gotResources(resources) {
-      topic.publish('gotResources', resources)
-      topic.publish('loaded')
-    },
-    getDetailedResource(id) {
-      when(this.resourceStore.get(id), lang.hitch(this,'gotDetailedResource'), lang.hitch(this, 'reportError'))
-    },
-    gotDetailedResource(res) {
-      topic.publish('gotDetailedResource', res)
-    },
-    reportError(err) {
-      console.log(err)
-      topic.publish('error')
-    }
+        // this.project.addProject({
+        //   "id":"",
+        //   "name":"",
+        //   "priority":"",
+        //   "customerMind":{
+        //     "customer":"",
+        //     "mind":""
+        //   },
+        //   "developersMind":""
+        // }).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
+      },
+      projAdded() {
+        // On actualise la liste des projets après en avoir ajouté un pour qu'il apparaisse directement
+        this.getProjects()
+      },
+      getSkills() {
+        this.project.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
+      },
+      gotSkills(skills) {
+        topic.publish('gotSkills', skills)
+      },
+      isAdded() {
+        console.log('Développement ajouté (normalement)')
+      },
+      getResources() {
+        topic.publish('loading')
+        when(this.resourceStore.query(), lang.hitch(this, 'gotResources'), lang.hitch(this, 'reportError'))
+      },
+      gotResources(resources) {
+        topic.publish('gotResources', resources)
+        topic.publish('loaded')
+      },
+      getDetailedResource(id) {
+        when(this.resourceStore.get(id), lang.hitch(this, 'gotDetailedResource'), lang.hitch(this, 'reportError'))
+      },
+      gotDetailedResource(res) {
+        topic.publish('gotDetailedResource', res)
+      },
+      getClients() {
+        console.log('ok')
+      },
+      reportError(err) {
+        console.log(err)
+        topic.publish('error')
+      }
+    })
   })
-})

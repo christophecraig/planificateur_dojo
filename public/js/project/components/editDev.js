@@ -1,14 +1,34 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function(declare, topic, lang, vueComponent) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
   return declare(null, {
     constructor(compName) {
       this.compName = compName
       this.data = {
         resources: [{}],
-        isOpen: false,
-        title: '',
-        client: '',
-        endDate: '',
-        startDate: ''
+        dev: {
+          isOpen: false,
+          title: '',
+          client: '',
+          endDate: '',
+          startDate: '',
+          earlyEnd: '',
+          earlyStart: '',
+          effort: '',
+          id: '',
+          lateEnd: '',
+          lateStart: '',
+          name: '',
+          optional: false,
+          parentDevelopment: '',
+          plannedEnd: '',
+          plannedStart: '',
+          previousDevelopment: '',
+          priority: '',
+          realEnd: '',
+          realStart: '',
+          resources: [],
+          skillTags: [],
+          status: ''
+        }
       }
       this.methods = {
         close() {
@@ -18,17 +38,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.template = '#edit_the_dev'
       topic.subscribe('closeModal', lang.hitch(this, 'close'))
       topic.subscribe('closeEditModal', lang.hitch(this, 'close'))
-      topic.subscribe('gotDetailedProject', lang.hitch(this, 'populate'))
-      topic.subscribe('openEdit', lang.hitch(this, 'openEdit'))
+      topic.subscribe('gotDetailedDevelopment', lang.hitch(this, 'populate'))
       this.createComponent()
     },
     close() {
       this.data.isOpen = false
     },
-    openEdit(e) {
-      this.devId = e.target.parentElement.parentElement.id
-    },
     populate(dev) {
+      console.log(dev)
       this.data.dev = dev
     },
     createComponent() {

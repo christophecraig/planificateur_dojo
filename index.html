@@ -169,15 +169,15 @@
       <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
       <edit-dev></edit-dev>
       <transition-group name="fade">
-        <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev.name">
+        <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev">
           <div class="align-left">
             <span class="dev_name">{{dev.name}}</span>
           </div>
           <div class="align-right">
             <span class="skill-tag" v-for="skills in dev.skillTags">{{skills.id}}</span>
             <span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
-            <span class="edit fa fa-pencil" @click="openEditModal"></span>
-            <span class="delete fa fa-trash" @click.stop="deleteDev"></span>
+            <span class="edit fa fa-pencil" @click="openEditModal(dev.id)"></span>
+            <span class="delete fa fa-trash" @click.stop="deleteDev(dev.id)"></span>
           </div>
         </div>
       </transition-group>
@@ -187,6 +187,7 @@
   <template id="edit_the_dev">
     <transition name="fade">
       <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
+        {{this.data}}
         <div class="btn close fa fa-window-close" @click="close"></div>
         <form name="editDev">
           <label>Titre
