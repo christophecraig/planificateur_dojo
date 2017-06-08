@@ -18,6 +18,7 @@
     };
   </script>
   <script src="//unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
   <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
@@ -212,6 +213,15 @@
       {{data.clients}}
     </div>
   </template>
+  <script>
+  $(function () {
+    var socket = io();
+    socket.on('id', function(id) {
+      console.log(id)
+    })
+      return false;
+    });
+</script>
 </body>
 
 </html>
