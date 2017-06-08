@@ -1,8 +1,8 @@
-define(['dojo/_base/declare', 'dojo/topic'], function (declare, topic) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang'], function (declare, topic, lang) {
   return declare(null, {
     constructor() {
       var socket = io()
-      topic.subscribe('openEdit', 'emitEditing')
+      topic.subscribe('openEdit', lang.hitch(this, 'emitEditing'))
     },
     emitEditing(dev) {
       console.log('test')
