@@ -14,9 +14,12 @@ app.get('/', function(req, res) {
 })
 
 io.on('connection', function(socket) {
-  io.emit('id')
   peopleConnected ++
   console.log('Il y a ' + peopleConnected + 'personnes connectées')
+  var edited = []
+  socket.on('editing', function(dev) {
+    edited.push(dev)
+  })
   socket.on('disconnect', function() {
     peopleConnected --
     console.log('Il y a ' + peopleConnected + 'personnes connectées')
