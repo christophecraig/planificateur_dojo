@@ -68,12 +68,12 @@
   </template>
   <template id="menu_tpl">
     <nav id='menu'>
-      <div class="back fa fa-angle-left" @click.stop="$root.currentView=''"></div>
+      <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
       <ul class="center">
-        <li><a href="#" @click.stop="$root.currentView='detailedProject'">Développements</a></li>
-        <li><a href="#" @click.stop="$root.currentView='resource'">Ressources</a></li>
+        <li><a href="#" @click.stop="$root.projectView($root.currentView)">Développements</a></li>
+        <li><a href="#" @click.stop="$root.resourceView($root.currentView)">Ressources</a></li>
         <li><a href="#">Infos Pratiques</a></li>
-        <li><a href="#" @click.stop="$root.currentView='customers'">Clients</a></li>
+        <li><a href="#" @click.stop="$root.customerView($root.currentView)">Clients</a></li>
         <li><a href="#">Ressources</a></li>
       </ul>
       <div id="settings">
@@ -205,7 +205,7 @@
   <template id="edit_the_dev">
     <transition name="fade">
       <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
-        <div class="btn close fa fa-window-close" @click="close"></div>
+        <div class="btn close fa fa-window-close" @click="close(data.dev.id)"></div>
         <form name="editDev">
           <label>Titre
             <input type="text" v-model="data.dev.name" placeholder="Titre">

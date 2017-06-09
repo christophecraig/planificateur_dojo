@@ -26,11 +26,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           skillTags: [],
           status: ''
         },
-        allSkills: ['SQL', 'JS', 'AJAX', 'DOJO', 'PHP'] // TODO:  peupler via le store de ressources
+        allSkills: ['SQL', 'JS', 'AJAX', 'DOJO', 'PHP'] // TODO: peupler via le store de ressources
       }
       this.methods = {
-        close() {
-          topic.publish('closeEditModal')
+        close(dev) {
+          topic.publish('closeEditModal', dev)
         }
       }
       this.template = '#edit_the_dev'
@@ -39,8 +39,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       topic.subscribe('gotDetailedDevelopment', lang.hitch(this, 'populate'))
       this.createComponent()
     },
-    close() {
+    close(dev) {
+      if (this.data.isOpen) {
       this.data.isOpen = false
+      topic.publish('stopEdit', dev)
+      }
     },
     populate(dev) {
       this.data.dev = dev

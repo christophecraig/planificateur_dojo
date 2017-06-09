@@ -17,14 +17,32 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
         el: '#app',
         data: {
           currentView: '',
+          lastView: '',
           isLoading: false
         },
         methods: {
           close() {
             topic.publish('closeModal')
+            topic.publish('closeEditModal')
           },
           loading() {
             this.isLoading = true
+          },
+          back(lastView) {
+            this.currentView = this.lastView
+            this.lastView = lastView
+          },
+          projectView(lastView) {
+            this.currentView = 'detailedProject'
+            this.lastView = lastView
+          },
+          resourceView(lastView) {
+            this.currentView = 'resource'
+            this.lastView = lastView
+          },
+          customerView(lastView) {
+            this.currentView = 'customer'
+            this.lastView = lastView
           },
           loaded() {
             this.isLoading = false

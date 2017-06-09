@@ -12,26 +12,45 @@ app.get('*', function (req, res) {
   res.sendFile(__dirname + '/index.html')
 })
 
+var edited = []
+
+var cancelDevEdit = function (dev) {
+  for (var i = 0; i < edited.length; i++) {
+    if (dev == edited[i]) {
+      edited.splice(i, 1)
+    }
+  }
+}
+
 io.on('connection', function (socket) {
 
+  var nowEditing = ''
   peopleConnected++
-  console.log('Il y a ' + peopleConnected + 'personnes connectées')
-  var edited = []
+  console.log(peopleConnected + 'personnes connectées')
 
   socket.on('editing', function (dev) {
-    console.log('someone is editing ' + dev)
-    edited.push(dev)
-    if (edited.length === 2) {
-      if (edited[0] === edited[1]) {
-        socket.emit('blockEdit', dev)
+    nowEditing = dev
+    var blocking = false
+    for (var i = 0; i < edited.length; i++) {
+      if (nowEditing == edited[i]) {
+        socket.emit('blockEdit', nowEditing)
+        blocking = true
+        console.log(nowEditing, edited[i])
+        break;
+      } else {
+        blocking = false
       }
-      edited.shift()
     }
+    if (!blocking) edited.push(nowEditing)
+    console.log(edited)
   })
 
+  socket.on('stopEdit', function () {
+    cancelDevEdit(nowEditing)
+  })
   socket.on('disconnect', function () {
     peopleConnected--
-    console.log('Il y a ' + peopleConnected + 'personnes connectées')
+    cancelDevEdit(nowEditing)
   })
 
 })
