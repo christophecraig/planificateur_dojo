@@ -2,7 +2,6 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
   return declare(Store, {
     constructor: function (ws) {
       this.ws = ws
-      this.data = null
     },
     get (id) {
       var def = new Deferred()
@@ -17,14 +16,21 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       }
       return def
     },
+    add (dev) {
+      var def = new Deferred()
+      this.ws.addDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError'))
+      return def
+    },
     gotDev (def, dev) {
-      console.log('store ' + dev)
       def.resolve(dev)
     },
     gotDevs: function (def, dev) {
       this.data.push(dev)
       def.resolve(this.data)
-      console.log('je suis dans le store')
+    },
+    devAdded(def, dev) {
+      console.log('et on ajoute ceci', dev)
+      def.resolve(dev)
     },
     reportError: function () {
       def.reject('not found')

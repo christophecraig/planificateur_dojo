@@ -20,6 +20,13 @@ io.on('connection', function (socket) {
 
   socket.on('editing', function (dev) {
     console.log('someone is editing ' + dev)
+    edited.push(dev)
+    if (edited.length === 2) {
+      if (edited[0] === edited[1]) {
+        socket.emit('blockEdit', dev)
+      }
+      edited.shift()
+    }
   })
 
   socket.on('disconnect', function () {

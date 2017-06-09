@@ -18,7 +18,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
         topic.subscribe('getClients', lang.hitch(this, 'getClients'))
-        topic.subscribe('getDetailedDevelopment', lang.hitch(this, 'getDetailedDevelopment'))
+        topic.subscribe('openEdit', lang.hitch(this, 'getDetailedDevelopment'))
         topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
         topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
         topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
@@ -71,23 +71,21 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         this.projectIsLoading = false
       },
       getDetailedDevelopment(devId) {
-        console.log(devId)
         when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
       },
       gotDevelopment(dev) {
-        console.log(dev)
         topic.publish('gotDevelopment', dev)
       },
       gotDetailedDevelopment(dev) {
-        console.log(dev)
         topic.publish('gotDetailedDevelopment', dev)
       },
       deleteDev() {
         // this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))
       },
-      submitNewDev() {
+      submitNewDev(dev) {
         // On aura besoin d'une vérification de la validité des données.
-        this.project.addDevelopment().then(lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
+        console.log(dev)
+        when(this.devStore.add(dev),lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
       },
       submitNewRes() {
         console.log('ajout dune ressource')

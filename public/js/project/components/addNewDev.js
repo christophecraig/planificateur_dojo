@@ -7,7 +7,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       topic.subscribe('gotSkills', lang.hitch(this, this.populate))
       this.template = '#modal_form'
       this.data = {
-        newDevInfos: {
+        dev: {
           "id": "",
           "name": "",
           "earlyStart": null,
@@ -33,8 +33,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
         close() {
           this.data.isOpen = false
         },
-        submitNewDev() {
-          topic.publish('saveDev')
+        submitNewDev(dev) {
+          console.log(dev) // TODO: Trouver pourquoi le publish ne veut pas envoyer le dev
+          topic.publish('saveDev', dev)
         }
       }
       this.createComponent()

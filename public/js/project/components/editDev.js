@@ -3,11 +3,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     constructor(compName) {
       this.compName = compName
       this.data = {
-        resources: [{}],
+        isOpen: false,
         dev: {
-          isOpen: false,
-          title: '',
-          client: '',
           endDate: '',
           startDate: '',
           earlyEnd: '',
@@ -28,7 +25,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           resources: [],
           skillTags: [],
           status: ''
-        }
+        },
+        allSkills: ['SQL', 'JS', 'AJAX', 'DOJO', 'PHP'] // TODO:  peupler via le store de ressources
       }
       this.methods = {
         close() {
@@ -45,7 +43,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.data.isOpen = false
     },
     populate(dev) {
-      console.log(dev)
       this.data.dev = dev
     },
     createComponent() {
