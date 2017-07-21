@@ -47,6 +47,7 @@ io.on('connection', function (socket) {
 
   socket.on('stopEdit', function () {
     cancelDevEdit(nowEditing)
+    console.log('stopEdit');
   })
   socket.on('disconnect', function () {
     peopleConnected--

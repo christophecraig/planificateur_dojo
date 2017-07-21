@@ -12,7 +12,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var modalAdd = new addNewDev('modalForm')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
-      var clientsPanel = new clients('customers')
+      var clientsPanel = new clients('customer')
       new Vue({
         el: '#app',
         data: {
