@@ -4,6 +4,7 @@
 @import "partials/modal";
 @import "partials/scrollbar";
 @import "partials/animations";
+
 // Règles CSS
 body {
     background: #fff;
@@ -24,7 +25,7 @@ ul {
 
 #bottom {
     position: relative;
-    height: calc(50% - 60px);    
+    height: calc(50% - 60px);
 }
 
 .btn {

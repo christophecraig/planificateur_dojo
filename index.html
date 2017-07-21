@@ -12,12 +12,13 @@
     var dojoConfig = {
       packages: [{
         name: "project",
-        location: "http://localhost/rpc5/js/project"
+        location: "http://localhost:8080/js/project"
       }],
       deps: ['project/dojorpc']
     };
   </script>
   <script src="//unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
   <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
@@ -67,12 +68,12 @@
   </template>
   <template id="menu_tpl">
     <nav id='menu'>
-      <div class="back fa fa-angle-left" @click.stop="$root.currentView=''"></div>
+      <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
       <ul class="center">
-        <li><a href="#" @click.stop="$root.currentView='detailedProject'">Développements</a></li>
-        <li><a href="#" @click.stop="$root.currentView='resource'">Ressources</a></li>
+        <li><a href="#" @click.stop="$root.projectView($root.currentView)">Développements</a></li>
+        <li><a href="#" @click.stop="$root.resourceView($root.currentView)">Ressources</a></li>
         <li><a href="#">Infos Pratiques</a></li>
-        <li><a href="#" @click.stop="$root.currentView='customers'">Clients</a></li>
+        <li><a href="#" @click.stop="$root.customerView($root.currentView)">Clients</a></li>
         <li><a href="#">Ressources</a></li>
       </ul>
       <div id="settings">
@@ -124,41 +125,59 @@
   </template>
   <template id="modal_form">
     <transition name="fade">
-      <div v-if="this.data.isOpen" @click.stop class="modal-form">
+      <div class="edit_container modal-form" v-if="this.data.isOpen" @click.stop>
         <div class="btn close fa fa-window-close" @click="close"></div>
-        <form name="addDev">
-          <div>
-            <label for="addDev_title">Titre
-              <input type="text" name="addDev_title">
+        <form name="editDev">
+          <label>Titre
+            <input type="text" v-model="data.dev.name" placeholder="Titre">
+          </label>
+          <label>Au plus tôt
+              <input type="date" v-model="data.dev.earlyStart">
+              <input type="date" v-model="data.dev.earlyEnd">
             </label>
-            <label>Client
-              <input type="text" name="addDev_client">
+          <label>Au plus tard
+              <input type="date" v-model="data.dev.lateStart">
+              <input type="date" v-model="data.dev.lateEnd">
             </label>
-            <label>Au plus tôt
-              <input type="date" name="addDev_earlyStartDate">
-              <input type="date" name="addDev_earlyEndDate">
+          <label>Prévu
+              <input type="date" v-model="data.dev.plannedStart">
+              <input type="date" v-model="data.dev.plannedEnd">
             </label>
-            <label>Au plus tard
-              <input type="date" name="addDev_lateStart">
-              <input type="date" name="addDev_lateEnd">
+          <label>Réel
+              <input type="date" v-model="data.dev.realStart">
+              <input type="date" v-model="data.dev.realEnd">
             </label>
-            <label>Prévu
-              <input type="date" name="addDev_plannedStart">
-              <input type="date" name="addDev_plannedEnd">
+          <label>Priorité
+            <select name="priority" v-model="data.dev.priority">
+              <option value="PrioTresHaute">Très Haute</option>
+              <option value="PrioHaute">Haute</option>
+              <option value="PrioNormale">Normale</option>
+              <option value="PrioBasse">Basse</option>
+              <option value="PrioTresBasse">Très Basse</option>
+            </select>
             </label>
-            <label>Réel
-              <input type="date" name="addDev_realStart">
-              <input type="date" name="addDev_realEnd">
+          <label>Facultatif
+              <input type="radio" v-model="data.dev.optional" value="true">
+          </label>
+          <label>Obligatoire
+              <input type="radio" v-model="data.dev.optional" value="false">
             </label>
-          </div>
-          <div class="skills">
-            <h4>Compétences</h4>
-            <label v-for="skill in this.data.skills">{{skill.id}}
-              <input type="checkbox" name="skills" :id="skill.id">
+          <label>
+              développement nécessaire
             </label>
-          </div>
-          <div id="saveDev" class="btn" @click="submitNewDev">Ajouter</div>
-        </form>
+          <label>
+              développement parent
+            </label>
+          <label>Ressources
+          </label>
+          <label v-for="skill in data.allSkills">
+            {{skill}}
+              <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
+          </label>
+      <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
+      </div>
+
+      </form>
       </div>
     </transition>
   </template>
@@ -168,15 +187,15 @@
       <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
       <edit-dev></edit-dev>
       <transition-group name="fade">
-        <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev.name">
+        <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev">
           <div class="align-left">
             <span class="dev_name">{{dev.name}}</span>
           </div>
           <div class="align-right">
             <span class="skill-tag" v-for="skills in dev.skillTags">{{skills.id}}</span>
             <span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
-            <span class="edit fa fa-pencil" @click="openEditModal"></span>
-            <span class="delete fa fa-trash" @click.stop="deleteDev"></span>
+            <span class="edit fa fa-pencil" @click="openEditModal(dev.id)"></span>
+            <span class="delete fa fa-trash" @click.stop="deleteDev(dev.id)"></span>
           </div>
         </div>
       </transition-group>
@@ -186,23 +205,55 @@
   <template id="edit_the_dev">
     <transition name="fade">
       <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
-        <div class="btn close fa fa-window-close" @click="close"></div>
+        <div class="btn close fa fa-window-close" @click="close(data.dev.id)"></div>
         <form name="editDev">
           <label>Titre
-            <input type="text" v-model="this.data.title" placeholder="Titre">
-            {{this.data.title}}
+            <input type="text" v-model="data.dev.name" placeholder="Titre">
           </label>
-          <label>Client
-            <input type="text" v-model="this.data.client" placeholder="Nom du client">
+          <label>Au plus tôt
+              <input type="date" v-model="data.dev.earlyStart">
+              <input type="date" v-model="data.dev.earlyEnd">
+            </label>
+          <label>Au plus tard
+              <input type="date" v-model="data.dev.lateStart">
+              <input type="date" v-model="data.dev.lateEnd">
+            </label>
+          <label>Prévu
+              <input type="date" v-model="data.dev.plannedStart">
+              <input type="date" v-model="data.dev.plannedEnd">
+            </label>
+          <label>Réel
+              <input type="date" v-model="data.dev.realStart">
+              <input type="date" v-model="data.dev.realEnd">
+            </label>
+          <label>Priorité
+            <select name="priority" v-model="data.dev.priority">
+              <option value="PrioTresHaute">Très Haute</option>
+              <option value="PrioHaute">Haute</option>
+              <option value="PrioNormale">Normale</option>
+              <option value="PrioBasse">Basse</option>
+              <option value="PrioTresBasse">Très Basse</option>
+            </select>
+            </label>
+          <label>Facultatif
+              <input type="radio" v-model="data.dev.optional" value="true">
           </label>
-          <label>Dates
-            <input type="date" v-model="this.data.startDate">
-            <input type="date" v-model="this.data.endDate">
-          </label>
+          <label>Obligatoire
+              <input type="radio" v-model="data.dev.optional" value="false">
+            </label>
+          <label>
+              développement nécessaire
+            </label>
+          <label>
+              développement parent
+            </label>
           <label>Ressources
-
           </label>
-          <div id="saveDev" class="btn">Ajouter</div>
+          <label v-for="skill in data.allSkills">
+            {{skill}}
+              <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
+          </label>
+          <div id="saveDev" class="btn">Sauvegarder</div>
       </div>
       </form>
     </transition>

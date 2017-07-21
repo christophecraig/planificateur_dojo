@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/christophecraig/planificateur_dojo#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "putainde-cookie": "^1.0.0",
+    "socket.io": "^2.0.2"
   }
 }
