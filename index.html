@@ -20,6 +20,7 @@
   <script src="//unpkg.com/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
   <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
+  <script src="./public/js/project/components/nunjucks-slim.min.js"></script>
 </head>
 
 <body id="body" class="loading">
@@ -174,7 +175,7 @@
             {{skill}}
               <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
           </label>
-      <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
+          <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
       </div>
 
       </form>
@@ -259,9 +260,13 @@
     </transition>
   </template>
   <template id="clients_tpl">
-    <div>
-      {{data.clients}}
+    <div class="clients">
+      <div class="client">{{data.clients}}</div>
+      <div id="add_client" @click="addClient">Ajouter un client
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      </div>
     </div>
+
   </template>
 </body>
 

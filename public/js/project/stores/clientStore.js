@@ -11,7 +11,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     },
     put() {
       var def = new Deferred()
-      this.ws.editCustomer().then(lang.hitch(this, 'resourceEdited'), lang.hitch(this, 'reportError'))
+      this.ws.editCustomer().then(lang.hitch(this, 'gotCustomers', def), lang.hitch(this, 'reportError'))
       return def
     },
     add() {
@@ -23,7 +23,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       }).then(lang.hitch(this, 'resourceAdded'), lang.hitch(this, 'reportError'))
       return def
     },
-    gotDetailedResource(def, res) {
+    gotCustomers(def, res) {
       def.resolve(res)
     },
     gotResources(def, res) {

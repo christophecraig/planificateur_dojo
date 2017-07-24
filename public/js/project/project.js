@@ -85,7 +85,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       submitNewDev(dev) {
         // On aura besoin d'une vérification de la validité des données.
         console.log(dev)
-        when(this.devStore.add(dev),lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
+        when(this.devStore.add(dev), lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
       },
       submitNewRes() {
         console.log('ajout dune ressource')
@@ -140,7 +140,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         topic.publish('gotDetailedResource', res)
       },
       getClients() {
-        console.log('ok')
+        when(this.clientStore.query(), lang.hitch(this, 'gotClients'), lang.hitch(this, 'reportError'))
+      },
+      gotClients(clients) {
+        topic.publish('gotClients', clients)
       },
       reportError(err) {
         console.log(err)
