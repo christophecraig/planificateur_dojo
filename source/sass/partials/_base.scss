@@ -1,4 +1,3 @@
-@import "compass/reset";
 // Variables
 $bg: #fff;
 $bg_dark: #454545;
@@ -15,7 +14,7 @@ $lg_screen: "screen and (min-width: 1440px)"; // Big screen
 $md_screen:  "screen and (min-width: 1024px)"; // Laptop
 $sm_screen: "screen and (min-width: 768px)"; // Tablet
 $xs_screen: "screen and (min-width: 480px)"; // Smartphone
-//$xxs_screen: (min-width: 320px); // old smartphone
+$xxs_screen: (min-width: 320px); // old smartphone
 // mixins
 @mixin centerer {
     position: absolute;

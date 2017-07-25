@@ -26,5 +26,12 @@
     "express": "^4.15.3",
     "putainde-cookie": "^1.0.0",
     "socket.io": "^2.0.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-csso": "^3.0.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11"
   }
 }
