@@ -6,6 +6,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.data = {
                 test: 'excellent'
             }
+            this.updated = function() {
+                console.log('updated')
+                this.content = document.getElementById('modal').innerHTML
+            }
             topic.subscribe('openModal', lang.hitch(this, 'openModal'))
             topic.subscribe('closeModal', lang.hitch(this, 'closeModal'))
             this.createComponent()
@@ -14,15 +18,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 
         },
         openModal(mode, arg) {
-            console.log(arg)
-            console.log(this.data)
-            console.log(this.data.clients)
+            console.log('ok')
             $.sweetModal({
-                content: 'Vraiment ' + this.data.test
+                content: this.content
             })
         },
         createComponent() {
-            this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
+            this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)
+            console.log(this.leComp)
         }
     })
 })

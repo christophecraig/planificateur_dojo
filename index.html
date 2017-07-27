@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
   <link rel="stylesheet" href="css/sweetmodal/jquery.sweet-modal.css" />
   <link rel="stylesheet" href="css/style.css">
-  <link rel="import" href="./js/templates/modal.html">
 
   <script>
     var dojoConfig = {
@@ -33,7 +32,6 @@
       <le-menu></le-menu>
       <div id="bottom">
         <component :is="currentView" transition="fade" transition-mode="out-in"></component>
-        <modal></modal>
       </div>
     </div>
   </div>
@@ -73,19 +71,22 @@
     <nav id='menu'>
       <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
       <ul class="center">
-        <li><a href="#" @click.stop="$root.projectView($root.currentView)">Développements</a></li>
-        <li><a href="#" @click.stop="$root.resourceView($root.currentView)">Ressources</a></li>
-        <li><a href="#">Infos Pratiques</a></li>
-        <li><a href="#" @click.stop="$root.customerView($root.currentView)">Clients</a></li>
+        <li><a href="./detailedProject" @click.stop.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
+        <li><a href="./resource" @click.stop.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
+        <li><a href="./infos" @click.stop.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
+        <li><a href="./customer" @click.stop.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
         <li><a href="#">Ressources</a></li>
       </ul>
       <div id="settings">
+      <a href="./settings" @click.stop.prevent="$root.changeView($root.currentView, './settings')">
         <span class="fa fa-gear"></span>
         <span class="text">Paramètres</span>
+      </a>
       </div>
     </nav>
   </template>
   <template id="resource_tpl">
+      <transition name="fade">
     <div class="resources" ref="res">
       <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
         <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
@@ -93,15 +94,15 @@
       <detailed-res></detailed-res>
       <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
     </div>
+        </transition>
+
   </template>
   <template id="detailed_resource">
     <div id="detailed_res" v-if="this.data.isOpen">
-      <!--<sweet-modal>-->
       <div id="photo">
         <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
       </div>
       <h4>{{this.fullName}}</h4>
-      <!--</sweet-modal>-->
     </div>
   </template>
   <template id="detailed_project">
@@ -163,14 +164,14 @@
               <input type="radio" v-model="data.dev.optional" value="true">
           </label>
           <label>Obligatoire
-              <input type="radio" v-model="data.dev.optional" value="false">
-            </label>
+            <input type="radio" v-model="data.dev.optional" value="false">
+          </label>
           <label>
-              développement nécessaire
-            </label>
+            développement nécessaire
+          </label>
           <label>
-              développement parent
-            </label>
+            développement parent
+          </label>
           <label>Ressources
           </label>
           <label v-for="skill in data.allSkills">
@@ -272,9 +273,15 @@
 
   </template>
   <template id="modal-tpl">
-  <div>
-    
-  </div></template>
+    <div id="modal">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cum libero perspiciatis numquam, odio provident iste nihil fugiat in excepturi! Ducimus, ullam in nulla explicabo. Veritatis quam enim aliquid inventore! {{data.test}}
+    </div>
+  </template>
+  <script>
+    function changeURL(url) {
+      history.pushState(null, null, url)
+    }
+  </script>
 </body>
 
 </html>
