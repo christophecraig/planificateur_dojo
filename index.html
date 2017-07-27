@@ -8,6 +8,14 @@
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
   <link rel="stylesheet" href="css/sweetmodal/jquery.sweet-modal.css" />
   <link rel="stylesheet" href="css/style.css">
+  <link rel="import" href="./js/templates/modal.html">
+  <script>
+    var imports = document.querySelectorAll('link[rel="import"]');
+    console.log(imports);
+    for (var i = 0; i < imports.length; i++) {
+      document.getElementById('modal-tpl').innerHTML = imports[i].import.querySelector('template');
+    }
+  </script>
   <script>
     var dojoConfig = {
       packages: [{
@@ -20,7 +28,6 @@
   <script src="//unpkg.com/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
   <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
-  <script src="./public/js/project/components/nunjucks-slim.min.js"></script>
 </head>
 
 <body id="body" class="loading">
@@ -32,10 +39,11 @@
       <le-menu></le-menu>
       <div id="bottom">
         <component :is="currentView" transition="fade" transition-mode="out-in"></component>
+        <modal></modal>
       </div>
     </div>
   </div>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="js/sweetmodal/jquery.sweet-modal.js"></script>
   <script src="js/styleselect/customSelect.js"></script>
   <!-- TEMPLATE ZONE -->
@@ -176,9 +184,7 @@
               <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
           </label>
           <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
-      </div>
-
-      </form>
+        </form>
       </div>
     </transition>
   </template>
@@ -261,13 +267,20 @@
   </template>
   <template id="clients_tpl">
     <div class="clients">
-      <div class="client">{{data.clients}}</div>
-      <div id="add_client" @click="addClient">Ajouter un client
+      <div class="client" v-for="client in data.clients">
+        <span v-if="client.firstName !== client.name">{{client.firstName}} {{client.name}}</span>
+        <span v-else>{{client.name}}</span>
+      </div>
+      <div id="add_client" @click="addClient(data)">Ajouter un client
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
     </div>
 
   </template>
+  <template id="modal-tpl">
+  <div>
+    
+  </div></template>
 </body>
 
 </html>

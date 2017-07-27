@@ -8,8 +8,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           clients: []
         }
         this.methods = {
-          addClient() {
-            topic.publish('openModal', 'add', 'clients')
+          addClient(data) {
+            topic.publish('openModal', 'add', data)
           }
         }
         this.created = function() {
