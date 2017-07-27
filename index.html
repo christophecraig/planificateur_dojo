@@ -9,13 +9,7 @@
   <link rel="stylesheet" href="css/sweetmodal/jquery.sweet-modal.css" />
   <link rel="stylesheet" href="css/style.css">
   <link rel="import" href="./js/templates/modal.html">
-  <script>
-    var imports = document.querySelectorAll('link[rel="import"]');
-    console.log(imports);
-    for (var i = 0; i < imports.length; i++) {
-      document.getElementById('modal-tpl').innerHTML = imports[i].import.querySelector('template');
-    }
-  </script>
+
   <script>
     var dojoConfig = {
       packages: [{

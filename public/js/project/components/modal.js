@@ -16,10 +16,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         openModal(mode, arg) {
             console.log(arg)
             console.log(this.data)
-            this.data = arg;
             console.log(this.data.clients)
             $.sweetModal({
-                content: document.getElementById(this.template).innerHTML
+                content: 'Vraiment ' + this.data.test
             })
         },
         createComponent() {
