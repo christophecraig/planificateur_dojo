@@ -4,7 +4,6 @@
 @import "partials/modal";
 @import "partials/scrollbar";
 @import "partials/animations";
-@import 'partials/menu';
 
 // Règles CSS
 body {
@@ -315,3 +314,5 @@ ul {
     font-size: initial;
     }
 }
+
+@import 'partials/menu';

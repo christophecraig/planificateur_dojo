@@ -69,20 +69,26 @@
   </template>
   <template id="menu_tpl">
     <nav id='menu'>
-      <div class="burger" id="burger" @click="openMenu()">x</div>
+      <div class="burger" id="burger" @click="toggleMenu()"><div class="menu-icon">
+	<span class="menu-icon__line menu-icon__line-left"></span>
+	<span class="menu-icon__line"></span>
+	<span class="menu-icon__line menu-icon__line-right"></span>
+</div></div>
+      <div class="menu-wrap">
       <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
-      <ul class="center">
-        <li><a href="./detailedProject" @click.stop.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
-        <li><a href="./resource" @click.stop.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
-        <li><a href="./infos" @click.stop.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
-        <li><a href="./customer" @click.stop.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
-        <li><a href="#">Ressources</a></li>
-      </ul>
-      <div id="settings">
-      <a href="./settings" @click.stop.prevent="$root.changeView($root.currentView, './settings')">
-        <span class="fa fa-gear"></span>
-        <span class="text">Paramètres</span>
-      </a>
+        <ul class="center">
+          <li><a href="./detailedProject" @click.stop.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
+          <li><a href="./resource" @click.stop.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
+          <li><a href="./infos" @click.stop.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
+          <li><a href="./customer" @click.stop.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
+          <li><a href="#">Ressources</a></li>
+        </ul>
+        <div id="settings">
+          <a href="./settings" @click.stop.prevent="$root.changeView($root.currentView, './settings')">
+            <span class="fa fa-gear"></span>
+            <span class="text">Paramètres</span>
+          </a>
+        </div>
       </div>
     </nav>
   </template>

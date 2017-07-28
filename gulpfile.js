@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 // Watches every .scss file in public/sass/
 gulp.task('default', function () {
-    return gulp.watch('source/sass/**/*.scss', ['scss-compile', 'serve'])
+    return gulp.watch('source/sass/**/*.scss', ['scss-compile'])
 })
 
 // Compiles scss files in public/sass/
@@ -19,6 +19,6 @@ gulp.task('scss-compile', function () {
     })).pipe(gulp.dest('public/css'))
 })
 
-gulp.task('serve', function () {
-    return gulp.src('./**/**').pipe(exec('node index.js'))
-})
+// gulp.task('serve', function () {
+//     return gulp.src('./**/**').pipe(exec('node index.js'))
+// })

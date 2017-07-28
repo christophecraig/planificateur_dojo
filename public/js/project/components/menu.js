@@ -8,8 +8,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 menu: ['Développements', 'Ressources', 'Infos pratiques', 'Clients'] // A recupérer autrement ?
             };
             this.methods = {
-                openMenu(data) {
-                    console.log(data)
+                toggleMenu() {
+                    document.getElementById('burger').classList.toggle('is-open')
                 }
             }
             this.mounted = function() {
