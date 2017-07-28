@@ -4,6 +4,7 @@
 @import "partials/modal";
 @import "partials/scrollbar";
 @import "partials/animations";
+@import 'partials/menu';
 
 // Règles CSS
 body {
@@ -107,12 +108,11 @@ ul {
     overflow: hidden;
     height: 60px;
     line-height: 60px;
-    &>div {
 
-    }
     & li {
         display: block;
     }
+    
     & a, .back, #settings {
         position: relative;
         display: block;

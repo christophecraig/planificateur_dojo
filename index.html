@@ -3,10 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
   <title>Planificateur de tâches</title>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
-  <link rel="stylesheet" href="css/sweetmodal/jquery.sweet-modal.css" />
   <link rel="stylesheet" href="css/style.css">
 
   <script>
@@ -32,11 +32,11 @@
       <le-menu></le-menu>
       <div id="bottom">
         <component :is="currentView" transition="fade" transition-mode="out-in"></component>
+        <modal></modal>
       </div>
     </div>
   </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="js/sweetmodal/jquery.sweet-modal.js"></script>
   <script src="js/styleselect/customSelect.js"></script>
   <!-- TEMPLATE ZONE -->
   <template id="calendar_tpl">
@@ -69,6 +69,7 @@
   </template>
   <template id="menu_tpl">
     <nav id='menu'>
+      <div class="burger" id="burger" @click="openMenu()">x</div>
       <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
       <ul class="center">
         <li><a href="./detailedProject" @click.stop.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
@@ -266,16 +267,33 @@
         <span v-if="client.firstName !== client.name">{{client.firstName}} {{client.name}}</span>
         <span v-else>{{client.name}}</span>
       </div>
-      <div id="add_client" @click="addClient(data)">Ajouter un client
+      <div id="add_client" @click="$root.openModal(this.data)">Ajouter un client
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
     </div>
 
   </template>
   <template id="modal-tpl">
-    <div id="modal">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cum libero perspiciatis numquam, odio provident iste nihil fugiat in excepturi! Ducimus, ullam in nulla explicabo. Veritatis quam enim aliquid inventore! {{data.test}}
+    <transition name="modal">
+  <div class="modal-mask" v-if="this.$root.modalOpen" @click.stop="closeModal">
+      <div class="modal-wrapper">
+        <div class="modal-container" @click.stop>
+
+          <div class="modal-header">
+              default header
+          </div>
+
+          <div class="modal-body">
+              default body
+          </div>
+
+          <div class="modal-footer">
+              default footer
+          </div>
+        </div>
+      </div>
     </div>
+    </transition>
   </template>
   <script>
     function changeURL(url) {

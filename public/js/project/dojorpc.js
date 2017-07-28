@@ -33,12 +33,18 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
         data: {
           currentView: '',
           lastView: '',
-          isLoading: false
+          isLoading: false,
+          modalOpen: false,
+          formData: {}
         },
         methods: {
           close() {
             topic.publish('closeModal')
             topic.publish('closeEditModal')
+          },
+          openModal(form) {
+            this.formData = form
+            this.modalOpen = true;
           },
           loading() {
             this.isLoading = true
@@ -74,6 +80,9 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
           // Fonction appelée à la création de la vue
           topic.publish('getResources')
           this.currentView = window.location.pathname.slice(1)
+        },
+        updated() {
+          topic.publish('useTemplate')
         }
       });
       document.getElementById('body').classList.remove('loading')
