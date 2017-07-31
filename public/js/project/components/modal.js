@@ -4,7 +4,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.compName = compName
             this.template = '#modal-tpl'
             this.data = {
-                test: 'excellent'
+                test: 'excellent',
+                modalType: ''
             }
             this.methods = {
                 closeModal() {

@@ -1,8 +1,13 @@
 @media screen and (min-width: 769px) {
     #menu {
+        display: block;
         & .burger {
             display: none;
         }
+    }
+    .menu-wrap {
+        display: flex;
+        justify-content: space-between;
     }
 }
 
@@ -36,20 +41,10 @@
     }
 }
 
-$background--color:#1e2023;
 $icon--color:#1e2023;
 $font--color:#ffffff;
 $font--color--active:#000000;
-$font--primary:'Fira Sans',
-sans-serif;
 $transition--length: .8;
-body {
-    background-color: $background--color;
-    font-family: $font--primary;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
 .site-content {
     max-width: 1100px;
     height: 100vh;

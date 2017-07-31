@@ -212,59 +212,59 @@
     </div>
   </template>
   <template id="edit_the_dev">
-    <transition name="fade">
+    <transition name="modal">
       <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
         <div class="btn close fa fa-window-close" @click="close(data.dev.id)"></div>
-        <form name="editDev">
-          <label>Titre
-            <input type="text" v-model="data.dev.name" placeholder="Titre">
-          </label>
-          <label>Au plus tôt
-              <input type="date" v-model="data.dev.earlyStart">
-              <input type="date" v-model="data.dev.earlyEnd">
+          <form name="editDev">
+            <label>Titre
+              <input type="text" v-model="data.dev.name" placeholder="Titre">
             </label>
-          <label>Au plus tard
-              <input type="date" v-model="data.dev.lateStart">
-              <input type="date" v-model="data.dev.lateEnd">
+            <label>Au plus tôt
+                <input type="date" v-model="data.dev.earlyStart">
+                <input type="date" v-model="data.dev.earlyEnd">
+              </label>
+            <label>Au plus tard
+                <input type="date" v-model="data.dev.lateStart">
+                <input type="date" v-model="data.dev.lateEnd">
+              </label>
+            <label>Prévu
+                <input type="date" v-model="data.dev.plannedStart">
+                <input type="date" v-model="data.dev.plannedEnd">
+              </label>
+            <label>Réel
+                <input type="date" v-model="data.dev.realStart">
+                <input type="date" v-model="data.dev.realEnd">
+              </label>
+            <label>Priorité
+              <select name="priority" v-model="data.dev.priority">
+                <option value="PrioTresHaute">Très Haute</option>
+                <option value="PrioHaute">Haute</option>
+                <option value="PrioNormale">Normale</option>
+                <option value="PrioBasse">Basse</option>
+                <option value="PrioTresBasse">Très Basse</option>
+              </select>
+              </label>
+            <label>Facultatif
+                <input type="radio" v-model="data.dev.optional" value="true">
             </label>
-          <label>Prévu
-              <input type="date" v-model="data.dev.plannedStart">
-              <input type="date" v-model="data.dev.plannedEnd">
+            <label>Obligatoire
+                <input type="radio" v-model="data.dev.optional" value="false">
+              </label>
+            <label>
+                développement nécessaire
+              </label>
+            <label>
+                développement parent
+              </label>
+            <label>Ressources
             </label>
-          <label>Réel
-              <input type="date" v-model="data.dev.realStart">
-              <input type="date" v-model="data.dev.realEnd">
+            <label v-for="skill in data.allSkills">
+              {{skill}}
+                <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
             </label>
-          <label>Priorité
-            <select name="priority" v-model="data.dev.priority">
-              <option value="PrioTresHaute">Très Haute</option>
-              <option value="PrioHaute">Haute</option>
-              <option value="PrioNormale">Normale</option>
-              <option value="PrioBasse">Basse</option>
-              <option value="PrioTresBasse">Très Basse</option>
-            </select>
-            </label>
-          <label>Facultatif
-              <input type="radio" v-model="data.dev.optional" value="true">
-          </label>
-          <label>Obligatoire
-              <input type="radio" v-model="data.dev.optional" value="false">
-            </label>
-          <label>
-              développement nécessaire
-            </label>
-          <label>
-              développement parent
-            </label>
-          <label>Ressources
-          </label>
-          <label v-for="skill in data.allSkills">
-            {{skill}}
-              <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
-          </label>
-          <div id="saveDev" class="btn">Sauvegarder</div>
+            <div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
+        </form>
       </div>
-      </form>
     </transition>
   </template>
   <template id="clients_tpl">
@@ -273,39 +273,36 @@
         <span v-if="client.firstName !== client.name">{{client.firstName}} {{client.name}}</span>
         <span v-else>{{client.name}}</span>
       </div>
-      <div id="add_client" @click="$root.openModal(this.data)">Ajouter un client
+      <div id="add_client" @click="$root.openModal(this.data, 'addClient')">Ajouter un client
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
     </div>
 
   </template>
+
+  <template id="form-client">
+    <div class="client-add">
+      <form>
+        <label>Prénom<input type="text" name="firstName" placeholder="Prénom"></label>
+        <label>Nom<input type="text" name="Name" placeholder="Nom"></label>
+
+      </form>
+    </div>
+  </template>
   <template id="modal-tpl">
     <transition name="modal">
-  <div class="modal-mask" v-if="this.$root.modalOpen" @click.stop="closeModal">
-      <div class="modal-wrapper">
-        <div class="modal-container" @click.stop>
-
-          <div class="modal-header">
-              default header
-          </div>
-
-          <div class="modal-body">
-              default body
-          </div>
-
-          <div class="modal-footer">
-              default footer
+      <div class="modal-mask" v-if="this.$root.modalOpen" @click.stop="closeModal">
+        <div class="modal-wrapper">
+          <div class="modal-container" @click.stop>
+            <component :is="$root.modalType"></component>
+            <div class="modal-body">
+                default body
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </transition>
   </template>
-  <script>
-    function changeURL(url) {
-      history.pushState(null, null, url)
-    }
-  </script>
 </body>
 
 </html>

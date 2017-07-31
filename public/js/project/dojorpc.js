@@ -42,9 +42,10 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
             topic.publish('closeModal')
             topic.publish('closeEditModal')
           },
-          openModal(form) {
+          openModal(form, modalType) {
             this.formData = form
-            this.modalOpen = true;
+            this.modalType = modalType
+            this.modalOpen = true
           },
           loading() {
             this.isLoading = true
