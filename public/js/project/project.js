@@ -2,6 +2,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
   function (declare, topic, lang, JsonService, clientStore, projectStore, devStore, resourceStore, when) {
     return declare(null, {
       constructor() {
+        // this.project might change depending on your configuration and on your server
+
+        //home-conf : 
+        //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        // work-conf : 
         this.project = new JsonService('http://localhost/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
         this.color = ''
