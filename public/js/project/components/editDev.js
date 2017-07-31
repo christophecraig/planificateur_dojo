@@ -31,6 +31,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.methods = {
         close(dev) {
           topic.publish('closeEditModal', dev)
+        },
+        saveDev(dev) {
+          
         }
       }
       this.template = '#edit_the_dev'

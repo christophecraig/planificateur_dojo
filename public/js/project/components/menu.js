@@ -7,6 +7,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 // TODO : pouvoir mettre les éléments du menu ici et plus dans le html
                 menu: ['Développements', 'Ressources', 'Infos pratiques', 'Clients'] // A recupérer autrement ?
             };
+            this.methods = {
+                toggleMenu() {
+                    document.getElementById('burger').classList.toggle('is-open')
+                }
+            }
             this.mounted = function() {
 
             };

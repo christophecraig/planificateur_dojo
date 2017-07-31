@@ -4,26 +4,18 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.compName = compName
             this.template = '#modal-tpl'
             this.data = {
-                test: 'excellent'
+                test: 'excellent',
+                modalType: ''
             }
-            topic.subscribe('openModal', lang.hitch(this, 'openModal'))
-            topic.subscribe('closeModal', lang.hitch(this, 'closeModal'))
+            this.methods = {
+                closeModal() {
+                    this.$root.modalOpen = false
+                }
+            }
             this.createComponent()
         },
-        closeModal() {
-
-        },
-        openModal(mode, arg) {
-            console.log(arg)
-            console.log(this.data)
-            this.data = arg;
-            console.log(this.data.clients)
-            $.sweetModal({
-                content: document.getElementById(this.template).innerHTML
-            })
-        },
         createComponent() {
-            this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
+            this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)
         }
     })
 })

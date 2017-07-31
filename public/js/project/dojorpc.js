@@ -16,33 +16,47 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var clientsPanel = new clients('customer')
       new Vue({
         el: '#app',
+        // components: [
+        //   'projects',
+        //   'leMenu',
+        //   'loader',
+        //   'detailedProject',
+        //   'resource',
+        //   'detailedRes',
+        //   'modalForm',
+        //   'modal',
+        //   'development',
+        //   'editDev',
+        //   'customer',
+        //   'test'
+        // ],
         data: {
           currentView: '',
           lastView: '',
-          isLoading: false
+          isLoading: false,
+          modalOpen: false,
+          formData: {}
         },
         methods: {
           close() {
             topic.publish('closeModal')
             topic.publish('closeEditModal')
           },
+          openModal(form, modalType) {
+            this.formData = form
+            this.modalType = modalType
+            this.modalOpen = true
+          },
           loading() {
             this.isLoading = true
           },
+          changeView(lastView, url) {
+            window.history.pushState(null, null, url);
+            this.lastView = lastView
+            this.currentView = window.location.pathname.slice(1)
+          },
           back(lastView) {
             this.currentView = this.lastView
-            this.lastView = lastView
-          },
-          projectView(lastView) {
-            this.currentView = 'detailedProject'
-            this.lastView = lastView
-          },
-          resourceView(lastView) {
-            this.currentView = 'resource'
-            this.lastView = lastView
-          },
-          customerView(lastView) {
-            this.currentView = 'customer'
             this.lastView = lastView
           },
           loaded() {
@@ -66,6 +80,10 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
         created() {
           // Fonction appelée à la création de la vue
           topic.publish('getResources')
+          this.currentView = window.location.pathname.slice(1)
+        },
+        updated() {
+          topic.publish('useTemplate')
         }
       });
       document.getElementById('body').classList.remove('loading')

@@ -1,6 +1,6 @@
 define(['dojo/_base/declare'], function(declare) {
     return declare(null, {
-        constructor (compName, template, data, methods, watch, mounted, computed, props, created, extended) {
+        constructor (compName, template, data, methods, watch, mounted, computed, props, created, updated, extended) {
             return Vue.component(compName, {
                 template: template,
                 data () {
@@ -14,6 +14,7 @@ define(['dojo/_base/declare'], function(declare) {
                 computed: computed,
                 props: props,
                 created: created,
+                updated: updated,
                 extends: extended
             });
         }

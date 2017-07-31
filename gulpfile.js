@@ -3,7 +3,9 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     watch = require('gulp-watch'),
-    csso = require('gulp-csso');
+    csso = require('gulp-csso'),
+    exec = require('gulp-exec');
+
 
 // Watches every .scss file in public/sass/
 gulp.task('default', function () {
@@ -16,3 +18,7 @@ gulp.task('scss-compile', function () {
         restructure: false
     })).pipe(gulp.dest('public/css'))
 })
+
+// gulp.task('serve', function () {
+//     return gulp.src('./**/**').pipe(exec('node index.js'))
+// })

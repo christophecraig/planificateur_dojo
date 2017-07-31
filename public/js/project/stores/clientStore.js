@@ -1,6 +1,6 @@
 define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_base/lang'], function (declare, Store, Deferred, lang) {
   return declare(Store, {
-    constructor: function (ws) {
+    constructor(ws) {
       this.ws = ws
       this.data = null
     },

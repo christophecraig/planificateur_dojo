@@ -8,7 +8,7 @@ var peopleConnected = 0
 app.use(express.static(path.join(__dirname, 'public'))) // Cette ligne permet de lire le contenu du dossier 'public'
 
 // Cela fait que sur localhost:8080, on retombera sur la page 'index.html'
-app.get(['/', '/index.html'], function (req, res) {
+app.get(['/*'], function (req, res) {
   res.sendFile(__dirname + '/index.html')
 })
 
