@@ -9,12 +9,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       }
       this.template = '#development'
       this.methods = {
-        openEditModal(dev) {
-          topic.publish('openEdit', dev)
-          setTimeout(lang.hitch(this, function () {
-            this.$children[0].data.isOpen = true
-          }), 10)
-        },
         deleteDev(dev) {
           console.log('suppression du développement ayant l\'id :', dev)
           topic.publish('deleteDev', dev)

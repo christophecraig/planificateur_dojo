@@ -4,7 +4,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.compName = compName
       this.template = '#resource_tpl'
       this.data = {}
-      this.data.ids = []
       this.data.resources = {}
       this.methods = {
         addRes() {
@@ -14,6 +13,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           topic.publish('editRes')
         },
         getDetailedResource(id) {
+          console.log(id)
           topic.publish('getDetailedResource', id)          
         }
       }

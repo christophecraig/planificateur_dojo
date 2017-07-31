@@ -5,7 +5,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       topic.subscribe('closeModal', lang.hitch(this, this.closeAddDev))
       topic.subscribe('openAddDev', lang.hitch(this, this.open))
       topic.subscribe('gotSkills', lang.hitch(this, this.populate))
-      this.template = '#modal_form'
+      this.template = '#add_dev'
       this.data = {
         dev: {
           "id": "",

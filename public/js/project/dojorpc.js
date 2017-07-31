@@ -1,5 +1,5 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/clients', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'dojo/ready'],
-  function (project, webSocket, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/clients', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/clientModal', 'dojo/ready'],
+  function (project, webSocket, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, clientModal, ready) {
     ready(function () {
       var call = new project() // nouvel appel Json RPC
       var ws = new webSocket()
@@ -9,10 +9,11 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var detailedProject = new affDetailedProject('detailedProject')
       var resources = new resource('resource')
       var detailedRes = new detailedResource('detailedRes')
-      var modalAdd = new addNewDev('modalForm')
+      var modalAdd = new addNewDev('addDev')
       var openModal = new modal('modal')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
+      var addClient = new clientModal('addClient')
       var clientsPanel = new clients('customer')
       new Vue({
         el: '#app',
@@ -35,6 +36,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
           lastView: '',
           isLoading: false,
           modalOpen: false,
+          modalType: '',
           formData: {}
         },
         methods: {
@@ -52,12 +54,11 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
           },
           changeView(lastView, url) {
             window.history.pushState(null, null, url);
-            this.lastView = lastView
             this.currentView = window.location.pathname.slice(1)
+              this.lastView = lastView
           },
           back(lastView) {
-            this.currentView = this.lastView
-            this.lastView = lastView
+            this.changeView(lastView, this.lastView)
           },
           loaded() {
             this.isLoading = false
