@@ -8,8 +8,10 @@ var peopleConnected = 0
 app.use(express.static(path.join(__dirname, 'public'))) // Cette ligne permet de lire le contenu du dossier 'public'
 
 // Cela fait que sur localhost:8080, on retombera sur la page 'index.html'
-app.get(['/*'], function (req, res) {
+app.get(['/'], function (req, res) {
   res.sendFile(__dirname + '/index.html')
+}).get(['/public/build.js'], function(req, res) {
+  res.sendFile(__dirname + '/public/build.js')
 })
 
 var edited = []
@@ -36,7 +38,7 @@ io.on('connection', function (socket) {
         socket.emit('blockEdit', nowEditing)
         blocking = true
         console.log(nowEditing, edited[i])
-        break;
+        break
       } else {
         blocking = false
       }
@@ -47,7 +49,7 @@ io.on('connection', function (socket) {
 
   socket.on('stopEdit', function () {
     cancelDevEdit(nowEditing)
-    console.log('stopEdit');
+    console.log('stopEdit')
   })
   socket.on('disconnect', function () {
     peopleConnected--
