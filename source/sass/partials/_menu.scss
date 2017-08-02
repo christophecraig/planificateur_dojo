@@ -1,5 +1,4 @@
 @import "./base";
-
 @media screen and (min-width: 769px) {
     .menu-wrap {
         display: flex;
@@ -57,9 +56,20 @@
             }
         }
     }
+    #settings .fa {
+        font-size: 1.5em;
+        font-weight: 100;
+        margin-right: 8px;
+    }
 }
 
 @media screen and (max-width: 768px) {
+    #settings {
+        text-align: center;
+        & .text {
+            font-size: 0
+        }
+    }
     #menu {
         height: auto;
         min-height: 60px;

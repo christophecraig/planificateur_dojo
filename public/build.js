@@ -7601,7 +7601,7 @@ exports.default = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('projects')],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('div',{attrs:{"id":"sub-container"}},[_c('projects')],1)])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -7624,15 +7624,21 @@ exports.default = {
   name: 'Projects',
   data: function data() {
     return {
-      msg: 'wow'
+      msg: 'wow',
+      project: {
+        name: ''
+      }
     };
+  },
+  created: function created() {
+    console.log(window.dojo);
   }
 };
 })()
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("\n  Test "+_vm._s(_vm.msg)+"\n  ")])}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"name":"fade"}},[_c('div',{attrs:{"id":"projects-slider"}},[_c('div',{attrs:{"id":"data"}},[_c('div',{attrs:{"id":"scroll_container"}},[_vm._l((_vm.data.project),function(project){return _c('div',{staticClass:"project",attrs:{"proj-id":project.id},on:{"click":function($event){_vm.openDev(project.id)}}},[_vm._v(_vm._s(project.name))])}),_vm._v(" "),_c('div',{staticClass:"project",on:{"click":_vm.addProj}},[_vm._v("Ajouter un projet")])],2)])])])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
