@@ -10,6 +10,14 @@ app.use(express.static(path.join(__dirname, 'public'))) // Cette ligne permet de
 // Cela fait que sur localhost:8080, on retombera sur la page 'index.html'
 app.get(['/'], function (req, res) {
   res.sendFile(__dirname + '/index.html')
+}).get(['/detailedProject'], function (req, res) {
+  res.sendFile(__dirname + '/index.html')
+}).get(['/resource'], function (req, res) {
+  res.sendFile(__dirname + '/index.html')
+}).get(['/customer'], function (req, res) {
+  res.sendFile(__dirname + '/index.html')
+}).get(['/infos'], function (req, res) {
+  res.sendFile(__dirname + '/index.html')
 }).get(['/public/build.js'], function(req, res) {
   res.sendFile(__dirname + '/public/build.js')
 })

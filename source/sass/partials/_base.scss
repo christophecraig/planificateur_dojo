@@ -23,7 +23,7 @@ $xxs_screen: (min-width: 320px); // old smartphone
     transform: translate(-50%, -50%);
 }
 
-@mixin clearfix() {
+@mixin clearfix {
   &:before,
   &:after {
     content: " "; // 1
