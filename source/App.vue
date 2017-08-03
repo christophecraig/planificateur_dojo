@@ -14,7 +14,13 @@
 </template>
 
 <script>
+var dojoConfig = {
+    async: true, 
+    deps: ['../public/js/project/dojorpc'] 
+}
+import dojo from 'dojo/dojo'
 import Projects from './components/Projects.vue'
+import * as dojorpc from '../public/js/project/dojorpc' 
 // import Loader from './components/Loader.vue'
 // import LeMenu from './components/LeMenu.vue'
 // import DetailedProject from './components/DetailedProject.vue'

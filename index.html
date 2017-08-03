@@ -13,14 +13,14 @@
     var dojoConfig = {
       packages: [{
         name: "project",
-        location: "http://localhost:8080/js/project"
+        location: "http://192.168.0.46:8080/js/project"
       }],
       deps: ['project/dojorpc']
     };
   </script>
   <script src="//unpkg.com/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
-  <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
+    <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>  
 </head>
 
 <body id="body" class="loading">
@@ -37,7 +37,8 @@
     </div>
   </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <script src="./public/build.js"></script> 
+   <!-- Browserify <script src="./public/build.js"></script>  -->
+   <!-- Webpack <script src="./bundle.js"></script> -->
   <!-- TEMPLATE ZONE -->
   <template id="calendar_tpl">
     <div id="graph">

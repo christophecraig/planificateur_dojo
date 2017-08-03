@@ -3,7 +3,7 @@
     <div id="projects-slider">
       <div id="data">
         <div id="scroll_container">
-          <div class="project" v-for="project in data.project" :proj-id="project.id" @click="openDev(project.id)">
+          <div class="project" v-for="project in projects" :proj-id="project.id" @click="openDev(project.id)">
             <!-- PROJECT COLOR ICI -->{{project.name}}</div>
           <div class="project" @click="addProj">Ajouter un projet</div>
         </div>
@@ -13,18 +13,28 @@
 </template>
 
 <script>
+import topic from 'dojo/topic'
 export default {
   name: 'Projects',
   data() {
     return {
       msg: 'wow',
-      project: {
+      projects: {
         name: ''
       }
     }
   },
   created() {
     console.log(window.dojo)
+    
+  },
+  methods: {
+    openDev(id) {
+      console.log('openDev')
+    },
+    addProj() {
+      console.log('addProj')
+    }
   }
 }
 </script>

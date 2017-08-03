@@ -7,7 +7,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         //home-conf : 
         //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         // work-conf : 
-        this.project = new JsonService('http://localhost/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        this.project = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
         this.color = ''
         this.projectStore = new projectStore(this.project)
