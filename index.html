@@ -7,7 +7,7 @@
   <title>Planificateur de tâches</title>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="http://192.168.0.46:8080/css/style.css">
 
   <script>
     var dojoConfig = {
@@ -20,7 +20,7 @@
   </script>
   <script src="//unpkg.com/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
-    <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>  
+  <script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
 <body id="body" class="loading">
@@ -32,13 +32,14 @@
       <le-menu></le-menu>
       <div id="bottom">
         <component :is="currentView" transition="fade" transition-mode="out-in"></component>
-        <modal></modal>
+        <!-- <modal></modal> -->
+
       </div>
     </div>
   </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <!-- Browserify <script src="./public/build.js"></script>  -->
-   <!-- Webpack <script src="./bundle.js"></script> -->
+  <!-- Browserify <script src="./public/build.js"></script>  -->
+  <!-- Webpack <script src="./bundle.js"></script> -->
   <!-- TEMPLATE ZONE -->
   <template id="calendar_tpl">
     <div id="graph">
@@ -50,7 +51,8 @@
       <div class="demo">
         <svg class="loader">
           <circle cx="25" cy="25" r="16" fill="transparent" stroke="#ABABAB" stroke-width="5" stroke-linecap="round" stroke-dasharray="385"
-            stroke-dashoffset="385"></circle>
+            stroke-dashoffset="385">
+          </circle>
         </svg>
       </div>
     </div>
@@ -70,18 +72,20 @@
   </template>
   <template id="menu_tpl">
     <nav id='menu'>
-      <div class="burger" id="burger" @click="toggleMenu()"><div class="menu-icon">
-	<span class="menu-icon__line menu-icon__line-left"></span>
-	<span class="menu-icon__line"></span>
-	<span class="menu-icon__line menu-icon__line-right"></span>
-</div></div>
+      <div class="burger" id="burger" @click.stop="toggleMenu()">
+        <div class="menu-icon">
+          <span class="menu-icon__line menu-icon__line-left"></span>
+          <span class="menu-icon__line"></span>
+          <span class="menu-icon__line menu-icon__line-right"></span>
+        </div>
+      </div>
       <div class="menu-wrap">
-      <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
+        <div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
         <ul class="center">
-          <li><a href="./detailedProject" @click.stop.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
-          <li><a href="./resource" @click.stop.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
-          <li><a href="./infos" @click.stop.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
-          <li><a href="./customer" @click.stop.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
+          <li><a href="./detailedProject" @click.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
+          <li><a href="./resource" @click.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
+          <li><a href="./infos" @click.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
+          <li><a href="./customer" @click.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
           <li><a href="#">Ressources</a></li>
         </ul>
         <div id="settings">
@@ -94,15 +98,15 @@
     </nav>
   </template>
   <template id="resource_tpl">
-      <transition name="fade">
-    <div class="resources" ref="res">
-      <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
-        <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
+    <transition name="fade">
+      <div class="resources" ref="res">
+        <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
+          <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
+        </div>
+        <detailed-res></detailed-res>
+        <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
       </div>
-      <detailed-res></detailed-res>
-      <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-    </div>
-        </transition>
+    </transition>
 
   </template>
   <template id="detailed_resource">
@@ -112,7 +116,8 @@
       </div>
       <h4>{{fullName}}</h4>
       <div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
-      <div class="skills" v-if="data.res.skillEfficiency[0]"><h5>Compétences : </h5>
+      <div class="skills" v-if="data.res.skillEfficiency[0]">
+        <h5>Compétences : </h5>
         <div class="skill" v-for="skill in skills">
           {{skill}}
         </div>
@@ -120,46 +125,48 @@
     </div>
   </template>
   <template id="detailed_project">
-      <div id="detailed-project" v-if="data.detailedProject.id">
-        <div class="project-infos">
-          <div class="project-top-infos">
-            <div class="project_name">
-              <div id="color" class="color"></div>
-              {{data.detailedProject.name}}
-            </div>
+    <div id="detailed-project" v-if="data.detailedProject.id">
+      <div class="project-infos">
+        <div class="project-top-infos">
+          <div class="project_name">
+            <div id="color" class="color"></div>
+            {{data.detailedProject.name}}
+
             <img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
               alt="Humeur moyenne">
             <img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
             <img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
-
           </div>
           <div id="add_dev" @click="addDev">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-          <development></development>
-          {{data.notification}}</div>
-      </div>
+          <div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
+          <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
+        </div>
+        <development></development>
+        {{data.notification}}</div>
+    </div>
   </template>
   <template id="add_dev">
-        <form name="editDev">
-          <label>Titre
+    <form name="editDev">
+      <label>Titre
             <input type="text" v-model="data.dev.name" placeholder="Titre">
           </label>
-          <label>Au plus tôt
+      <label>Au plus tôt
               <input type="date" v-model="data.dev.earlyStart">
               <input type="date" v-model="data.dev.earlyEnd">
             </label>
-          <label>Au plus tard
+      <label>Au plus tard
               <input type="date" v-model="data.dev.lateStart">
               <input type="date" v-model="data.dev.lateEnd">
             </label>
-          <label>Prévu
+      <label>Prévu
               <input type="date" v-model="data.dev.plannedStart">
               <input type="date" v-model="data.dev.plannedEnd">
             </label>
-          <label>Réel
+      <label>Réel
               <input type="date" v-model="data.dev.realStart">
               <input type="date" v-model="data.dev.realEnd">
             </label>
-          <label>Priorité
+      <label>Priorité
             <select name="priority" v-model="data.dev.priority">
               <option value="PrioTresHaute">Très Haute</option>
               <option value="PrioHaute">Haute</option>
@@ -168,70 +175,73 @@
               <option value="PrioTresBasse">Très Basse</option>
             </select>
             </label>
-          <label>Facultatif
+      <label>Facultatif
               <input type="radio" v-model="data.dev.optional" value="true">
           </label>
-          <label>Obligatoire
+      <label>Obligatoire
             <input type="radio" v-model="data.dev.optional" value="false">
           </label>
-          <label>
+      <label>
             développement nécessaire
           </label>
-          <label>
+      <label>
             développement parent
           </label>
-          <label>Ressources
+      <label>Ressources
           </label>
-          <label v-for="skill in data.allSkills">
+      <label v-for="skill in data.allSkills">
             {{skill}}
               <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
           </label>
-          <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
-        </form>
+      <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
+    </form>
   </template>
   <template id="development">
     <div id="developments">
-      <div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
-      <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
       <transition-group name="fade">
         <div class="dev" :id="dev.id" v-for="dev in data.developments" :key="dev.id" v-if="dev">
           <div class="align-left">
             <span class="dev_name">{{dev.name}}</span>
           </div>
           <div class="align-right">
-            <span class="skill-tag" v-for="skills in dev.skillTags">{{skills.id}}</span>
+            <span class="skill-tag" v-for="skills in dev.skillTags">{{skills}}</span>
             <span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
-            <span class="edit fa fa-pencil" @click="$root.openModal(this.data, 'addDev')"></span>
+            <span class="edit fa fa-pencil" @click="$root.openModal"></span>
             <span class="delete fa fa-trash" @click.stop="deleteDev(dev.id)"></span>
           </div>
         </div>
       </transition-group>
+      <edit-dev v-if="$root.modalOpen"></edit-dev>
 
     </div>
   </template>
   <template id="edit_the_dev">
-      <div class="edit_container modal-form" v-if="data.isOpen" @click.stop>
-          <form name="editDev">
-            <label>Titre
+    <transition name="modal">
+      <div class="modal-mask" v-if="$root.modalOpen" @click.stop="$root.closeModal">
+        <div class="modal-wrapper">
+          <div class="modal-container" @click.stop>
+            <div class="edit_container modal-form" @click.stop>
+              <form name="editDev">
+                <label>Titre
               <input type="text" v-model="data.dev.name" placeholder="Titre">
             </label>
-            <label>Au plus tôt
+                <label>Au plus tôt
                 <input type="date" v-model="data.dev.earlyStart">
                 <input type="date" v-model="data.dev.earlyEnd">
               </label>
-            <label>Au plus tard
+                <label>Au plus tard
                 <input type="date" v-model="data.dev.lateStart">
                 <input type="date" v-model="data.dev.lateEnd">
               </label>
-            <label>Prévu
+                <label>Prévu
                 <input type="date" v-model="data.dev.plannedStart">
                 <input type="date" v-model="data.dev.plannedEnd">
               </label>
-            <label>Réel
+                <label>Réel
                 <input type="date" v-model="data.dev.realStart">
                 <input type="date" v-model="data.dev.realEnd">
               </label>
-            <label>Priorité
+                <label>Priorité
               <select name="priority" v-model="data.dev.priority">
                 <option value="PrioTresHaute">Très Haute</option>
                 <option value="PrioHaute">Haute</option>
@@ -240,27 +250,31 @@
                 <option value="PrioTresBasse">Très Basse</option>
               </select>
               </label>
-            <label>Facultatif
+                <label>Facultatif
                 <input type="radio" v-model="data.dev.optional" value="true">
             </label>
-            <label>Obligatoire
+                <label>Obligatoire
                 <input type="radio" v-model="data.dev.optional" value="false">
               </label>
-            <label>
+                <label>
                 développement nécessaire
               </label>
-            <label>
+                <label>
                 développement parent
               </label>
-            <label>Ressources
+                <label>Ressources
             </label>
-            <label v-for="skill in data.allSkills">
+                <label v-for="skill in data.allSkills">
               {{skill}}
                 <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
             </label>
-            <div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
-        </form>
+                <div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
+    </transition>
   </template>
   <template id="clients_tpl">
     <div class="clients">
@@ -276,31 +290,30 @@
   </template>
 
   <template id="add-client">
-  <div>
-    <form name="addClient">
-      <label>Prénom<input type="text" name="firstName"></label>
-      <label>Nom<input type="text" name="name"></label>
-      <div class="btn"></div>
-    </form>
-  </div>
-    
+    <div>
+      <form name="addClient">
+        <label>Prénom<input type="text" name="firstName"></label>
+        <label>Nom<input type="text" name="name"></label>
+        <div class="btn"></div>
+      </form>
+    </div>
+
   </template>
 
-  <template id="modal-tpl">
+  <!-- <template id="modal-tpl">
     <transition name="modal">
-      <div class="modal-mask" v-if="this.$root.modalOpen" @click.stop="closeModal">
+      <div class="modal-mask" v-if="$root.modalOpen" @click.stop="closeModal">
         <div class="modal-wrapper">
           <div class="modal-container" @click.stop>
             <component :is="$root.modalType"></component>
             <div class="modal-body">
-              {{$root.modalType}}
-                default body
+              {{$root.modalType}} default body
             </div>
           </div>
         </div>
       </div>
     </transition>
-  </template>
+  </template> -->
 </body>
 
 </html>

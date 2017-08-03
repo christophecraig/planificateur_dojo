@@ -3,6 +3,7 @@
 @import "partials/modal";
 @import "partials/scrollbar";
 @import "partials/animations";
+@import "partials/dev";
 
 // Règles CSS
 body {
@@ -86,136 +87,8 @@ ul {
     display: none;
 }
 
-.project {
-    cursor: pointer;
-    display: flex;
-    float: left;
-    align-items: center;
-    border-radius: 4px;
-    padding: 0 12px;
-    height: 60px;
-    margin-bottom: 10px;
-    color: #454545;
-    background: $projectsInSlider;
-    transition: .15s;
-    &:not(:last-child) {
-        margin-right: 8px;
-    }
-    &:hover {
-        color: #101010;
-    }
-    // &::before {
-    //     content: '';
-    //     display: block;
-    //     float: left;
-    //     margin-top: 4px;
-    //     margin-right: 5px;
-    //     width: 12px;
-    //     height: 12px;
-    //     border-radius: 6px;
-    // }
-    // @for $i from 1 through length($projects_Color) {
-    //      &:nth-child(#{$i}n) {
-    // &::before {
-    // background-color: nth($projects_Color, $i);
-    // }
-    // }
-    // } 
-}
-
-.project-infos {
-    padding: 12px 25px;
-}
-
-.project-top-infos {
-    margin: 10px 0 18px;
-    display: flex;
-}
-
-.project_name {
-    font-size: 1.35em
-}
-
-.color-circle {
-    border-radius: 50%;
-    background-color: nth($projects_Color, 1);
-    width: 12px;
-    height: 12px;
-    margin-top: 5px;
-    margin-right: 4px;
-    float: left;
-}
-
-#mood {
-    width: 18px;
-    height: 18px;
-    margin-left: 4px;
-}
-
-#sort {
-    border: none;
-    &:focus {
-        outline: none;
-    }
-}
-
-.dev {
-    background-color: $textColor_light;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    &:hover {
-        cursor: pointer;
-        background-color: #b13030;
-        color: $textColor_light;
-    }
-    & .align-right,
-    .align-left {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-#add_dev {
-    cursor: pointer;
-    color: $bg_dark;
-}
-
 .resource {
     font-size: .75em;
-}
-
-.date,
-.edit {
-    margin-right: 10px;
-    display: flex;
-}
-
-.edit,
-.delete {
-    font-size: 0;
-    display: flex;
-    &.fa {
-        font-size: 20px;
-    }
-}
-
-.dev_name {
-    line-height: 30px;
-    color: inherit;
-}
-
-.skill-tag {
-    background-color: $bg_dark;
-    color: $textColor_light;
-    padding: 0 8px;
-    display: inline-block;
-    margin-right: 5px;
-    line-height: 28px;
-    border-radius: 4px;
 }
 
 // LOADER 

@@ -1,0 +1,61 @@
+@import 'partials/base';
+@import 'partials/project';
+.dev {
+    background-color: $textColor_light;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.date,
+.edit,
+.delete {
+    display: inline-block;
+}
+
+.dev_name {
+    line-height: 30px;
+    color: inherit;
+}
+
+.skill-tag {
+    background-color: $bg_dark;
+    color: $textColor_light;
+    padding: 0 8px;
+    display: inline-block;
+    margin-right: 5px;
+    line-height: 28px;
+    border-radius: 4px;
+}
+
+@media #{$sm_screen} {
+    .dev {
+        display: flex;
+        justify-content: space-between;
+        &:hover {
+            cursor: pointer;
+            background-color: #b13030;
+            color: $textColor_light;
+        }
+        & .align-right,
+        .align-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .date,
+    .edit {
+        margin-right: 10px;
+        display: flex;
+    }
+    .edit,
+    .delete {
+        font-size: 0;
+        display: flex;
+        &.fa {
+            font-size: 20px;
+        }
+    }
+}

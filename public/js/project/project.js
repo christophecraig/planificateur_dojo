@@ -4,7 +4,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       constructor() {
         // this.project might change depending on your configuration and on your server
 
-        //home-conf : 
+        // home-conf : 
         //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         // work-conf : 
         this.project = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
@@ -32,10 +32,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       getProjects() {
         topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
         when(this.projectStore.query({
-            short: true
-          }),
-          lang.hitch(this, 'gotProjects'),
-          lang.hitch(this, 'reportError'))
+          short: true
+        }),
+        lang.hitch(this, 'gotProjects'),
+        lang.hitch(this, 'reportError'))
       },
       gotProjects(proj) {
         topic.publish('loaded') // cet évènement indique que le chargement est terminé

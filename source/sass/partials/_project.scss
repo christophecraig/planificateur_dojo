@@ -1,0 +1,82 @@
+.project {
+    cursor: pointer;
+    display: flex;
+    float: left;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0 12px;
+    height: 60px;
+    margin-bottom: 10px;
+    color: #454545;
+    background: $projectsInSlider;
+    transition: .15s;
+    &:not(:last-child) {
+        margin-right: 8px;
+    }
+    &:hover {
+        color: #101010;
+    }
+    // &::before {
+    //     content: '';
+    //     display: block;
+    //     float: left;
+    //     margin-top: 4px;
+    //     margin-right: 5px;
+    //     width: 12px;
+    //     height: 12px;
+    //     border-radius: 6px;
+    // }
+    // @for $i from 1 through length($projects_Color) {
+    //      &:nth-child(#{$i}n) {
+    // &::before {
+    // background-color: nth($projects_Color, $i);
+    // }
+    // }
+    // } 
+}
+
+.project-infos {
+    padding: 12px 25px;
+}
+
+.project-top-infos {
+    margin: 10px 0 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project_name {
+    font-size: 1.35em
+}
+
+.color-circle {
+    border-radius: 50%;
+    background-color: nth($projects_Color, 1);
+    width: 12px;
+    height: 12px;
+    margin-top: 5px;
+    margin-right: 4px;
+    float: left;
+}
+
+#mood {
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+}
+
+#sort {
+    border: none;
+    &:focus {
+        outline: none;
+    }
+}
+
+#add_dev {
+    cursor: pointer;
+    color: $bg_dark;
+}
+
+@media #{$sm_screen} {
+
+}
