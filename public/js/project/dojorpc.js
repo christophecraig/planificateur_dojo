@@ -1,5 +1,5 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/clients', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/clientModal', 'dojo/ready'],
-  function (project, webSocket, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, clientModal, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/clients', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/clientModal', 'project/components/settings', 'dojo/ready'],
+  function (project, webSocket, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, clientModal, settings, ready) {
     ready(function () {
       var call = new project() // nouvel appel Json RPC
       var ws = new webSocket()
@@ -10,39 +10,27 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var resources = new resource('resource')
       var detailedRes = new detailedResource('detailedRes')
       var modalAdd = new addNewDev('addDev')
-      // var openModal = new modal('modal')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
       var addClient = new clientModal('addClient')
       var clientsPanel = new clients('customer')
+      var _settings = new settings('settings')
       new Vue({
         el: '#app',
-        // components: [
-        //   'projects',
-        //   'leMenu',
-        //   'loader',
-        //   'detailedProject',
-        //   'resource',
-        //   'detailedRes',
-        //   'modalForm',
-        //   'modal',
-        //   'development',
-        //   'editDev',
-        //   'customer',
-        //   'test'
-        // ],
         data: {
           currentView: '',
           lastView: '',
           isLoading: false,
           modalOpen: false,
-          modalType: '',
+          addDevIsOpen: false,
+          addResIsOpen: false,
           formData: {}
         },
         methods: {
           close() {
             topic.publish('closeModal')
-            topic.publish('closeEditModal')
+            this.addDevIsOpen = false
+            this.addResIsOpen = false
             document.getElementById('burger').classList.remove('is-open')
           },
           closeModal() {

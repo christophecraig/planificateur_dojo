@@ -6,8 +6,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.data = {}
       this.data.resources = {}
       this.methods = {
-        addRes() {
-          topic.publish('addRes')
+        openAddRes() {
+          topic.publish('openAddRes')
         },
         editRes(id) {
           topic.publish('editRes')
@@ -23,8 +23,12 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       //   console.log('teeeeeeeeeest')
       // }
       // }
+      topic.subscribe('closeModal', lang.hitch(this, 'close'))
       this.createComponent()
       topic.subscribe('gotResources', lang.hitch(this, 'showResources'))
+    },
+    close() {
+      this.data.isOpen = false
     },
     showResources(resources) {
       this.data.resources = resources

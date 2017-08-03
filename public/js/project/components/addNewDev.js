@@ -2,8 +2,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
   return declare(null, {
     constructor(compName) {
       this.compName = compName
-      topic.subscribe('closeModal', lang.hitch(this, this.closeAddDev))
-      topic.subscribe('openAddDev', lang.hitch(this, this.open))
+      topic.subscribe('closeModal', lang.hitch(this, 'closeAddDev'))
       topic.subscribe('gotSkills', lang.hitch(this, this.populate))
       this.template = '#add_dev'
       this.data = {
@@ -26,13 +25,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
         skills: {test: 'bravo'},
         isOpen: false
       }
-      this.created = function() {
-        topic.subscribe('closeModal', lang.hitch(this, this.close))
-      }
       this.methods = {
-        close() {
-          this.data.isOpen = false
-        },
         submitNewDev(dev) {
           console.log(dev) // TODO: Trouver pourquoi le publish ne veut pas envoyer le dev
           topic.publish('saveDev', dev)
@@ -41,11 +34,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       this.createComponent()
     },
     closeAddDev() {
+      console.log('ok')
       this.data.isOpen = false
     },
     open() {
       setTimeout(lang.hitch(this, function() {
         this.data.isOpen = true
+        console.log(this)
         topic.publish('getSkills')
       }), 10)},
     populate(skills) {

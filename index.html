@@ -104,69 +104,97 @@
           <span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
         </div>
         <detailed-res></detailed-res>
-        <div id="add_res" @click.stop="addRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+        <div @click.stop="openAddRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
       </div>
     </transition>
 
   </template>
   <template id="detailed_resource">
-    <div id="detailed_res" v-if="data.isOpen">
-      <div id="photo">
-        <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
-      </div>
-      <h4>{{fullName}}</h4>
-      <div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
-      <div class="skills" v-if="data.res.skillEfficiency[0]">
-        <h5>Compétences : </h5>
-        <div class="skill" v-for="skill in skills">
-          {{skill}}
+    <transition name="modal">
+      <div class="modal-mask" v-if="data.isOpen" @click.stop="$root.close">
+        <div class="modal-wrapper">
+          <div class="modal-container" @click.stop>
+            <div id="detailed_res">
+              <div id="photo">
+                <!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
+              </div>
+              <h4>{{fullName}}</h4>
+              <div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
+              <div class="skills" v-if="data.res.skillEfficiency[0]">
+                <h5>Compétences : </h5>
+                <div class="skill" v-for="skill in skills">
+                  {{skill}}
+                </div>
+              </div>
+              <div class="btn" @click="editRes">Modifier</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
+  </template>
+  <template id="add_res">
+    <transition name="modal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <h4>Ressource</h4>
+          </div>
+        </div>
+      </div>
+    </transition>
   </template>
   <template id="detailed_project">
     <div id="detailed-project" v-if="data.detailedProject.id">
-      <div class="project-infos">
-        <div class="project-top-infos">
-          <div class="project_name">
-            <div id="color" class="color"></div>
-            {{data.detailedProject.name}}
+      <div>
+        <div class="project-infos">
+          <div class="project-top-infos">
+            <div class="project_name">
+              <div id="color" class="color"></div>
+              {{data.detailedProject.name}}
 
-            <img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
-              alt="Humeur moyenne">
-            <img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
-            <img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
+              <img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
+                alt="Humeur moyenne">
+              <img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
+              <img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
+            </div>
+            <div @click.stop="openAddDev">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+            <div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
+            <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
           </div>
-          <div id="add_dev" @click="addDev">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-          <div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
-          <div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
+          <development></development>
         </div>
-        <development></development>
-        {{data.notification}}</div>
+        <add-dev v-if="$root.addDevIsOpen"></add-dev>
+      </div>
     </div>
   </template>
   <template id="add_dev">
-    <form name="editDev">
-      <label>Titre
+    <transition name="modal">
+      <div class="modal-mask" @click="$root.close">
+        <div class="modal-wrapper">
+          <div class="modal-container" @click.stop>
+            <form name="addDev">
+
+              <label>Titre
             <input type="text" v-model="data.dev.name" placeholder="Titre">
           </label>
-      <label>Au plus tôt
+              <label>Au plus tôt
               <input type="date" v-model="data.dev.earlyStart">
               <input type="date" v-model="data.dev.earlyEnd">
             </label>
-      <label>Au plus tard
+              <label>Au plus tard
               <input type="date" v-model="data.dev.lateStart">
               <input type="date" v-model="data.dev.lateEnd">
             </label>
-      <label>Prévu
+              <label>Prévu
               <input type="date" v-model="data.dev.plannedStart">
               <input type="date" v-model="data.dev.plannedEnd">
             </label>
-      <label>Réel
+              <label>Réel
               <input type="date" v-model="data.dev.realStart">
               <input type="date" v-model="data.dev.realEnd">
             </label>
-      <label>Priorité
+              <label>Priorité
             <select name="priority" v-model="data.dev.priority">
               <option value="PrioTresHaute">Très Haute</option>
               <option value="PrioHaute">Haute</option>
@@ -175,26 +203,30 @@
               <option value="PrioTresBasse">Très Basse</option>
             </select>
             </label>
-      <label>Facultatif
+              <label>Facultatif
               <input type="radio" v-model="data.dev.optional" value="true">
           </label>
-      <label>Obligatoire
+              <label>Obligatoire
             <input type="radio" v-model="data.dev.optional" value="false">
           </label>
-      <label>
+              <label>
             développement nécessaire
           </label>
-      <label>
+              <label>
             développement parent
           </label>
-      <label>Ressources
+              <label>Compétences
           </label>
-      <label v-for="skill in data.allSkills">
+              <label v-for="skill in data.allSkills">
             {{skill}}
               <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
           </label>
-      <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
-    </form>
+              <div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
   </template>
   <template id="development">
     <div id="developments">
@@ -217,31 +249,30 @@
   </template>
   <template id="edit_the_dev">
     <transition name="modal">
-      <div class="modal-mask" v-if="$root.modalOpen" @click.stop="$root.closeModal">
+      <div class="modal-mask" @click.stop="$root.closeModal">
         <div class="modal-wrapper">
           <div class="modal-container" @click.stop>
-            <div class="edit_container modal-form" @click.stop>
-              <form name="editDev">
-                <label>Titre
+            <form name="editDev">
+              <label>Titre
               <input type="text" v-model="data.dev.name" placeholder="Titre">
             </label>
-                <label>Au plus tôt
+              <label>Au plus tôt
                 <input type="date" v-model="data.dev.earlyStart">
                 <input type="date" v-model="data.dev.earlyEnd">
               </label>
-                <label>Au plus tard
+              <label>Au plus tard
                 <input type="date" v-model="data.dev.lateStart">
                 <input type="date" v-model="data.dev.lateEnd">
               </label>
-                <label>Prévu
+              <label>Prévu
                 <input type="date" v-model="data.dev.plannedStart">
                 <input type="date" v-model="data.dev.plannedEnd">
               </label>
-                <label>Réel
+              <label>Réel
                 <input type="date" v-model="data.dev.realStart">
                 <input type="date" v-model="data.dev.realEnd">
               </label>
-                <label>Priorité
+              <label>Priorité
               <select name="priority" v-model="data.dev.priority">
                 <option value="PrioTresHaute">Très Haute</option>
                 <option value="PrioHaute">Haute</option>
@@ -250,27 +281,26 @@
                 <option value="PrioTresBasse">Très Basse</option>
               </select>
               </label>
-                <label>Facultatif
+              <label>Facultatif
                 <input type="radio" v-model="data.dev.optional" value="true">
             </label>
-                <label>Obligatoire
+              <label>Obligatoire
                 <input type="radio" v-model="data.dev.optional" value="false">
               </label>
-                <label>
+              <label>
                 développement nécessaire
               </label>
-                <label>
+              <label>
                 développement parent
               </label>
-                <label>Ressources
+              <label>Compétences
             </label>
-                <label v-for="skill in data.allSkills">
+              <label v-for="skill in data.allSkills">
               {{skill}}
                 <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
             </label>
-                <div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
-              </form>
-            </div>
+              <div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
+            </form>
           </div>
         </div>
       </div>
@@ -314,6 +344,18 @@
       </div>
     </transition>
   </template> -->
+
+  <template id="_settings">
+    <div>
+      <h2>Paramètres</h2>
+    </div>
+  </template>
+
+  <template id="add-res-tpl">
+    <div>
+      <h4>Ajotuer une ressource</h4>
+    </div>
+  </template>
 </body>
 
 </html>

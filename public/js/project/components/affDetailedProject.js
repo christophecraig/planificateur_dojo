@@ -14,8 +14,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         notification: ''
       }
       this.methods = {
-        addDev() {
-          topic.publish('openAddDev')
+        openAddDev() {
+          this.$root.addDevIsOpen = true
         }
       }
       this.createComponent()
