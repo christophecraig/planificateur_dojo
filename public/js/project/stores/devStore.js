@@ -22,6 +22,13 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       this.ws.addDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError'))
       return def
     },
+    delete(dev) {
+      if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
+        var def = new Deferred()
+        this.ws.deleteDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError'))
+        return def
+      }
+    },
     gotDev(def, dev) {
       def.resolve(dev)
     },

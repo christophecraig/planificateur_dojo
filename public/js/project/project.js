@@ -6,8 +6,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 
         // home-conf : 
         //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+
         // work-conf : 
         this.project = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        
         // conf maxime : 
         // this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
@@ -87,8 +89,12 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       gotDetailedDevelopment(dev) {
         topic.publish('gotDetailedDevelopment', dev)
       },
-      deleteDev() {
+      deleteDev(dev) {
         // this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))
+        when(this.devStore.delete(dev), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
+      },
+      devIsDeleted() {
+        // Mettre ici un modal, ou plutôt une simple notification en haut à droite de quelques secondes indiquant que le développement a bien été supprimé 
       },
       submitNewDev(dev) {
         // On aura besoin d'une vérification de la validité des données.
