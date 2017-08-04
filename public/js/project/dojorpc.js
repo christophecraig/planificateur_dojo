@@ -1,5 +1,5 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/clients', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/clientModal', 'project/components/settings', 'dojo/ready'],
-  function (project, webSocket, lang, topic, clients, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, clientModal, settings, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/customerModal', 'project/components/settings', 'dojo/ready'],
+  function (project, webSocket, lang, topic, customers, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, customerModal, settings, ready) {
     ready(function () {
       var call = new project() // nouvel appel Json RPC
       var ws = new webSocket()
@@ -12,8 +12,8 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var modalAdd = new addNewDev('addDev')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
-      var addClient = new clientModal('addCustomer')
-      var customersPanel = new clients('customer')
+      var addClient = new customerModal('addCustomer')
+      var customersPanel = new customers('customer')
       var _settings = new settings('settings')
       new Vue({
         el: '#app',
