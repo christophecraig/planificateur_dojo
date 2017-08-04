@@ -2,17 +2,16 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     return declare(null, {
         constructor(compName) {
             this.compName = compName
-            this.template = '#add-customer-tpl'
+            this.template = '#edit-res-tpl'
             this.data = {
                 test: 'excellent',
-                modalType: ''
+                formData: {
+                    
+                }
             }
             this.methods = {
                 closeModal() {
                     this.$root.modalOpen = false
-                },
-                addCustomer() {
-                    topic.publish('addCustomer')
                 }
             }
             this.createComponent()

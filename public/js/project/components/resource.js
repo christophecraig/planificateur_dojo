@@ -2,7 +2,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
   return declare(null, {
     constructor(compName) {
       this.compName = compName
-      this.template = '#resource_tpl'
+      this.template = '#resource-tpl'
       this.data = {}
       this.data.resources = {}
       this.methods = {

@@ -1,0 +1,11 @@
+.skill {
+    padding: 6px 0;
+    & .text {
+        width: 140px;
+        float: left;
+    }
+    & .bar {
+        transform: translate3D(0, 0, 0);
+        transition: .6s;
+    }
+}

@@ -1,8 +1,8 @@
-define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
+define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent', 'chartJS'], function (declare, lang, topic, vueComponent, chartJS) {
   return declare(null, {
     constructor(compName) {
       this.compName = compName
-      this.template = '#detailed_resource'
+      this.template = '#detailed-resource-tpl'
       this.data = {
         isOpen: false,
         res: {
@@ -12,6 +12,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           baseEfficiency: 0,
           holidays: [],
           skillEfficiency: []
+        }
+      }
+      this.methods = {
+        drawBar(value) {
+          var skill = 160*0.7
+          return 'M 0 0 L ' +skill+ ' 0 L ' + skill + ' 9 L 0 9'
         }
       }
       this.computed = {

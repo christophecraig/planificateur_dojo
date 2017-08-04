@@ -3,9 +3,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
     return declare(null, {
       constructor(compName) {
         this.compName = compName
-        this.template = '#clients_tpl'
+        this.template = '#customers_tpl'
         this.data = {
-          clients: []
+          customers: []
         }
         this.methods = {
           addClient(data) {
@@ -13,13 +13,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           }
         }
         this.created = function() {
-          topic.publish('getClients')
+          topic.publish('getCustomers')
         }
         this.createComponent()
-        topic.subscribe('gotClients', lang.hitch(this, 'showClients'))
+        topic.subscribe('gotCustomers', lang.hitch(this, 'showCustomers'))
       },
-      showClients(clients) {
-        this.data.clients = clients
+      showCustomers(customers) {
+        this.data.customers = customers
       },
       createComponent() {
         this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)

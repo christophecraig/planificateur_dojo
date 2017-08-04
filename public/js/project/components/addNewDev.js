@@ -4,7 +4,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       this.compName = compName
       topic.subscribe('closeModal', lang.hitch(this, 'closeAddDev'))
       topic.subscribe('gotSkills', lang.hitch(this, this.populate))
-      this.template = '#add_dev'
+      this.template = '#add-dev-tpl'
       this.data = {
         dev: {
           "id": "",
@@ -34,7 +34,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       this.createComponent()
     },
     closeAddDev() {
-      console.log('ok')
       this.data.isOpen = false
     },
     open() {

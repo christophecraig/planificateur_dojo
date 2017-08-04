@@ -8,10 +8,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang'], function (declar
     },
     alertEditing(dev) {
       console.log(dev)
-      $.sweetModal({
-        content: "<strong role='alert'>Quelqu'un est déjà en train d'éditer ce développement !</strong>",
-        icon: $.sweetModal.ICON_WARNING
-      })
+      console.log("quelqu'un edite deja")
       console.log('test')
       setTimeout(() => {
         topic.publish('closeEditModal')

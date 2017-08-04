@@ -15,7 +15,11 @@
         name: "project",
         location: "http://192.168.0.46:8080/js/project"
       }],
-      deps: ['project/dojorpc']
+      aliases: [
+        ['chartJS', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'],
+        ['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js']
+      ],
+      deps: ['project/dojorpc', 'jquery']
     };
   </script>
   <script src="//unpkg.com/vue"></script>
@@ -37,7 +41,6 @@
       </div>
     </div>
   </div>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <!-- Browserify <script src="./public/build.js"></script>  -->
   <!-- Webpack <script src="./bundle.js"></script> -->
   <!-- TEMPLATE ZONE -->
@@ -97,7 +100,7 @@
       </div>
     </nav>
   </template>
-  <template id="resource_tpl">
+  <template id="resource-tpl">
     <transition name="fade">
       <div class="resources" ref="res">
         <div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
@@ -109,7 +112,7 @@
     </transition>
 
   </template>
-  <template id="detailed_resource">
+  <template id="detailed-resource-tpl">
     <transition name="modal">
       <div class="modal-mask" v-if="data.isOpen" @click.stop="$root.close">
         <div class="modal-wrapper">
@@ -120,20 +123,23 @@
               </div>
               <h4>{{fullName}}</h4>
               <div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
-              <div class="skills" v-if="data.res.skillEfficiency[0]">
+              <div class="skills" v-if="data.res.skillEfficiency.length !== 0">
                 <h5>Compétences : </h5>
-                <div class="skill" v-for="skill in skills">
-                  {{skill}}
+                <div class="skill" v-for="(value, key) in data.res.skillEfficiency">
+                  <div class="text">{{key}} : {{value}}</div>
+                  <svg width="160px" height="9px" viewBox="0 0 160 9">
+                      <path class="bar" :d="drawBar(value)" fill="green" fill-opacity="0.7" />
+                  </svg>
                 </div>
               </div>
-              <div class="btn" @click="editRes">Modifier</div>
+              <!-- <div class="btn" @click="editRes">Modifier</div> -->
             </div>
           </div>
         </div>
       </div>
     </transition>
   </template>
-  <template id="add_res">
+  <template id="add-res-tpl">
     <transition name="modal">
       <div class="modal-mask">
         <div class="modal-wrapper">
@@ -168,7 +174,7 @@
       </div>
     </div>
   </template>
-  <template id="add_dev">
+  <template id="add-dev-tpl">
     <transition name="modal">
       <div class="modal-mask" @click="$root.close">
         <div class="modal-wrapper">
@@ -306,44 +312,37 @@
       </div>
     </transition>
   </template>
-  <template id="clients_tpl">
-    <div class="clients">
-      <div class="client" v-for="client in data.clients">
-        <span v-if="client.firstName !== client.name">{{client.firstName}} {{client.name}}</span>
-        <span v-else>{{client.name}}</span>
+  <template id="customers_tpl">
+    <div class="customers">
+      <div class="customer" v-for="customer in data.customers">
+        <span v-if="customer.firstName !== customer.name">{{customer.firstName}} {{customer.name}}</span>
+        <span v-else>{{customer.name}}</span>
       </div>
-      <div id="add_client" @click="$root.openModal(this.data, 'addClient')">Ajouter un client
+      <div id="add_customer" @click.stop="$root.openModal(this.data, 'addCustomer')">Ajouter un client
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
-    </div>
+      <add-customer v-if="$root.modalOpen"></add-customer>
 
+    </div>
   </template>
 
-  <template id="add-client">
-    <div>
-      <form name="addClient">
-        <label>Prénom<input type="text" name="firstName"></label>
-        <label>Nom<input type="text" name="name"></label>
-        <div class="btn"></div>
-      </form>
-    </div>
-
-  </template>
-
-  <!-- <template id="modal-tpl">
+  <template id="add-customer-tpl">
     <transition name="modal">
-      <div class="modal-mask" v-if="$root.modalOpen" @click.stop="closeModal">
+      <div class="modal-mask" @click.stop="$root.closeModal">
         <div class="modal-wrapper">
           <div class="modal-container" @click.stop>
-            <component :is="$root.modalType"></component>
-            <div class="modal-body">
-              {{$root.modalType}} default body
-            </div>
+            <form name="addCustomer">
+              <h4>Ajouter un client</h4>
+              <label>Prénom<input type="text" name="firstName"></label>
+              <label>Nom<input type="text" name="name"></label>
+              <div class="btn" @click="addCustomer"></div>
+            </form>
           </div>
         </div>
       </div>
     </transition>
-  </template> -->
+
+  </template>
 
   <template id="_settings">
     <div>

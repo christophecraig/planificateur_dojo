@@ -1,5 +1,5 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/clientStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'],
-  function (declare, topic, lang, JsonService, clientStore, projectStore, devStore, resourceStore, when) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/customerStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'],
+  function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, when) {
     return declare(null, {
       constructor() {
         // this.project might change depending on your configuration and on your server
@@ -8,21 +8,24 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         // work-conf : 
         this.project = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        // conf maxime : 
+        // this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
         this.color = ''
         this.projectStore = new projectStore(this.project)
         this.devStore = new devStore(this.project)
         this.resourceStore = new resourceStore(this.project)
-        this.clientStore = new clientStore(this.project)
+        this.customerStore = new customerStore(this.project)
         this.getProjects()
         this.ids = []
         this.projectIsLoading = false
         topic.subscribe('addDev', lang.hitch(this, 'submitNewDev'))
+        topic.subscribe('addCustomer', lang.hitch(this, 'submitNewCustomer'))
         topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
         topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
-        topic.subscribe('getClients', lang.hitch(this, 'getClients'))
+        topic.subscribe('getCustomers', lang.hitch(this, 'getCustomers'))
         topic.subscribe('openEdit', lang.hitch(this, 'getDetailedDevelopment'))
         topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
         topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
@@ -144,11 +147,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       gotDetailedResource(res) {
         topic.publish('gotDetailedResource', res)
       },
-      getClients() {
-        when(this.clientStore.query(), lang.hitch(this, 'gotClients'), lang.hitch(this, 'reportError'))
+      getCustomers() {
+        when(this.customerStore.query(), lang.hitch(this, 'gotCustomers'), lang.hitch(this, 'reportError'))
       },
-      gotClients(clients) {
-        topic.publish('gotClients', clients)
+      gotCustomers(customers) {
+        topic.publish('gotCustomers', customers)
+      },
+      submitNewCustomer() {
+        
       },
       reportError(err) {
         console.log(err)

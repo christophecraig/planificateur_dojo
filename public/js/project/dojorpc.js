@@ -12,8 +12,8 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
       var modalAdd = new addNewDev('addDev')
       var dev = new development('development')
       var modalEdit = new editDev('editDev')
-      var addClient = new clientModal('addClient')
-      var clientsPanel = new clients('customer')
+      var addClient = new clientModal('addCustomer')
+      var customersPanel = new clients('customer')
       var _settings = new settings('settings')
       new Vue({
         el: '#app',
@@ -30,7 +30,8 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
           close() {
             topic.publish('closeModal')
             this.addDevIsOpen = false
-            this.addResIsOpen = false
+            this.addResourceIsOpen = false
+            this.addCustomerIsOpen = false
             document.getElementById('burger').classList.remove('is-open')
           },
           closeModal() {
