@@ -20,9 +20,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           "status": 0,
           "optional": false,
           "effort": 0,
+          "skillTags": [],
           "project": ""
         },
-        skills: {test: 'bravo'},
         isOpen: false
       }
       this.methods = {

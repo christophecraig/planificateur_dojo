@@ -19,12 +19,13 @@
 				['chartJS', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'],
 				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js']
 			],
-			deps: ['project/dojorpc', 'jquery']
+			deps: ['project/dojorpc', 'jquery'],
+			isDebug: true
 		};
 	</script>
 	<script src="//unpkg.com/vue"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
-	<script data-dojo-config="async: 1" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
+	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
 <body id="body" class="loading">
@@ -85,11 +86,11 @@
 			<div class="menu-wrap">
 				<div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
 				<ul class="center">
-					<li><a href="./detailedProject" @click.prevent="$root.changeView($root.currentView, './detailedProject')">Développements</a></li>
-					<li><a href="./resource" @click.prevent="$root.changeView($root.currentView, './resource')">Ressources</a></li>
-					<li><a href="./infos" @click.prevent="$root.changeView($root.currentView, './infos')">Infos Pratiques</a></li>
-					<li><a href="./customer" @click.prevent="$root.changeView($root.currentView, './customer')">Clients</a></li>
-					<li><a href="#">Ressources</a></li>
+					<li v-for="item in data.menu">
+						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path); changeActive()" :class="">
+						{{item.name}}
+					</a>
+					</li>
 				</ul>
 				<div id="settings">
 					<a href="./settings" @click.stop.prevent="$root.changeView($root.currentView, './settings')">
@@ -106,8 +107,9 @@
 				<div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
 					<span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
 				</div>
-				<detailed-res></detailed-res>
 				<div @click.stop="openAddRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+				<add-resource v-if="data.addResIsOpen"></add-resource>
+				<detailed-res></detailed-res>
 			</div>
 		</transition>
 
@@ -144,7 +146,7 @@
 			<div class="modal-mask">
 				<div class="modal-wrapper">
 					<div class="modal-container">
-						<h4>Ressource</h4>
+						<h4>Ajouter une ressource</h4>
 					</div>
 				</div>
 			</div>
@@ -210,11 +212,8 @@
             </select>
             </label>
 							<label>Facultatif
-              <input type="radio" v-model="data.dev.optional" value="true">
-          </label>
-							<label>Obligatoire
-            <input type="radio" v-model="data.dev.optional" value="false">
-          </label>
+            	<input type="checkbox" v-model="data.dev.optional">
+          	</label>
 							<label>
             développement nécessaire
           </label>
@@ -244,67 +243,67 @@
 					<div class="align-right">
 						<span class="skill-tag" v-for="skills in dev.skillTags">{{skills}}</span>
 						<span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
-						<span class="edit fa fa-pencil" @click="$root.openModal"></span>
+						<span class="edit fa fa-pencil" @click.stop="openEditDev(dev.id)"></span>
 						<span class="delete fa fa-trash" @click.stop="deleteDev(dev.id)"></span>
 					</div>
 				</div>
 			</transition-group>
-			<edit-dev v-if="$root.modalOpen"></edit-dev>
+			<edit-dev v-if="data.editDevIsOpen"></edit-dev>
 
 		</div>
 	</template>
 	<template id="edit_the_dev">
 		<transition name="modal">
-			<div class="modal-mask" @click.stop="$root.closeModal">
+			<div class="modal-mask" @click="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
 						<form name="editDev">
 							<label>Titre
               <input type="text" v-model="data.dev.name" placeholder="Titre">
-            </label>
-							<label>Au plus tôt
-                <input type="date" v-model="data.dev.earlyStart">
-                <input type="date" v-model="data.dev.earlyEnd">
-              </label>
+            				</label>
+							<label @click="data.dev.earlyStart = '2017-06-09'">Au plus tôt
+									<input type="date" v-model="data.dev.earlyStart">
+									<input type="date" v-model="data.dev.earlyEnd">
+							</label>
 							<label>Au plus tard
-                <input type="date" v-model="data.dev.lateStart">
-                <input type="date" v-model="data.dev.lateEnd">
-              </label>
+								<input type="date" v-model="data.dev.lateStart">
+								<input type="date" v-model="data.dev.lateEnd">
+							</label>
 							<label>Prévu
-                <input type="date" v-model="data.dev.plannedStart">
-                <input type="date" v-model="data.dev.plannedEnd">
-              </label>
+								<input type="date" v-model="data.dev.plannedStart">
+								<input type="date" v-model="data.dev.plannedEnd">
+							</label>
 							<label>Réel
-                <input type="date" v-model="data.dev.realStart">
-                <input type="date" v-model="data.dev.realEnd">
-              </label>
+								<input type="date" v-model="data.dev.realStart">
+								<input type="date" v-model="data.dev.realEnd">
+							</label>
 							<label>Priorité
-              <select name="priority" v-model="data.dev.priority">
-                <option value="PrioTresHaute">Très Haute</option>
-                <option value="PrioHaute">Haute</option>
-                <option value="PrioNormale">Normale</option>
-                <option value="PrioBasse">Basse</option>
-                <option value="PrioTresBasse">Très Basse</option>
-              </select>
-              </label>
+								<select name="priority" v-model="data.dev.priority">
+									<option value="PrioTresHaute">Très Haute</option>
+									<option value="PrioHaute">Haute</option>
+									<option value="PrioNormale">Normale</option>
+									<option value="PrioBasse">Basse</option>
+									<option value="PrioTresBasse">Très Basse</option>
+								</select>
+							</label>
 							<label>Facultatif
-                <input type="radio" v-model="data.dev.optional" value="true">
-            </label>
-							<label>Obligatoire
-                <input type="radio" v-model="data.dev.optional" value="false">
-              </label>
+								<input type="checkbox" v-model="data.dev.optional">
+							</label>
 							<label>
-                développement nécessaire
-              </label>
+				développement nécessaire
+								<select multiple name="requiredDevs">
+									for
+								</select>
+							</label>
 							<label>
                 développement parent
-              </label>
+             				 </label>
 							<label>Compétences
-            </label>
+            				</label>
 							<label v-for="skill in data.allSkills">
-              {{skill}}
-                <input type="checkbox" v-model="data.dev.skillTags" :value="skill">
-            </label>
+							{{skill}}
+								<input type="checkbox" v-model="data.dev.skillTags" :value="skill">
+							</label>
 							<div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
 						</form>
 					</div>
@@ -318,17 +317,17 @@
 				<span v-if="customer.firstName !== customer.name">{{customer.firstName}} {{customer.name}}</span>
 				<span v-else>{{customer.name}}</span>
 			</div>
-			<div id="add_customer" @click.stop="$root.openModal(this.data, 'addCustomer')">Ajouter un client
+			<div id="add_customer" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 			</div>
-			<add-customer v-if="$root.modalOpen"></add-customer>
+			<add-customer v-if="data.addCustomerIsOpen"></add-customer>
 
 		</div>
 	</template>
 
 	<template id="add-customer-tpl">
 		<transition name="modal">
-			<div class="modal-mask" @click.stop="$root.closeModal">
+			<div class="modal-mask" @click.stop="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
 						<form name="addCustomer">
@@ -352,7 +351,7 @@
 
 	<template id="add-res-tpl">
 		<div>
-			<h4>Ajotuer une ressource</h4>
+			<h4>Ajouter une ressource</h4>
 		</div>
 	</template>
 </body>

@@ -1,5 +1,5 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resource', 'project/components/detailedResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/customerModal', 'project/components/settings', 'dojo/ready'],
-	function (project, webSocket, lang, topic, customers, affProjectList, menu, affDetailedProject, development, resource, detailedResource, addNewDev, editDev, eventLoad, modal, customerModal, settings, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'dojo/ready'],
+	function (project, webSocket, lang, topic, customers, affProjectList, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
 			var ws = new webSocket()
@@ -7,13 +7,14 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			var leMenu = new menu('leMenu')
 			var loadWatcher = new eventLoad('loader') // Surveille les évènements et donc le chargement des données demandées
 			var detailedProject = new affDetailedProject('detailedProject')
-			var resources = new resource('resource')
+			var _resources = new resources('resources')
 			var detailedRes = new detailedResource('detailedRes')
+			var _addResource = new addResource('addResource')
 			var modalAdd = new addNewDev('addDev')
 			var dev = new development('development')
 			var modalEdit = new editDev('editDev')
-			var addClient = new customerModal('addCustomer')
-			var customersPanel = new customers('customer')
+			var _addClient = new addCustomer('addCustomer')
+			var customersPanel = new customers('customers')
 			var _settings = new settings('settings')
 			new Vue({
 				el: '#app',
@@ -24,6 +25,8 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					modalOpen: false,
 					addDevIsOpen: false,
 					addResIsOpen: false,
+					addCustomerIsOpen: false,
+					editDevIsOpen: false,
 					formData: {}
 				},
 				methods: {
@@ -32,15 +35,11 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 						this.addDevIsOpen = false
 						this.addResourceIsOpen = false
 						this.addCustomerIsOpen = false
+						this.editDevIsOpen = false
 						document.getElementById('burger').classList.remove('is-open')
 					},
 					closeModal() {
 						this.modalOpen = false
-					},
-					openModal() {
-						// this.formData = form
-						// this.modalType = modalType
-						this.modalOpen = true
 					},
 					loading() {
 						this.isLoading = true

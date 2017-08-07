@@ -12,14 +12,16 @@ app.get(['/'], function (req, res) {
 	res.sendFile(__dirname + '/index.html')
 }).get(['/detailedProject'], function (req, res) {
 	res.sendFile(__dirname + '/index.html')
-}).get(['/resource'], function (req, res) {
+}).get(['/resources'], function (req, res) {
 	res.sendFile(__dirname + '/index.html')
-}).get(['/customer'], function (req, res) {
+}).get(['/customers'], function (req, res) {
 	res.sendFile(__dirname + '/index.html')
 }).get(['/infos'], function (req, res) {
 	res.sendFile(__dirname + '/index.html')
 }).get(['/public/build.js'], function (req, res) {
 	res.sendFile(__dirname + '/public/build.js')
+}).get(['/settings'], function (req, res) {
+	res.sendFile(__dirname + '/index.html')
 })
 
 var edited = []

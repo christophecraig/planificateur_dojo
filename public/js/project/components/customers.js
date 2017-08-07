@@ -5,21 +5,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 				this.compName = compName
 				this.template = '#customers_tpl'
 				this.data = {
+					addCustomerIsOpen: false,
 					customers: []
 				}
 				this.methods = {
-					addClient(data) {
-						topic.publish('openModal', 'add', data)
+					openAddCustomer(data) {
+						this.data.addCustomerIsOpen = true
 					}
 				}
 				this.created = function () {
 					topic.publish('getCustomers')
 				}
 				this.createComponent()
+				topic.subscribe('closeModal', lang.hitch(this, 'closeAddCustomer'))
 				topic.subscribe('gotCustomers', lang.hitch(this, 'showCustomers'))
 			},
 			showCustomers(customers) {
 				this.data.customers = customers
+			},
+			closeAddCustomer() {
+				this.data.addCustomerIsOpen = false
 			},
 			createComponent() {
 				this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)

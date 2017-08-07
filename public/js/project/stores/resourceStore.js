@@ -38,7 +38,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     resourceAdded(def, res) {
 
     },
-    reportError() {
+    reportError(def, res) {
       def.reject('not found')
     }
   })

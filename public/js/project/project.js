@@ -2,35 +2,35 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
   function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, when) {
     return declare(null, {
       constructor() {
-        // this.project might change depending on your configuration and on your server
+        // this.connexion might change depending on your configuration and on your server
 
         // home-conf : 
-        //this.project = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        //this.connexion = new JsonService('http://localhost:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
         // work-conf : 
-        this.project = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         
         // conf maxime : 
-        // this.project = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        // this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
         this.color = ''
-        this.projectStore = new projectStore(this.project)
-        this.devStore = new devStore(this.project)
-        this.resourceStore = new resourceStore(this.project)
-        this.customerStore = new customerStore(this.project)
+        this.projectStore = new projectStore(this.connexion)
+        this.devStore = new devStore(this.connexion)
+        this.resourceStore = new resourceStore(this.connexion)
+        this.customerStore = new customerStore(this.connexion)
         this.getProjects()
         this.ids = []
         this.projectIsLoading = false
-        topic.subscribe('addDev', lang.hitch(this, 'submitNewDev'))
+        topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
         topic.subscribe('addCustomer', lang.hitch(this, 'submitNewCustomer'))
         topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
         topic.subscribe('addRes', lang.hitch(this, 'submitNewRes'))
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
         topic.subscribe('getCustomers', lang.hitch(this, 'getCustomers'))
-        topic.subscribe('openEdit', lang.hitch(this, 'getDetailedDevelopment'))
+        topic.subscribe('openEditDev', lang.hitch(this, 'getDetailedDevelopment'))
         topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
-        topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
+        topic.subscribe('saveNewDev', lang.hitch(this, 'submitNewDev'))
         topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
         topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
       },
@@ -103,7 +103,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       },
       submitNewRes() {
         console.log('ajout dune ressource')
-        this.project.addResource({
+        this.connexion.addResource({
           "id": 'ccraig',
           "name": 'Craig',
           "firstName": 'Christophe'
@@ -113,8 +113,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       },
       submitNewProj(project) {
         // Impeccable, ça fonctionne, à remplacer par des données récupérées sur le serveur
-        this.project.addProject(project).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
-
+        // this.project.addProject(project).then(lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
+        when(this.projectStore.add(project), lang.hitch(this, 'projAdded'), lang.hitch(this, 'reportError'))
         // this.project.addProject({
         //   "id":"",
         //   "name":"",
@@ -131,7 +131,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         this.getProjects()
       },
       getSkills() {
-        this.project.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
+        this.connexion.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
       },
       gotSkills(skills) {
         topic.publish('gotSkills', skills)

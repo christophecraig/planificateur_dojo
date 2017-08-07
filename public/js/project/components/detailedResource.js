@@ -30,7 +30,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 			this.createComponent()
 		},
 		closeResource() {
-			console.log('test')
 			this.data.isOpen = false
 		},
 		showResource(res) {
