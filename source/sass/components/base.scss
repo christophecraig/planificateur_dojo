@@ -19,6 +19,7 @@ ul {
 #bottom {
     position: relative;
     height: calc(50% - 60px);
+    padding: 20px 25px;
 }
 
 .btn {
@@ -27,14 +28,12 @@ ul {
     color: #ddd;
     cursor: pointer;
     border-radius: 3px;
-    &.close {
-        padding: 0;
-        font-size: 1.25em;
+    display: inline-block;
+    margin-top: 10px;
+    &--close {
         position: absolute;
-        background-color: transparent;
-        color: #333;
-        top: 0;
-        right: 0;
+        top: 20px;
+        right: 25px;
     }
 }
 
@@ -68,6 +67,7 @@ ul {
 #data {
     overflow: hidden;
     overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     height: 70px;
     padding: 10px;
 }

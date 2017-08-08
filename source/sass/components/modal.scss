@@ -2,7 +2,7 @@
 	& label {
 		display: block;
 		overflow: hidden;
-		margin: 16px;
+		margin: 16px 0;
 	}
 	& input {
 		margin: 0 10px;
@@ -37,7 +37,7 @@
 .modal-container {
 	width: 640px;
 	max-width: 90%;
-	max-height: 90%;
+	max-height: 70%;
 	margin: 0px auto;
 	padding: 20px 25px;
 	background-color: #fff;
@@ -48,12 +48,16 @@
 	font-family: Helvetica, Arial, sans-serif;
 	z-index: 9999;
 	top: 50%;
-	transform: translate(-50%, -50%);
 	left: 50%;
+	transform: translate(-50%, -50%);
 	box-sizing: border-box;
 	overflow-y: scroll;
-	& h4 {
+	& .btn {
 		margin-top: 0;
+	}
+	& h4 {
+		margin-top: 10px;
+		margin-bottom: 30px;
 	}
 }
 
@@ -78,8 +82,8 @@
 	opacity: 0;
 }
 
-// .modal-enter .modal-container,
-// .modal-leave-active .modal-container {
-//   -webkit-transform: scale(1.1);
-//   transform: scale(1.1);
-// }
+@media #{$md_screen} {
+	.modal-container {
+		max-height: 90%;
+	}
+}

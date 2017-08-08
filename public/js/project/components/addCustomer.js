@@ -5,14 +5,23 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.template = '#add-customer-tpl'
             this.data = {
                 test: 'excellent',
-                modalType: ''
+                formContent: {
+                    name: '',
+                    firstName: ''
+                }
             }
             this.methods = {
                 closeModal() {
                     this.$root.modalOpen = false
                 },
-                addCustomer() {
-                    topic.publish('addCustomer')
+                addCustomer(id, data) {
+                    // topic.publish('addCustomer', id, data)
+                    topic.publish('refreshCustomers')
+                }
+            }
+            this.computed = {
+                generateId() {
+                    return this.data.formContent.firstName.slice(0,1) + this.data.formContent.name
                 }
             }
             this.createComponent()

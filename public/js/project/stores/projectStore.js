@@ -54,7 +54,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
         }
       }
     },
-    reportError(err) {
+    reportError(def) {
       def.reject('not found')
     }
   })

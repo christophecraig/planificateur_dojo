@@ -40,7 +40,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       console.log('et on ajoute ceci', dev)
       def.resolve(dev)
     },
-    reportError() {
+    reportError(def) {
       def.reject('not found')
     }
   })

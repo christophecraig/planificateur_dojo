@@ -1,8 +1,17 @@
 .skill {
     padding: 6px 0;
     & .text {
-        width: 140px;
+        min-width: 100px;
         float: left;
+        line-height: 40px;
+    }
+    & .value {
+        line-height: 40px;
+        float: right;
+    }
+    & svg {
+        max-width: 100%;
+        margin: 15px 0;
     }
     & .bar {
         transform: translate3D(0, 0, 0);

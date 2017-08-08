@@ -14,25 +14,22 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       this.ws.editCustomer().then(lang.hitch(this, 'gotCustomers', def), lang.hitch(this, 'reportError'))
       return def
     },
-    add() {
+    add(id, data) {
       var def = new Deferred()
       this.ws.addCustomer({
         id: id,
-        name: name,
-        firstName: firstName
-      }).then(lang.hitch(this, 'resourceAdded'), lang.hitch(this, 'reportError'))
+        name: data.name,
+        firstName: data.firstName
+      }).then(lang.hitch(this, 'customerAdded'), lang.hitch(this, 'reportError'))
       return def
     },
     gotCustomers(def, res) {
       def.resolve(res)
     },
-    gotResources(def, res) {
+    customerAdded(def, res) {
       def.resolve(res)
     },
-    resourceAdded(def, res) {
-
-    },
-    reportError() {
+    reportError(def) {
       def.reject('not found')
     }
   })

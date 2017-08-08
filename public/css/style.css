@@ -14,22 +14,21 @@ ul {
 
 #bottom {
   position: relative;
-  height: calc(50% - 60px); }
+  height: calc(50% - 60px);
+  padding: 20px 25px; }
 
 .btn {
   padding: 12px;
   background: #333;
   color: #ddd;
   cursor: pointer;
-  border-radius: 3px; }
-  .btn.close {
-    padding: 0;
-    font-size: 1.25em;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: 10px; }
+  .btn--close {
     position: absolute;
-    background-color: transparent;
-    color: #333;
-    top: 0;
-    right: 0; }
+    top: 20px;
+    right: 25px; }
 
 #developments {
   position: relative; }
@@ -56,6 +55,7 @@ ul {
 #data {
   overflow: hidden;
   overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 70px;
   padding: 10px; }
 
@@ -99,7 +99,7 @@ ul {
   opacity: 0; }
 
 .modal-enter-active .skill .bar {
-  transform: translate3D(-250px, 0, 0); }
+  transform: translate3D(-400px, 0, 0); }
 
 .fill-bar-leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1); }
@@ -112,7 +112,7 @@ ul {
 .modal-container label {
   display: block;
   overflow: hidden;
-  margin: 16px; }
+  margin: 16px 0; }
 
 .modal-container input {
   margin: 0 10px; }
@@ -145,7 +145,7 @@ ul {
 .modal-container {
   width: 640px;
   max-width: 90%;
-  max-height: 90%;
+  max-height: 70%;
   margin: 0px auto;
   padding: 20px 25px;
   background-color: #fff;
@@ -156,12 +156,15 @@ ul {
   font-family: Helvetica, Arial, sans-serif;
   z-index: 9999;
   top: 50%;
-  transform: translate(-50%, -50%);
   left: 50%;
+  transform: translate(-50%, -50%);
   box-sizing: border-box;
   overflow-y: scroll; }
-  .modal-container h4 {
+  .modal-container .btn {
     margin-top: 0; }
+  .modal-container h4 {
+    margin-top: 10px;
+    margin-bottom: 30px; }
 
 .modal-header h3 {
   margin-top: 0;
@@ -178,6 +181,10 @@ ul {
 
 .modal-leave-active {
   opacity: 0; }
+
+@media screen and (min-width: 1024px) {
+  .modal-container {
+    max-height: 90%; } }
 
 @media screen and (min-width: 769px) {
   .menu-wrap {
@@ -200,16 +207,14 @@ ul {
     #menu li {
       display: block; }
     #menu a,
-    #menu .back,
-    #menu #settings {
+    #menu .back {
       position: relative;
       display: block;
       color: inherit;
       line-height: 60px;
       padding: 0 20px; }
       #menu a::after,
-      #menu .back::after,
-      #menu #settings::after {
+      #menu .back::after {
         content: '';
         display: block;
         position: absolute;
@@ -226,12 +231,10 @@ ul {
         border-top-right-radius: 50%;
         transition: .25s; }
       #menu a:hover,
-      #menu .back:hover,
-      #menu #settings:hover {
+      #menu .back:hover {
         color: #fff; }
         #menu a:hover::after,
-        #menu .back:hover::after,
-        #menu #settings:hover::after {
+        #menu .back:hover::after {
           height: 4px;
           width: 30px; }
   #settings .fa {
@@ -312,11 +315,8 @@ ul {
   .project:hover {
     color: #101010; }
 
-.project-infos {
-  padding: 12px 25px; }
-
 .project-top-infos {
-  margin: 10px 0 18px;
+  margin: 0 0 18px;
   display: flex;
   flex-direction: column; }
 
@@ -349,8 +349,15 @@ ul {
 .skill {
   padding: 6px 0; }
   .skill .text {
-    width: 140px;
-    float: left; }
+    min-width: 100px;
+    float: left;
+    line-height: 40px; }
+  .skill .value {
+    line-height: 40px;
+    float: right; }
+  .skill svg {
+    max-width: 100%;
+    margin: 15px 0; }
   .skill .bar {
     transform: translate3D(0, 0, 0);
     transition: .6s; }

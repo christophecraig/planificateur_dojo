@@ -5,13 +5,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         // this.connexion might change depending on your configuration and on your server
 
         // home-conf : 
-        this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        // this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
         // work-conf : 
         // this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         
         // conf maxime : 
-        // this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+        this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
         this.sliderProjects = []
         this.color = ''
         this.projectStore = new projectStore(this.connexion)
@@ -28,6 +28,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         topic.subscribe('addProj', lang.hitch(this, 'submitNewProj'))
         topic.subscribe('getResources', lang.hitch(this, 'getResources'))
         topic.subscribe('getCustomers', lang.hitch(this, 'getCustomers'))
+        topic.subscribe('refreshCustomers', lang.hitch(this, 'getCustomers'))
         topic.subscribe('openEditDev', lang.hitch(this, 'getDetailedDevelopment'))
         topic.subscribe('getDetailedProject', lang.hitch(this, 'getDetailedProject'))
         topic.subscribe('saveNewDev', lang.hitch(this, 'submitNewDev'))
@@ -159,8 +160,15 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
       gotCustomers(customers) {
         topic.publish('gotCustomers', customers)
       },
-      submitNewCustomer() {
-        
+      submitNewCustomer(id, data) {
+        console.log(id, data)
+        when(this.customerStore.add(id, data), lang.hitch(this, 'customerIsAdded'), lang.hitch(this, 'reportError'))
+      },
+      customerIsAdded(data) {
+        console.log('test')
+        console.log(data)
+        topic.publish('notifyCustomerAdded')
+        this.getCustomers()
       },
       reportError(err) {
         console.log(err)

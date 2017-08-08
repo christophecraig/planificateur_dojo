@@ -16,8 +16,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 			}
 			this.methods = {
 				drawBar(value) {
-					var skill = 250 * value
-					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 9 L 0 9'
+					var skill = 400 * value
+					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 40 L 0 40'
 				}
 			}
 			this.computed = {

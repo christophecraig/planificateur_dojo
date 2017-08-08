@@ -5,17 +5,21 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Planificateur de tâches</title>
+		<script src="./js/libs/viewport-units-buggyfill.js"></script>
+	<script>
+		window.viewportUnitsBuggyfill.init();
+	</script>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu:500" rel="stylesheet">
-	<!-- <link rel="stylesheet" href="http://192.168.0.46:8080/css/style.css"> -->
- <link rel="stylesheet" href="http://localhost:8080/css/style.css">
+	<link rel="stylesheet" href="http://192.168.0.46:8080/css/style.css">
+	<!-- <link rel="stylesheet" href="http://localhost:8080/css/style.css"> -->
 
 	<script>
 		var dojoConfig = {
 			packages: [{
 				name: "project",
-				// location: "http://192.168.0.46:8080/js/project"
-				location: "http://localhost:8080/js/project"
+				location: "http://192.168.0.46:8080/js/project"
+				// location: "http://localhost:8080/js/project"
 			}],
 			aliases: [
 				['chartJS', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'],
@@ -95,7 +99,7 @@
 					</li>
 				</ul>
 				<div id="settings">
-					<a href="./settings" @click.stop.prevent="$root.changeView($root.currentView, './settings')">
+					<a href="./settings" @click.prevent="$root.changeView($root.currentView, './settings'); changeActive();">
             <span class="fa fa-gear"></span>
             <span class="text">Paramètres</span>
           </a>
@@ -121,23 +125,25 @@
 			<div class="modal-mask" v-if="data.isOpen" @click.stop="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
-						<div id="detailed_res">
-							<div id="photo">
-								<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
-							</div>
-							<h4>{{fullName}}</h4>
-							<div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
-							<div class="skills" v-if="data.res.skillEfficiency.length !== 0">
-								<h5>Compétences : </h5>
-								<div class="skill" v-for="(value, key) in data.res.skillEfficiency">
-									<div class="text">{{key}} : {{value}}</div>
-									<svg width="250px" height="9px" viewBox="0 0 250 9">
-										<path class="bar" :d="drawBar(value)" fill="green" fill-opacity="0.7" />
-									</svg>
-								</div>
-							</div>
-							<!-- <div class="btn" @click="editRes">Modifier</div> -->
+						<div class="btn btn--close" @click="$root.close"><i class="fa fa-close"></i></div>
+						<div id="photo">
+							<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
 						</div>
+						<h4>{{fullName}}</h4>
+						<div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
+						<div class="skills" v-if="data.res.skillEfficiency.length !== 0">
+							<h5>Compétences : </h5>
+							<div class="skill" v-for="(value, key) in data.res.skillEfficiency">
+								<div class="text">{{key}}</div>
+								<div class="value">
+									{{value}}
+								</div>
+								<svg width="400px" height="10px" viewBox="0 0 400 10">
+									<path class="bar" :d="drawBar(value)" fill="green" fill-opacity="0.7" />
+								</svg>
+							</div>
+						</div>
+						<!-- <div class="btn" @click="editRes">Modifier</div> -->
 					</div>
 				</div>
 			</div>
@@ -148,6 +154,8 @@
 			<div class="modal-mask">
 				<div class="modal-wrapper">
 					<div class="modal-container">
+						<div class="btn btn--close" @click="$root.close"><i class="fa fa-close"></i></div>
+
 						<h4>Ajouter une ressource</h4>
 					</div>
 				</div>
@@ -183,6 +191,8 @@
 			<div class="modal-mask" @click="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
+						<div class="btn btn--close" @click="$root.close"><i class="fa fa-close"></i></div>
+
 						<form name="addDev">
 							<h4>Ajouter un développement</h4>
 							<label>Titre
@@ -259,6 +269,8 @@
 			<div class="modal-mask" @click="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
+						<div class="btn btn--close" @click="$root.close"><i class="fa fa-close"></i></div>
+
 						<form name="editDev">
 							<h4>Modifier un développement</h4>
 							<label>Titre
@@ -320,7 +332,7 @@
 				<span v-if="customer.firstName !== customer.name">{{customer.firstName}} {{customer.name}}</span>
 				<span v-else>{{customer.name}}</span>
 			</div>
-			<div id="add_customer" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
+			<div id="add_customer" class="btn" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 			</div>
 			<add-customer v-if="data.addCustomerIsOpen"></add-customer>
@@ -333,11 +345,13 @@
 			<div class="modal-mask" @click.stop="$root.close">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
+						<div class="btn btn--close" @click="$root.close"><i class="fa fa-close"></i></div>
+
 						<form name="addCustomer">
 							<h4>Ajouter un client</h4>
-							<label>Prénom<input type="text" name="firstName"></label>
-							<label>Nom<input type="text" name="name"></label>
-							<div class="btn" @click="addCustomer">Ajouter un client</div>
+							<label>Prénom<input type="text" name="firstName" v-model="data.formContent.firstName" placeholder="Prénom"></label>
+							<label>Nom<input type="text" name="name" v-model="data.formContent.name" placeholder="Nom"></label>
+							<div class="btn" @click="addCustomer(generateId, data.formContent)">Ajouter un client</div>
 						</form>
 					</div>
 				</div>
