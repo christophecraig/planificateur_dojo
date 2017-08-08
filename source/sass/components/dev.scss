@@ -6,10 +6,15 @@
     text-align: center;
 }
 
-.date,
+.date {
+    display: block;
+}
+
 .edit,
 .delete {
     display: inline-block;
+    font-size: 1.5em;
+    padding: 8px 20px;
 }
 
 .dev_name {
@@ -55,5 +60,11 @@
         &.fa {
             font-size: 20px;
         }
+    }
+}
+
+@media #{$md_screen} {
+    .date {
+        display: inline-block;
     }
 }

@@ -52,6 +52,7 @@
 	transform: translate(-50%, -50%);
 	box-sizing: border-box;
 	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	& .btn {
 		margin-top: 0;
 	}

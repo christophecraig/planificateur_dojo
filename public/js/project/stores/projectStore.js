@@ -40,7 +40,6 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     gotProjects: function (def, list) {
       this.data = [];
       for (var item in list) {
-        list.item.complete = true
         this.data.push(list.item)
       }
       def.resolve(this.data);

@@ -4,28 +4,15 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			this.compName = compName
 			this.template = '#calendar_tpl'
 			this.data = {
-				test: 'message de qualité'
+				message: 'message de qualité',
+				projects: {}
 			}
-			this.extends = VueChartJs.Line
-			this.mounted = function () {
-				console.log('mounted')
-				this.renderChart({
-					labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-					datasets: [{
-						label: 'Data One',
-						backgroundColor: '#FC2525',
-						data: [40, 39, 10, 40, 39, 80, 40]
-					}, {
-						label: 'Data Two',
-						backgroundColor: '#05CBE1',
-						data: [60, 55, 32, 10, 2, 12, 53]
-					}]
-				}, {
-					responsive: true,
-					maintainAspectRatio: false
-				})
-			}
+			// this.extends = VueChartJs.Line
 			this.createComponent()
+			topic.subscribe('gotFullProjects', lang.hitch(this, 'drawProjects'))
+		},
+		drawProjects(projects) {
+			this.data.projects = projects
 		},
 		createComponent() {
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.extends)

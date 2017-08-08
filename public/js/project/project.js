@@ -18,7 +18,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         this.devStore = new devStore(this.connexion)
         this.resourceStore = new resourceStore(this.connexion)
         this.customerStore = new customerStore(this.connexion)
-        this.getProjects()
+        this.getListOfProjects()
         this.ids = []
         this.projectIsLoading = false
         topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
@@ -35,15 +35,21 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
         topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
         topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
       },
-      getProjects() {
+      getListOfProjects() {
         topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
         when(this.projectStore.query({
           short: true
         }),
-        lang.hitch(this, 'gotProjects'),
+        lang.hitch(this, 'gotListOfProjects'),
         lang.hitch(this, 'reportError'))
       },
-      gotProjects(proj) {
+      getProjects() {
+        topic.publish('loading')
+        when(this.projectStore.query({
+          short: false
+        }), lang.hitch(this, 'gotFullProjects'))
+      },
+      gotListOfProjects(proj) {
         topic.publish('loaded') // cet évènement indique que le chargement est terminé
         topic.publish('gotProjects', proj)
         // On rassemble les ids des projets dans un tableau pour pouvoir les réutiliser pour le
@@ -62,14 +68,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
           document.getElementById('scroll_container').style = 'width: ' + (this.sliderWidth) + 'px;'
         }), 400);
       },
+      gotFullProjects(projects) {
+        topic.publish('loaded')
+        topic.publish('gotFullProjects', projects)
+      },
       getDetailedProject(id) {
         topic.publish('loading')
         // this.project.getDetailedProject(this.ids[this.currentProject]).then(lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
         when(this.projectStore.get(id), lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
-
-        // function (proj) {
-        // console.log('le getDetailedProject marche aussi', proj)
-        // })  
       },
       gotDetailedProject(proj) {
         topic.publish('gotDetailedProject', proj)
