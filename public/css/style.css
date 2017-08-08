@@ -1,7 +1,11 @@
 body {
   background: #fff;
-  font-family: Ubuntu, sans-serif;
+  font-family: 'PT Sans', sans-serif;
   margin: 0; }
+
+input {
+  min-height: 38px;
+  -webkit-appearance: none; }
 
 a {
   all: unset; }
@@ -19,12 +23,15 @@ ul {
 
 .btn {
   padding: 12px;
-  background: #333;
-  color: #ddd;
+  background: #454545;
+  color: #f2f2f2;
   cursor: pointer;
   border-radius: 3px;
   display: inline-block;
-  margin-top: 10px; }
+  margin-top: 10px;
+  transition: .25s; }
+  .btn:hover {
+    background: #525252; }
   .btn--close {
     position: absolute;
     top: 20px;
@@ -64,9 +71,6 @@ ul {
 
 .loading {
   display: none; }
-
-.resource {
-  font-size: .75em; }
 
 .demo {
   width: 50px;
@@ -159,7 +163,8 @@ ul {
   left: 50%;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch; }
   .modal-container .btn {
     margin-top: 0; }
   .modal-container h4 {
@@ -316,9 +321,7 @@ ul {
     color: #101010; }
 
 .project-top-infos {
-  margin: 0 0 18px;
-  display: flex;
-  flex-direction: column; }
+  margin: 0 0 18px; }
 
 .project_name {
   font-size: 1.35em; }
@@ -346,6 +349,9 @@ ul {
   cursor: pointer;
   color: #454545; }
 
+.resource {
+  cursor: pointer; }
+
 .skill {
   padding: 6px 0; }
   .skill .text {
@@ -369,10 +375,14 @@ ul {
   padding: 10px;
   text-align: center; }
 
-.date,
+.date {
+  display: block; }
+
 .edit,
 .delete {
-  display: inline-block; }
+  display: inline-block;
+  font-size: 1.5em;
+  padding: 8px 20px; }
 
 .dev_name {
   line-height: 30px;
@@ -411,6 +421,10 @@ ul {
     .edit.fa,
     .delete.fa {
       font-size: 20px; } }
+
+@media screen and (min-width: 1024px) {
+  .date {
+    display: inline-block; } }
 
 #data::-webkit-scrollbar {
   height: 10px;
