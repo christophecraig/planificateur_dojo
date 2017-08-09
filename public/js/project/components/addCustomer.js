@@ -15,7 +15,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     this.$root.modalOpen = false
                 },
                 addCustomer(id, data) {
-                    // topic.publish('addCustomer', id, data)
+                    topic.publish('addCustomer', id, data)
                     topic.publish('refreshCustomers')
                 }
             }

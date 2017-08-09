@@ -21,7 +21,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 				topic.subscribe('gotCustomers', lang.hitch(this, 'showCustomers'))
 			},
 			showCustomers(customers) {
-				console.log('showcustomers')
 				this.data.customers = customers
 			},
 			closeAddCustomer() {

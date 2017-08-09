@@ -2,21 +2,24 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     return declare(null, {
         constructor(compName) {
             this.compName = compName
-            this.template = '#add-res-tpl'
+            this.template = '#notification-tpl'
             this.data = {
-                id:'',
-                name:'',
-                firstName: ''
+                visible: false,
+                type: '',
+                title: '',
+                message: ''
             }
             this.methods = {
-                close() {
-                    this.$root.modalOpen = false
-                },
-                submitResource() {
-                    topic.publish('submitNewResource', this.id, this.name, this.firstName)
-                }
+
             }
+            topic.subscribe('notify', lang.hitch(this, 'showNotification'))
             this.createComponent()
+        },
+        showNotification(type, title, message) {
+            this.data.tit = title
+            this.data.typ = type
+            this.data.message = message
+            this.data.visible = true
         },
         createComponent() {
             this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)

@@ -7,17 +7,17 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     get(id) {
       this.data = []
       var def = new Deferred()
-      this.ws.getAResource(id).then(lang.hitch(this, 'gotDetailedResource', def), lang.hitch(this, 'reportError')).then(lang.hitch(this, 'getSkills', def), lang.hitch(this, 'reportError'))
+      this.ws.getAResource(id).then(lang.hitch(this, 'gotDetailedResource', def), lang.hitch(this, 'reportError')).then(lang.hitch(this, 'getSkills', def), lang.hitch(this, 'reportError', def))
       return def
     },
     query() {
       var def = new Deferred()
-      this.ws.getResources().then(lang.hitch(this, 'gotResources', def), lang.hitch(this, 'reportError'))
+      this.ws.getResources().then(lang.hitch(this, 'gotResources', def), lang.hitch(this, 'reportError', def))
       return def
     },
     put() {
       var def = new Deferred()
-      this.ws.editResource().then(lang.hitch(this, 'resourceEdited'), lang.hitch(this, 'reportError'))
+      this.ws.editResource().then(lang.hitch(this, 'resourceEdited', def), lang.hitch(this, 'reportError', def))
       return def
     },
     add() {
@@ -26,7 +26,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
         id: id,
         name: name,
         firstName: firstName
-      }).then(lang.hitch(this, 'resourceAdded'), lang.hitch(this, 'reportError'))
+      }).then(lang.hitch(this, 'resourceAdded', def), lang.hitch(this, 'reportError', def))
       return def
     },
     gotDetailedResource(def, res) {

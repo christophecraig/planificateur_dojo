@@ -1,8 +1,8 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'dojo/ready'],
-	function (project, webSocket, lang, topic, customers, affProjectList, calendar, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, ready) {
+require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings' ,'project/components/notification', 'dojo/ready'],
+	function (VueChartJS, project, webSocket, lang, topic, customers, affProjectList, calendar, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
-			var ws = new webSocket()
+			var socket = new webSocket()
 			var projList = new affProjectList('projects') // nouveau component qui gère la liste des projets
 			var leMenu = new menu('leMenu')
 			var _calendar = new calendar('calendar')
@@ -17,6 +17,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			var _addClient = new addCustomer('addCustomer')
 			var customersPanel = new customers('customers')
 			var _settings = new settings('settings')
+			var _notification = new notification('notification')
 			new Vue({
 				el: '#app',
 				data: {

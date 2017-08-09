@@ -23,15 +23,15 @@
 				// location: "http://localhost:8080/js/project"
 			}],
 			aliases: [
-				['chartJS', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'],
-				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js']
+				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'],
+				['VueChartJS', '//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js']
 			],
 			deps: ['project/dojorpc', 'jquery'],
 			isDebug: true
 		};
 	</script>
 	<script src="//unpkg.com/vue"></script>
-	<script src="//unpkg.com/vue-chartjs@2.5.7-rc3/dist/vue-chartjs.full.min.js"></script>
+	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js"></script> -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
@@ -40,6 +40,7 @@
 	<div id="app" @click="close">
 		<div id="sub-container">
 			<loader></loader>
+			<notification></notification>
 			<calendar></calendar>
 			<projects></projects>
 			<le-menu></le-menu>
@@ -55,8 +56,8 @@
 	<!-- TEMPLATE ZONE -->
 	<template id="calendar_tpl">
 		<div id="calendar">
-			<div class="proj" v-for="project in data.projects">
-				{{project}}
+			<div class="proj" v-for="dev in data.devs">
+				{{dev.name}}
 			</div>
 		</div>
 	</template>
@@ -97,7 +98,7 @@
 				<div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
 				<ul class="center">
 					<li v-for="item in data.menu">
-						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path); changeActive()" :class="">
+						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path); changeActive()" :class="data.current">
 						{{item.name}}
 					</a>
 					</li>
@@ -161,6 +162,8 @@
 						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
 
 						<h4>Ajouter une ressource</h4>
+
+						<div class="btn" @click="submitResource">Sauvegarder</div>
 					</div>
 				</div>
 			</div>
@@ -257,7 +260,7 @@
 						<span class="skill-tag" v-for="skills in dev.skillTags">{{skills}}</span>
 						<span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
 						<span class="edit fa fa-pencil" @click.stop="openEditDev(dev.id)"></span>
-						<span class="delete fa fa-trash" @click.stop="deleteDev(dev.id)"></span>
+						<span class="delete fa fa-trash" @click.stop="deleteDev(dev.id, dev.earlyStart)"></span>
 					</div>
 				</div>
 			</transition-group>
@@ -370,6 +373,13 @@
 	<template id="add-res-tpl">
 		<div>
 			<h4>Ajouter une ressource</h4>
+		</div>
+	</template>
+
+	<template id="notification-tpl">
+		<div class="notification" v-if="data.visible">
+			<h4>{{data.tit}}</h4>
+			<p>{{data.message}}</p>
 		</div>
 	</template>
 </body>

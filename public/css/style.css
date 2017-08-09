@@ -3,7 +3,7 @@ body {
   font-family: 'PT Sans', sans-serif;
   margin: 0; }
 
-input {
+input[type="text"] {
   min-height: 38px;
   -webkit-appearance: none; }
 
@@ -417,7 +417,8 @@ ul {
   .edit,
   .delete {
     font-size: 0;
-    display: flex; }
+    display: flex;
+    padding: 0 2px; }
     .edit.fa,
     .delete.fa {
       font-size: 20px; } }

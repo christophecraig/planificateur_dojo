@@ -16,16 +16,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           topic.publish('editRes')
         },
         getDetailedResource(id) {
-          console.log(id)
           topic.publish('getDetailedResource', id)          
         }
       }
-      // this.mounted = function() {
-      // for (resource in this.data.resources) {
-      //   this.data.ids.push(resource.id)
-      //   console.log('teeeeeeeeeest')
-      // }
-      // }
       topic.subscribe('closeModal', lang.hitch(this, 'closeAddRes'))
       this.createComponent()
       topic.subscribe('gotResources', lang.hitch(this, 'showResources'))

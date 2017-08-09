@@ -6,26 +6,27 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     },
     get(id) {
       var def = new Deferred()
-      this.ws.getDetailedDevelopment(id).then(lang.hitch(this, 'gotDev', def), lang.hitch(this, 'reportError'))
+      this.ws.getDetailedDevelopment(id).then(lang.hitch(this, 'gotDev', def), lang.hitch(this, 'reportError', def))
       return def
     },
     query(ids) {
       this.data = []
       var def = new Deferred()
       for (var i = 0; i < ids.length; i++) {
-        this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError'))
+        this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
       }
       return def
     },
     add(dev) {
       var def = new Deferred()
-      this.ws.addDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError'))
+      this.ws.addDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError', def))
       return def
     },
-    delete(dev) {
+    remove(dev, property) {
+      console.log(dev, property)
       if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
         var def = new Deferred()
-        this.ws.deleteDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError'))
+        this.ws.deleteSomething(dev, property).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
         return def
       }
     },
@@ -38,6 +39,10 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     },
     devAdded(def, dev) {
       console.log('et on ajoute ceci', dev)
+      def.resolve(dev)
+    },
+    devDeleted(def, dev) {
+      console.log('Suppression du développement ', dev)
       def.resolve(dev)
     },
     reportError(def) {

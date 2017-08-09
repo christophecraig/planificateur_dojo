@@ -1,4 +1,4 @@
-define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent', 'chartJS'], function (declare, lang, topic, vueComponent, chartJS) {
+define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
 	return declare(null, {
 		constructor(compName) {
 			this.compName = compName

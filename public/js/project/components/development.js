@@ -9,9 +9,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			}
 			this.template = '#development'
 			this.methods = {
-				deleteDev(dev) {
-					console.log('suppression du développement ayant l\'id :', dev)
-					topic.publish('deleteDev', dev)
+				deleteDev(dev, property) {
+					console.log('Préparation à la suppression du développement ayant l\'id :', dev)
+					topic.publish('deleteDev', dev, property)
 				},
 				openEditDev(dev) {
 					this.data.editDevIsOpen = true
