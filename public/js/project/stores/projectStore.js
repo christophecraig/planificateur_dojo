@@ -1,24 +1,24 @@
 define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_base/lang'], function (declare, Store, Deferred, lang) {
 	return declare(Store, {
 		constructor(ws) {
-			this.ws = ws;
-			this.data = [];
+			this.ws = ws
+			this.data = []
 		},
 		get(id) {
 			for (var i = 0; i < this.data.length; i++) {
 				if (this.data[i].id == id) {
 					if (!this.data[i].complete) {
-						var def = new Deferred();
+						var def = new Deferred()
 						this.ws.getDetailedProject(id).then(lang.hitch(this, 'gotDetailedProject', def), lang.hitch(this, 'reportError', def))
-						return def;
+						return def
 					} else {
-						return this.data[i];
+						return this.data[i]
 					}
 				}
 			}
 		},
 		query(query) {
-			var def = new Deferred();
+			var def = new Deferred()
 			if (query.short) {
 				this.ws.getListOfProjects().then(lang.hitch(this, 'gotListOfProjects', def), lang.hitch(this, 'reportError', def))
 			} else {
@@ -38,7 +38,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 			def.resolve(this.data)
 		},
 		gotProjects(def, list) {
-			def.resolve(list);
+			def.resolve(list)
 		},
 		gotDetailedProject(def, proj) {
 			proj.complete = true;

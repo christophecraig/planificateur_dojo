@@ -2,23 +2,29 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     return declare(null, {
         constructor(compName) {
             this.compName = compName
-            this.template = '#add-res-tpl'
+            this.template = '#_task'
+            this.props = ['dev']
             this.data = {
-                id:'',
-                name:'',
-                firstName: ''
-            }
-            this.computed = {
-                id() {
-                    return this.data.firstName.slice(0,1) + this.data.name
-                }
+
             }
             this.methods = {
-                close() {
-                    console.log(this.id)
+
+            }
+            this.computed = {
+                color() {
+                    return '#C03030'
                 },
-                submitResource() {
-                    topic.publish('submitNewResource', this.id, this.name, this.firstName)
+                startDate() {
+                    return this.$props.dev.plannedStartDate
+                },
+                currentY() {
+                    return ''
+                },
+                height() {
+                    return ''
+                },
+                length() {
+                    return ''
                 }
             }
             this.createComponent()

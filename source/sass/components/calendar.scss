@@ -1,0 +1,36 @@
+#calendar {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.months {
+    width: 1920px;
+}
+
+.month {
+    float: left;
+    width: 160px;
+    min-height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: lighten($projectsInSlider, 2%);
+    border-bottom: 1px solid darken($projectsInSlider, 5%);
+    border-left: 1px solid darken($projectsInSlider, 5%);
+    box-sizing: border-box;
+    transition: .35s;
+    &:first-child {
+        border-left: 0;
+    }
+    span {
+        transition: .25s;
+        display: inline-block;
+        margin: 0 auto;
+    }
+    &:hover {
+        cursor: pointer;
+        background: lighten($projectsInSlider, 4%); 
+        span {
+            transform: scale(1.125)
+        }
+    }
+}

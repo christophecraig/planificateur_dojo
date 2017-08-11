@@ -1,11 +1,12 @@
-require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings' ,'project/components/notification', 'dojo/ready'],
-	function (VueChartJS, project, webSocket, lang, topic, customers, affProjectList, calendar, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, notification, ready) {
+require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings' ,'project/components/notification', 'dojo/ready'],
+	function (VueChartJS, project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
 			var socket = new webSocket()
 			var projList = new affProjectList('projects') // nouveau component qui gère la liste des projets
 			var leMenu = new menu('leMenu')
 			var _calendar = new calendar('calendar')
+			var _tasks = new tasks('task')
 			var loadWatcher = new eventLoad('loader') // Surveille les évènements et donc le chargement des données demandées
 			var detailedProject = new affDetailedProject('detailedProject')
 			var _resources = new resources('resources')
@@ -78,6 +79,5 @@ require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/l
 					topic.publish('useTemplate')
 				}
 			});
-			document.getElementById('body').classList.remove('loading')
 		});
 	});

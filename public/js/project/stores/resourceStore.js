@@ -20,7 +20,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       this.ws.editResource().then(lang.hitch(this, 'resourceEdited', def), lang.hitch(this, 'reportError', def))
       return def
     },
-    add() {
+    add(id, name, firstName) {
       var def = new Deferred()
       this.ws.addResource({
         id: id,
@@ -36,7 +36,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       def.resolve(res)
     },
     resourceAdded(def, res) {
-
+      def.resolve(res)
     },
     reportError(def, res) {
       def.reject('not found')

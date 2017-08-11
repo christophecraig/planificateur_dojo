@@ -7,11 +7,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// home-conf : 
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
-				// work-conf : 
-				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// Stable unfinished work-conf : 
+				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
-				// conf maxime : 
-				this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// conf maxime Dev : 
+				// this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
@@ -68,24 +68,19 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 						this.sliderWidth += this.sliderProjects[i].clientWidth + 8 // Pour ajouter la marge
 					}
 					document.getElementById('scroll_container').style = 'width: ' + (this.sliderWidth) + 'px;'
-				}), 400);
+				}), 2500);
 			},
 			gotFullProjects(projects) {
-				topic.publish('loaded')
 				var developmentsToDraw = []
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
-						developmentsToDraw.push(projects[proj].developments[i])
+						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
 					}
 				}
-				console.log('toDraw', developmentsToDraw)
 				this.retrieveDatesToDraw(developmentsToDraw)
 			},
 			retrieveDatesToDraw(devs) {
-				console.log(devs)
-				// for(var i = 0; i<devs.length; i++) {
 				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
-				// }
 			},
 			drawOnGraph(devs) {
 				topic.publish('drawProjects', devs)

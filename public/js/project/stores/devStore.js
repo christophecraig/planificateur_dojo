@@ -13,6 +13,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
       this.data = []
       var def = new Deferred()
       for (var i = 0; i < ids.length; i++) {
+        // var parentProject = proj ? proj : null
         this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
       }
       return def

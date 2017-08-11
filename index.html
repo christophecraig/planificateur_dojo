@@ -31,7 +31,7 @@
 		};
 	</script>
 	<script src="//unpkg.com/vue"></script>
-	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js"></script> -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
@@ -39,9 +39,9 @@
 <body id="body" class="loading">
 	<div id="app" @click="close">
 		<div id="sub-container">
+			<calendar></calendar>
 			<loader></loader>
 			<notification></notification>
-			<calendar></calendar>
 			<projects></projects>
 			<le-menu></le-menu>
 			<div id="bottom">
@@ -54,11 +54,29 @@
 	<!-- Browserify <script src="./public/build.js"></script>  -->
 	<!-- Webpack <script src="./bundle.js"></script> -->
 	<!-- TEMPLATE ZONE -->
+	<template id="_task">
+		<!-- <g class="proj">
+			<rect :x="startDate" :y="currentY" :height="height" :width="length" :fill="color"></rect>
+			<text>{{data}}</text>
+		</g> -->
+	</template>
 	<template id="calendar_tpl">
 		<div id="calendar">
-			<div class="proj" v-for="dev in data.devs">
-				{{dev.name}}
+			<div class="months">
+				<div class="month" v-for="(month, index) in data.months">
+					<span>{{month.name}}</span>
+				</div>
 			</div>
+			<!-- <svg height="400px" width="1800px" viewBox="0 0 1800 400">
+				<g>
+					<g v-for="(month, index) in data.months" class="month">
+						<rect :x="150*index" width="150" height="50" fill="#f2f2f2" stroke="#f9f9f9"></rect>
+						<text :x="(150*index)+55" y="30" text-anchor="start" fill="#303030">{{month.name}}</text>
+					</g>
+				</g>
+				<task v-for="dev in data.devs" :dev="dev" :key="dev.id"></task>
+			</svg> -->
+			<canvas id="canvas"></canvas>
 		</div>
 	</template>
 	<template id="load_tpl">
@@ -97,8 +115,8 @@
 			<div class="menu-wrap">
 				<div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
 				<ul class="center">
-					<li v-for="item in data.menu">
-						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path); changeActive()" :class="data.current">
+					<li v-for="item in data.menu" :key="item.id">
+						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path)" :class="data.current">
 						{{item.name}}
 					</a>
 					</li>
