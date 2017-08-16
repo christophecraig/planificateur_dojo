@@ -58,14 +58,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 		drawProjects(devs) {
 			this.data.devs = devs
 			console.log(typeof this.data.devs)
-			var canvas = document.getElementById('canvas')
-			canvas.setAttribute('width', 1920)
-			var ctx = canvas.getContext('2d')
-			for (var dev in this.data.devs) {
-				console.log(devs[dev])
-			}
-			ctx.fillStyle = '#c03030'
-			ctx.fillRect(30, 10, 85, 35)
+
 
 			document.getElementById('body').classList.remove('loading')
 		},

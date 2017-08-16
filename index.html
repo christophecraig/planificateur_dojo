@@ -39,7 +39,9 @@
 <body id="body" class="loading">
 	<div id="app" @click="close">
 		<div id="sub-container">
-			<calendar></calendar>
+			<calendar>
+				<task></task>
+			</calendar>
 			<loader></loader>
 			<notification></notification>
 			<projects></projects>
@@ -55,10 +57,14 @@
 	<!-- Webpack <script src="./bundle.js"></script> -->
 	<!-- TEMPLATE ZONE -->
 	<template id="_task">
-		<!-- <g class="proj">
+		<div>
+			<!-- <g class="proj">
 			<rect :x="startDate" :y="currentY" :height="height" :width="length" :fill="color"></rect>
 			<text>{{data}}</text>
 		</g> -->
+			<canvas id="canvas" v-fill="data.width" width="1920" height="460"></canvas>
+			<input type="range" v-model="data.width" step="5" min="5" max="300">
+		</div>
 	</template>
 	<template id="calendar_tpl">
 		<div id="calendar">
@@ -73,9 +79,10 @@
 						<rect :x="150*index" width="150" height="50" fill="#f2f2f2" stroke="#f9f9f9"></rect>
 						<text :x="(150*index)+55" y="30" text-anchor="start" fill="#303030">{{month.name}}</text>
 					</g>
-				</g>
-				<task v-for="dev in data.devs" :dev="dev" :key="dev.id"></task>
-			</svg> -->
+				</g> -->
+			<!-- <task v-for="dev in data.devs" :dev="dev" :key="dev.id"></task> -->
+			<!-- </svg> -->
+			<slot></slot>
 			<canvas id="canvas"></canvas>
 		</div>
 	</template>
@@ -349,17 +356,19 @@
 		</transition>
 	</template>
 	<template id="customers_tpl">
-		<div class="customers">
-			<div class="customer" v-for="customer in data.customers">
-				<span v-if="customer.firstName !== customer.name">{{customer.firstName}} {{customer.name}}</span>
-				<span v-else>{{customer.name}}</span>
-			</div>
-			<div id="add_customer" class="btn" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
-				<i class="fa fa-plus-circle" aria-hidden="true"></i>
-			</div>
-			<add-customer v-if="data.addCustomerIsOpen"></add-customer>
+		<transition name="fade">
+			<div class="customers">
+				<div class="customer" v-for="customer in data.customers">
+					<span v-if="customer.firstName !== customer.name">{{customer.firstName}} {{customer.name}}</span>
+					<span v-else>{{customer.name}}</span>
+				</div>
+				<div id="add_customer" class="btn" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
+					<i class="fa fa-plus-circle" aria-hidden="true"></i>
+				</div>
+				<add-customer v-if="data.addCustomerIsOpen"></add-customer>
 
-		</div>
+			</div>
+		</transition>
 	</template>
 
 	<template id="add-customer-tpl">

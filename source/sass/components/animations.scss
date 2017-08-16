@@ -1,14 +1,10 @@
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity .25s;
+.fade-enter-active {
+    transition: all .5s;
 }
 
 #developments {
     & span .fade-leave-active,
     & span .fade-leave-to {
-        position: absolute;
-        width: 100%;
-        height: 50px;
         box-sizing: border-box;
     }
 }
