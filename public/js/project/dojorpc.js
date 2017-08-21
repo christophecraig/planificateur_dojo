@@ -32,37 +32,37 @@ require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/l
 					formData: {}
 				},
 				methods: {
-					close() {
+					close () {
 						topic.publish('closeModal')
 						this.addDevIsOpen = false
 						this.editDevIsOpen = false 
 						document.getElementById('burger').classList.remove('is-open')
 					},
-					closeModal() {
+					closeModal () {
 						this.modalOpen = false
 					},
-					loading() {
+					loading () {
 						this.isLoading = true
 					},
-					changeView(lastView, url) {
+					changeView (lastView, url) {
 						window.history.pushState(null, null, url);
 						this.currentView = window.location.pathname.slice(1)
 						this.lastView = lastView
 					},
-					back(lastView) {
+					back (lastView) {
 						this.changeView(lastView, this.lastView)
 					},
-					loaded() {
+					loaded () {
 						this.isLoading = false
 					},
-					alpha(a, b) {
+					alpha (a, b) {
 						if (a.name < b.name)
 							return -1;
 						if (a.name > b.name)
 							return 1;
 						return 0;
 					},
-					date(a, b) {
+					date (a, b) {
 						if (a.date < b.date)
 							return -1
 						if (a.date > b.date)
@@ -70,7 +70,7 @@ require(['VueChartJS', 'project/project', 'project/cli_webSocket', 'dojo/_base/l
 						return 0
 					}
 				},
-				created() {
+				created () {
 					// Fonction appelée à la création de la vue
 					topic.publish('getResources')
 					this.currentView = window.location.pathname.slice(1)

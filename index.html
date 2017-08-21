@@ -31,7 +31,6 @@
 		};
 	</script>
 	<script src="//unpkg.com/vue"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
@@ -40,7 +39,7 @@
 	<div id="app" @click="close">
 		<div id="sub-container">
 			<calendar>
-				<task></task>
+				<task :infos="this"></task>
 			</calendar>
 			<loader></loader>
 			<notification></notification>
@@ -48,8 +47,6 @@
 			<le-menu></le-menu>
 			<div id="bottom">
 				<component :is="currentView" transition="fade" transition-mode="out-in"></component>
-				<!-- <modal></modal> -->
-
 			</div>
 		</div>
 	</div>
@@ -62,7 +59,7 @@
 			<rect :x="startDate" :y="currentY" :height="height" :width="length" :fill="color"></rect>
 			<text>{{data}}</text>
 		</g> -->
-			<canvas id="canvas" v-fill="data.width" width="1920" height="460"></canvas>
+			<canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas>
 			<input type="range" v-model="data.width" step="5" min="5" max="300">
 		</div>
 	</template>
