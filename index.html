@@ -24,9 +24,11 @@
 			}],
 			aliases: [
 				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'],
-				['VueChartJS', '//cdnjs.cloudflare.com/ajax/libs/vue-chartjs/2.6.5/vue-chartjs.full.min.js']
+				['snapSVG', '//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js'],
+				['momentjs', '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js'],
+				['frappe-gantt', 'http://192.168.0.46:8080/js/libs/frappe-gantt.min.js']
 			],
-			deps: ['project/dojorpc', 'jquery'],
+			deps: ['project/dojorpc', 'jquery', 'momentjs', 'snapSVG', 'frappe-gantt'],
 			isDebug: true
 		};
 	</script>
@@ -39,7 +41,7 @@
 	<div id="app" @click="close">
 		<div id="sub-container">
 			<calendar>
-				<task :infos="this"></task>
+				<task></task>
 			</calendar>
 			<loader></loader>
 			<notification></notification>
@@ -55,11 +57,12 @@
 	<!-- TEMPLATE ZONE -->
 	<template id="_task">
 		<div>
-			<!-- <g class="proj">
-			<rect :x="startDate" :y="currentY" :height="height" :width="length" :fill="color"></rect>
-			<text>{{data}}</text>
-		</g> -->
-			<canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas>
+			<svg id="svg" @click="draw" width="1920px" height="460px">
+				<g v-for="dev, i in data.devs" :id="'dev' + i" :key="'dev' + i">
+				</g>
+			</svg>
+			<svg id="gantt"></svg>
+			<!-- <canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas> -->
 			<input type="range" v-model="data.width" step="5" min="5" max="300">
 		</div>
 	</template>
