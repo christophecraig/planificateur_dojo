@@ -113,6 +113,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 'Half Day',
                 'Quarter Day'
             ]
+            topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')) // doesn't exist yet
             topic.subscribe('tasks', lang.hitch(this, 'storeDevs'))
             this.createComponent()
         },
@@ -131,7 +132,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                                 case 'lateStart':
                                     this.tasks[dev].start = devs[dev][prop]
                                     break
-                                case 'earlyEnd': 
+                                case 'earlyEnd':
                                 case 'plannedEnd':
                                 case 'realEnd':
                                 case 'lateEnd':
@@ -150,8 +151,17 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                         }
                     }
                 }
-                this.__gantt = new Gantt("#gantt", this.tasks)
-                this.__gantt.change_view_mode('Week')
+                this.__gantt = new Gantt('#gantt', this.tasks, {
+                    on_date_change: function(task, start, end) {
+                        console.log(task, start, end)
+                    },
+                    on_progress_change: function(task, progress) {
+                        console.log(task, progress)
+                    },
+                    on_view_change: function(mode) {
+                        console.log(mode)
+                    }
+                })
             }), 2000) // Temporaire, à rappeler via un évènement émis par le store ou project.js
 
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
@@ -169,6 +179,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     this.level--
                         return this.__gantt.change_view_mode(this.levels[this.level])
                 }
+            }
+        },
+        applyClass(id) {
+            for (dev in this.tasks) {
+                this.tasks[dev].custom_class = (id === this.tasks[dev].id ? 'is-active' : '')
             }
         },
         createComponent() {

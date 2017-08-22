@@ -3,3 +3,15 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.zoom {
+    position: fixed;
+    left: 10px;
+}
+
+#zoom-in {
+    top: 90px;
+}
+
+#zoom-out {
+    top: 140px;
+}

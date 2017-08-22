@@ -9,7 +9,7 @@
 	<script>
 		window.viewportUnitsBuggyfill.init();
 	</script> -->
-	<link rel="manifest" href="/manifest.json">	
+	<link rel="manifest" href="/manifest.json">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./css/fontello.css">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
@@ -37,7 +37,7 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
-	<script src="./js/libs/frappe-gantt.js"></script>		
+	<script src="./js/libs/frappe-gantt.js"></script>
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
@@ -146,29 +146,34 @@
 
 	</template>
 	<template id="detailed-resource-tpl">
+		<modal is-open="false" v-show="data.isOpen">
+			<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
+			<div id="photo">
+				<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
+			</div>
+			<h4>{{fullName}}</h4>
+			<div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
+			<div class="skills" v-if="data.res.skillEfficiency.length !== 0">
+				<h5>Compétences : </h5>
+				<div class="skill" v-for="(value, key) in data.res.skillEfficiency">
+					<div class="text">{{key}}</div>
+					<div class="value">
+						{{value}}
+					</div>
+					<svg width="400px" height="10px" viewBox="0 0 400 10">
+						<path class="bar" :d="drawBar(value)" fill="green" fill-opacity="0.7" />
+					</svg>
+				</div>
+			</div>
+			<!-- <div class="btn" @click="editRes">Modifier</div> -->
+		</modal>
+	</template>
+	<template id="modal-tpl">
 		<transition name="modal">
-			<div class="modal-mask" v-if="data.isOpen" @click.stop="$root.close">
+			<div class="modal-mask">
 				<div class="modal-wrapper">
-					<div class="modal-container" @click.stop>
+					<div class="modal-container">
 						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
-						<div id="photo">
-							<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
-						</div>
-						<h4>{{fullName}}</h4>
-						<div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
-						<div class="skills" v-if="data.res.skillEfficiency.length !== 0">
-							<h5>Compétences : </h5>
-							<div class="skill" v-for="(value, key) in data.res.skillEfficiency">
-								<div class="text">{{key}}</div>
-								<div class="value">
-									{{value}}
-								</div>
-								<svg width="400px" height="10px" viewBox="0 0 400 10">
-									<path class="bar" :d="drawBar(value)" fill="green" fill-opacity="0.7" />
-								</svg>
-							</div>
-						</div>
-						<!-- <div class="btn" @click="editRes">Modifier</div> -->
 					</div>
 				</div>
 			</div>

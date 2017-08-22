@@ -427,6 +427,16 @@ ul {
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch; }
 
+.zoom {
+  position: fixed;
+  left: 10px; }
+
+#zoom-in {
+  top: 90px; }
+
+#zoom-out {
+  top: 140px; }
+
 #data::-webkit-scrollbar {
   height: 10px;
   border-radius: 5px;
