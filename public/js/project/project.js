@@ -11,7 +11,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				// this.connexion = new JsonService('http://192.168.0.80/~mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
@@ -72,6 +72,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			},
 			gotFullProjects(projects) {
 				var developmentsToDraw = []
+				console.log(projects)
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
 						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
@@ -83,6 +84,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
 			},
 			drawOnGraph(devs) {
+				console.log(devs)
 				topic.publish('drawProjects', devs)
 			},
 			getDetailedProject(id) {

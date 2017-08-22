@@ -427,32 +427,6 @@ ul {
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch; }
 
-.months {
-  width: 1920px; }
-
-.month {
-  float: left;
-  width: 160px;
-  min-height: 40px;
-  line-height: 40px;
-  text-align: center;
-  background: #f7f7f7;
-  border-bottom: 1px solid #e5e5e5;
-  border-left: 1px solid #e5e5e5;
-  box-sizing: border-box;
-  transition: .35s; }
-  .month:first-child {
-    border-left: 0; }
-  .month span {
-    transition: .25s;
-    display: inline-block;
-    margin: 0 auto; }
-  .month:hover {
-    cursor: pointer;
-    background: #fcfcfc; }
-    .month:hover span {
-      transform: scale(1.125); }
-
 #data::-webkit-scrollbar {
   height: 10px;
   border-radius: 5px;

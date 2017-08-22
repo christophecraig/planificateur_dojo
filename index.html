@@ -9,10 +9,11 @@
 	<script>
 		window.viewportUnitsBuggyfill.init();
 	</script> -->
+	<link rel="manifest" href="/manifest.json">	
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="http://192.168.0.46:8080/css/fontello.css">
+	<link rel="stylesheet" href="./css/fontello.css">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-	<link rel="stylesheet" href="http://192.168.0.46:8080/css/style.css">
+	<link rel="stylesheet" href="./css/style.css">
 	<!-- <link rel="stylesheet" href="http://localhost:8080/css/style.css"> -->
 
 	<script>
@@ -26,14 +27,17 @@
 				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'],
 				['snapSVG', '//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js'],
 				['momentjs', '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js'],
-				['frappe-gantt', 'http://192.168.0.46:8080/js/libs/frappe-gantt.min.js']
+				['frappe-gantt', 'http://192.168.0.46:8080/js/libs/frappe-gantt.js']
 			],
-			deps: ['project/dojorpc', 'jquery', 'momentjs', 'snapSVG', 'frappe-gantt'],
+			deps: ['project/dojorpc', 'jquery'],
 			isDebug: true
 		};
 	</script>
 	<script src="//unpkg.com/vue"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+	<script src="./js/libs/frappe-gantt.js"></script>		
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
@@ -57,22 +61,14 @@
 	<!-- TEMPLATE ZONE -->
 	<template id="_task">
 		<div>
-			<svg id="svg" @click="draw" width="1920px" height="460px">
-				<g v-for="dev, i in data.devs" :id="'dev' + i" :key="'dev' + i">
-				</g>
-			</svg>
+			<div class="fa fa-plus zoom btn" id="zoom-in"></div>
+			<div class="fa fa-minus zoom btn" id="zoom-out"></div>
 			<svg id="gantt"></svg>
 			<!-- <canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas> -->
-			<input type="range" v-model="data.width" step="5" min="5" max="300">
 		</div>
 	</template>
 	<template id="calendar_tpl">
 		<div id="calendar">
-			<div class="months">
-				<div class="month" v-for="(month, index) in data.months">
-					<span>{{month.name}}</span>
-				</div>
-			</div>
 			<!-- <svg height="400px" width="1800px" viewBox="0 0 1800 400">
 				<g>
 					<g v-for="(month, index) in data.months" class="month">
@@ -83,7 +79,6 @@
 			<!-- <task v-for="dev in data.devs" :dev="dev" :key="dev.id"></task> -->
 			<!-- </svg> -->
 			<slot></slot>
-			<canvas id="canvas"></canvas>
 		</div>
 	</template>
 	<template id="load_tpl">

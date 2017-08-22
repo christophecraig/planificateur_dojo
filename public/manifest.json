@@ -1,0 +1,12 @@
+{
+    "name": "Always Be Progressive",
+    "short_name": "test",
+    "background": "#000",
+    "display": "standalone",
+    "start_url": "/",
+    "icons": [{
+        "src": "https://i.pinimg.com/736x/5d/b0/31/5db031b430d080cfa0afcd2c214190c3--gravity-falls-gnomes.jpg",
+        "type": "img/jpg",
+        "sizes": "192x192"
+    }]
+}

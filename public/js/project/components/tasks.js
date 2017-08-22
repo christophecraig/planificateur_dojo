@@ -1,4 +1,4 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent', 'snapSVG', 'momentjs', 'frappe-gantt'], function (declare, topic, lang, vueComponent, Snap, moment, Gantt) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
     return declare(null, {
         constructor(compName) {
             this.compName = compName
@@ -105,34 +105,72 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 }
             }
             // topic.subscribe('drawProjects', lang.hitch(this, 'drawTasks')) 
+            this.level = 3
+            this.levels = [
+                'Month',
+                'Week',
+                'Day',
+                'Half Day',
+                'Quarter Day'
+            ]
             topic.subscribe('tasks', lang.hitch(this, 'storeDevs'))
             this.createComponent()
         },
-        
         storeDevs(devs) {
             this.data.devs = devs
-            console.log(this)
-            var tasks = [{
-                id: 'Task 1',
-                name: 'Redesign website',
-                start: '2016-12-28',
-                end: '2016-12-31',
-                progress: 20,
-                dependencies: 'Task 2, Task 3'
-            }]
-            var __gantt = new Gantt("#gantt", tasks);
+            this.tasks = []
+            setTimeout(lang.hitch(this, function () {
+                for (var dev in devs) {
+                    this.tasks.push({}) // Pour ne pas se prendre un "undefined"
+                    for (var prop in devs[dev]) {
+                        if (devs[dev][prop] !== null) {
+                            switch (prop) {
+                                case 'earlyStart':
+                                case 'plannedStart':
+                                case 'realStart':
+                                case 'lateStart':
+                                    this.tasks[dev].start = devs[dev][prop]
+                                    break
+                                case 'earlyEnd': 
+                                case 'plannedEnd':
+                                case 'realEnd':
+                                case 'lateEnd':
+                                    this.tasks[dev].end = devs[dev][prop]
+                                    break
+                                case 'id':
+                                    this.tasks[dev].id = devs[dev][prop]
+                                    break
+                                case 'name':
+                                    this.tasks[dev].name = devs[dev][prop]
+                                    break
+                                case 'effort':
+                                    this.tasks[dev].progress = devs[dev][prop]
+                                    break
+                            }
+                        }
+                    }
+                }
+                this.__gantt = new Gantt("#gantt", this.tasks)
+                this.__gantt.change_view_mode('Week')
+            }), 2000) // Temporaire, à rappeler via un évènement émis par le store ou project.js
+
+            document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
+            document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
         },
-        // drawTasks() {
-        //     this.canvas = document.getElementById('canvas')
-        // 	this.canvas.setAttribute('width', 1920)
-        // 	this.ctx = canvas.getContext('2d')
-        // 	for (var dev in this.data.devs) {
-        // 		console.log(devs[dev])
-        // 	}
-        //     this.ctx.fillStyle = '#c03030'
-        //     console.log(lang.hitch(this.vue, function() {console.log(this())}))
-        // 	this.ctx.fillRect(0, 0, 0, 0)
-        // },
+        setZoomLevel(arg) {
+            if (arg === 1) {
+                if (this.level < 4) {
+                    this.level++
+                        return this.__gantt.change_view_mode(this.levels[this.level])
+                }
+            }
+            if (arg === 0) {
+                if (this.level > 0) {
+                    this.level--
+                        return this.__gantt.change_view_mode(this.levels[this.level])
+                }
+            }
+        },
         createComponent() {
             this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended, this.directives)
         }

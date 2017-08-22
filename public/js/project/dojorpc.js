@@ -1,4 +1,4 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings' ,'project/components/notification', 'dojo/ready'],
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
 	function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
@@ -32,37 +32,37 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					formData: {}
 				},
 				methods: {
-					close () {
+					close() {
 						topic.publish('closeModal')
 						this.addDevIsOpen = false
-						this.editDevIsOpen = false 
+						this.editDevIsOpen = false
 						document.getElementById('burger').classList.remove('is-open')
 					},
-					closeModal () {
+					closeModal() {
 						this.modalOpen = false
 					},
-					loading () {
+					loading() {
 						this.isLoading = true
 					},
-					changeView (lastView, url) {
+					changeView(lastView, url) {
 						window.history.pushState(null, null, url);
 						this.currentView = window.location.pathname.slice(1)
 						this.lastView = lastView
 					},
-					back (lastView) {
+					back(lastView) {
 						this.changeView(lastView, this.lastView)
 					},
-					loaded () {
+					loaded() {
 						this.isLoading = false
 					},
-					alpha (a, b) {
+					alpha(a, b) {
 						if (a.name < b.name)
 							return -1;
 						if (a.name > b.name)
 							return 1;
 						return 0;
 					},
-					date (a, b) {
+					date(a, b) {
 						if (a.date < b.date)
 							return -1
 						if (a.date > b.date)
@@ -70,7 +70,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 						return 0
 					}
 				},
-				created () {
+				created() {
 					// Fonction appelée à la création de la vue
 					topic.publish('getResources')
 					this.currentView = window.location.pathname.slice(1)

@@ -4,43 +4,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			this.compName = compName
 			this.template = '#calendar_tpl'
 			this.data = {
-				months: [{
-					name: 'Janvier',
-					num: 1
-				}, {
-					name: 'Février',
-					num: 2
-				}, {
-					name: 'Mars',
-					num: 3
-				}, {
-					name: 'Avril',
-					num: 4
-				}, {
-					name: 'Mai',
-					num: 5
-				}, {
-					name: 'Juin',
-					num: 6
-				}, {
-					name: 'Juillet',
-					num: 7
-				}, {
-					name: 'Août',
-					num: 8
-				}, {
-					name: 'Septembre',
-					num: 9
-				}, {
-					name: 'Octobre',
-					num: 10
-				}, {
-					name: 'Novembre',
-					num: 11
-				}, {
-					name: 'Décembre',
-					num: 12
-				}],
 				devs: {},
 				fromProject: ''
 			}

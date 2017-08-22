@@ -11,11 +11,19 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
     },
     query(ids) {
       this.data = []
+      console.log(ids)
       var def = new Deferred()
+      if (ids[0].dev !== undefined) {
+      for (var i = 0; i < ids.length; i++) {
+        // var parentProject = proj ? proj : null
+        this.ws.getDetailedDevelopment(ids[i].dev).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
+      }
+    } else {
       for (var i = 0; i < ids.length; i++) {
         // var parentProject = proj ? proj : null
         this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
       }
+    }
       return def
     },
     add(dev) {
