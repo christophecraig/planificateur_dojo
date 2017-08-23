@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Planificateur de tâches</title>
 	<link rel="stylesheet" href="./css/material.css">
-	<link rel="manifest" href="/manifest.json">	
+	<link rel="manifest" href="/manifest.json">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./css/fontello.css">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
@@ -138,7 +138,7 @@
 					<span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
 				</div>
 				<div class="btn" @click.stop="openAddRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-				<add-resource v-if="data.addResIsOpen"></add-resource>
+				<add-resource></add-resource>
 				<detailed-res></detailed-res>
 			</div>
 		</transition>
@@ -146,7 +146,6 @@
 	</template>
 	<template id="detailed-resource-tpl">
 		<modal is-open="false" v-show="data.isOpen">
-			<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
 			<div id="photo">
 				<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
 			</div>
@@ -173,25 +172,18 @@
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
+						<slot></slot>
 					</div>
 				</div>
 			</div>
 		</transition>
 	</template>
 	<template id="add-res-tpl">
-		<transition name="modal">
-			<div class="modal-mask">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
+		<modal is-open="false" v-show="data.isOpen">
+			<h4>Ajouter une ressource</h4>
 
-						<h4>Ajouter une ressource</h4>
-
-						<div class="btn" @click="submitResource">Sauvegarder</div>
-					</div>
-				</div>
-			</div>
-		</transition>
+			<div class="btn" @click="submitResource">Sauvegarder</div>
+		</modal>
 	</template>
 	<template id="detailed_project">
 		<div id="detailed-project" v-if="data.detailedProject.id">

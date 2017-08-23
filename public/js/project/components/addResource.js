@@ -3,7 +3,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         constructor(compName) {
             this.compName = compName
             this.template = '#add-res-tpl'
+            this.props = ['addResIsOpen']
             this.data = {
+                isOpen: false,
                 id:'',
                 name:'',
                 firstName: ''
@@ -21,8 +23,16 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     topic.publish('submitNewResource', this.id, this.name, this.firstName)
                 }
             }
+            topic.subscribe('openAddRes', lang.hitch(this, 'open'))
+            topic.subscribe('closeModal', lang.hitch(this, 'close'))
             this.createComponent()
         },
+        open() {
+            this.data.isOpen = true
+        },
+        close() {
+            this.data.isOpen = false
+        }, 
         createComponent() {
             this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)
         }

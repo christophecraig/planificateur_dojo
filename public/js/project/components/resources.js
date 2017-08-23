@@ -4,12 +4,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.compName = compName
       this.template = '#resource-tpl'
       this.data = {
-        addResIsOpen: false,
         resources: {}
       }
       this.methods = {
         openAddRes() {
-          this.data.addResIsOpen = true
           topic.publish('openAddRes')
         },
         editRes(id) {
@@ -19,12 +17,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
           topic.publish('getDetailedResource', id)          
         }
       }
-      topic.subscribe('closeModal', lang.hitch(this, 'closeAddRes'))
       this.createComponent()
       topic.subscribe('gotResources', lang.hitch(this, 'showResources'))
-    },
-    closeAddRes() {
-      this.data.addResIsOpen = false
     },
     showResources(resources) {
       this.data.resources = resources
