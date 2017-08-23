@@ -41,59 +41,31 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             topic.subscribe('tasks', lang.hitch(this, 'storeDevs'))
             this.createComponent()
         },
-        storeDevs(devs) {
+        storeDevs(devs, tasks) {
+            console.log(devs, tasks)
             this.data.devs = devs
-            this.tasks = []
-            setTimeout(lang.hitch(this, function () {
-                for (var dev in devs) {
-                    this.tasks.push({}) // Pour ne pas se prendre un "undefined"
-                    for (var prop in devs[dev]) {
-                        if (devs[dev][prop] !== null) {
-                            switch (prop) {
-                                case 'earlyStart':
-                                case 'plannedStart':
-                                case 'realStart':
-                                case 'lateStart':
-                                    this.tasks[dev].start = devs[dev][prop]
-                                    break
-                                case 'earlyEnd':
-                                case 'plannedEnd':
-                                case 'realEnd':
-                                case 'lateEnd':
-                                    this.tasks[dev].end = devs[dev][prop]
-                                    break
-                                case 'id':
-                                    this.tasks[dev].id = devs[dev][prop]
-                                    break
-                                case 'name':
-                                    this.tasks[dev].name = devs[dev][prop]
-                                    break
-                                case 'effort':
-                                    this.tasks[dev].progress = devs[dev][prop]
-                                    break
-                            }
-                        }
-                    }
+            this.tasks = tasks
+            this.__gantt = new Gantt('#gantt', this.tasks, {
+                on_date_change (task, start, end) {
+                    console.log(task, start, end)
+                },
+                on_progress_change (task, progress) {
+                    console.log(task, progress)
+                },
+                on_view_change (mode) {
+                    console.log(mode)
+                    topic.publish('ganttLoaded')
                 }
-                this.__gantt = new Gantt('#gantt', this.tasks, {
-                    on_date_change: function (task, start, end) {
-                        console.log(task, start, end)
-                    },
-                    on_progress_change: function (task, progress) {
-                        console.log(task, progress)
-                    },
-                    on_view_change: function (mode) {
-                        console.log(mode)
-                    }
-                })
-            }), 2000) // Temporaire, à rappeler via un évènement émis par le store ou project.js
-
+            })
+            window.addEventListener('click', lang.hitch( this, function() {
+                this.__gantt.refresh(this.tasks)
+            }))
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
             this.expanded = false
-            document.getElementById('expand').addEventListener('click', lang.hitch(this, 'growGantt'))
+            document.getElementById('expand').addEventListener('click', lang.hitch(this, 'expandGantt'))
         },
-        growGantt() {
+        expandGantt() {
             if (!this.expanded) {
                 document.getElementById('calendar').style = 'height:' + (window.innerHeight - 78) + 'px'
                 document.getElementById('expand').classList.add('fa-compress')

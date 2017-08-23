@@ -38,19 +38,17 @@
 	<script data-dojo-config="async: 1, isDebug: true" src="//ajax.googleapis.com/ajax/libs/dojo/1.12.1/dojo/dojo.js"></script>
 </head>
 
-<body id="body" class="loading">
+<body id="body">
 	<div id="app" @click="close">
-		<div id="sub-container">
-			<calendar>
-				<tasks></tasks>
-			</calendar>
-			<loader></loader>
-			<notification></notification>
-			<projects></projects>
-			<le-menu></le-menu>
-			<div id="bottom">
-				<component :is="currentView" transition="fade" transition-mode="out-in"></component>
-			</div>
+		<calendar>
+			<tasks></tasks>
+		</calendar>
+		<loader></loader>
+		<notification></notification>
+		<projects></projects>
+		<le-menu></le-menu>
+		<div id="bottom">
+			<component :is="currentView" transition="fade" transition-mode="out-in"></component>
 		</div>
 	</div>
 	<!-- Browserify <script src="./public/build.js"></script>  -->
@@ -80,14 +78,13 @@
 		</div>
 	</template>
 	<template id="load_tpl">
-		<div id="loader" v-if="this.$root.isLoading">
-			<div class="demo">
-				<svg class="loader">
-					<circle cx="25" cy="25" r="16" fill="transparent" stroke="#ABABAB" stroke-width="5" stroke-linecap="round" stroke-dasharray="385"
-					    stroke-dashoffset="385">
-					</circle>
-				</svg>
-			</div>
+		<div class="load" v-if="data.isLoading">
+			<ul style="list-style-type:none">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
 		</div>
 	</template>
 	<template id="projects_tpl">
@@ -145,7 +142,7 @@
 
 	</template>
 	<template id="detailed-resource-tpl">
-		<modal is-open="false" v-show="data.isOpen">
+		<modal v-show="data.isOpen">
 			<div id="photo">
 				<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
 			</div>
@@ -170,7 +167,7 @@
 		<transition name="modal">
 			<div class="modal-mask">
 				<div class="modal-wrapper">
-					<div class="modal-container">
+					<div class="modal-container" @click.stop>
 						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
 						<slot></slot>
 					</div>
@@ -179,7 +176,7 @@
 		</transition>
 	</template>
 	<template id="add-res-tpl">
-		<modal is-open="false" v-show="data.isOpen">
+		<modal v-show="data.isOpen">
 			<h4>Ajouter une ressource</h4>
 
 			<div class="btn" @click="submitResource">Sauvegarder</div>
@@ -204,66 +201,58 @@
 				</div>
 				<development></development>
 			</div>
-			<add-dev v-if="$root.addDevIsOpen"></add-dev>
+			<add-dev></add-dev>
 		</div>
 	</template>
 	<template id="add-dev-tpl">
-		<transition name="modal">
-			<div class="modal-mask" @click="$root.close">
-				<div class="modal-wrapper">
-					<div class="modal-container" @click.stop>
-						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
+		<modal v-show="data.isOpen">
+			<form name="addDev">
+				<h4>Ajouter un développement</h4>
 
-						<form name="addDev">
-							<h4>Ajouter un développement</h4>
+				<label>Titre</label>
+				<input type="text" v-model="data.dev.name" placeholder="Titre">
 
-							<label>Titre</label>
-							<input type="text" v-model="data.dev.name" placeholder="Titre">
+				<label>Au plus tôt</label>
+				<input type="date" v-model="data.dev.earlyStart">
+				<input type="date" v-model="data.dev.earlyEnd">
 
-							<label>Au plus tôt</label>
-							<input type="date" v-model="data.dev.earlyStart">
-							<input type="date" v-model="data.dev.earlyEnd">
+				<label>Au plus tard</label>
+				<input type="date" v-model="data.dev.lateStart">
+				<input type="date" v-model="data.dev.lateEnd">
 
-							<label>Au plus tard</label>
-							<input type="date" v-model="data.dev.lateStart">
-							<input type="date" v-model="data.dev.lateEnd">
+				<label>Prévu</label>
+				<input type="date" v-model="data.dev.plannedStart">
+				<input type="date" v-model="data.dev.plannedEnd">
 
-							<label>Prévu</label>
-							<input type="date" v-model="data.dev.plannedStart">
-							<input type="date" v-model="data.dev.plannedEnd">
+				<label>Réel</label>
+				<input type="date" v-model="data.dev.realStart">
+				<input type="date" v-model="data.dev.realEnd">
 
-							<label>Réel</label>
-							<input type="date" v-model="data.dev.realStart">
-							<input type="date" v-model="data.dev.realEnd">
-
-							<label>Priorité</label>
-							<select name="priority" v-model="data.dev.priority">
-								<option value="PrioTresHaute">Très Haute</option>
-								<option value="PrioHaute">Haute</option>
-								<option value="PrioNormale">Normale</option>
-								<option value="PrioBasse">Basse</option>
-								<option value="PrioTresBasse">Très Basse</option>
+				<label>Priorité</label>
+				<select name="priority" v-model="data.dev.priority" class="form-group">
+								<option value="PrioTresHaute" class="form-control">Très Haute</option>
+								<option value="PrioHaute" class="form-control">Haute</option>
+								<option value="PrioNormale" class="form-control">Normale</option>
+								<option value="PrioBasse" class="form-control">Basse</option>
+								<option value="PrioTresBasse" class="form-control">Très Basse</option>
 							</select>
 
-							<label>Facultatif</label>
-							<input type="checkbox" v-model="data.dev.optional">
+				<label>Facultatif</label>
+				<input type="checkbox" v-model="data.dev.optional">
 
-							<label>développement nécessaire</label>
+				<label>développement nécessaire</label>
 
-							<label>développement parent</label>
+				<label>développement parent</label>
 
-							<label>Compétences</label>
-							<div v-for="skill in data.allSkills">
-								<label for="">{{skill}}</label>
-								<input type="checkbox" v-model="data.dev.skillTags" :value="skill">
-							</div>
-
-							<div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
-						</form>
-					</div>
+				<label>Compétences</label>
+				<div v-for="(skill, index) in data.allSkills" class="form-check">
+					<label for="" class="form-check-label">{{skill.name}}</label>
+					<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" class="form-check-input">
 				</div>
-			</div>
-		</transition>
+
+				<div id="saveDev" class="btn" @click="submitNewDev(data.dev)">Ajouter</div>
+			</form>
+		</modal>
 	</template>
 	<template id="development">
 		<div id="developments">
@@ -334,10 +323,11 @@
                 développement parent
              				 </label>
 							<label>Compétences
-            				</label>
-							<label v-for="skill in data.allSkills">
+							</label>
+							<div>{{data.dev}}</div>
+							<label v-for="skill in data.dev.skillTags">
 							{{skill}}
-								<input type="checkbox" v-model="data.dev.skillTags" :value="skill">
+								<input type="checkbox" v-model="skill" :value="skill">
 							</label>
 							<div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
 						</form>
@@ -385,12 +375,6 @@
 	<template id="_settings">
 		<div>
 			<h2>Paramètres</h2>
-		</div>
-	</template>
-
-	<template id="add-res-tpl">
-		<div>
-			<h4>Ajouter une ressource</h4>
 		</div>
 	</template>
 

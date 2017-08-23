@@ -3,7 +3,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         constructor(compName) {
             this.compName = compName
             this.template = '#modal-tpl'
-            this.props = ['isOpen']
             this.data = {
                 test: 'excellent',
                 formData: {

@@ -8,10 +8,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// Stable unfinished work-conf : 
-				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
@@ -22,6 +22,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.getProjects()
 				this.ids = []
 				this.projectIsLoading = false
+
+				// Listeners
+
 				topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
 				topic.subscribe('addCustomer', lang.hitch(this, 'submitNewCustomer'))
 				topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
@@ -75,11 +78,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
 						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
+						// developmentsToDraw.push(projects[proj].developments[i])
 					}
 				}
 				this.retrieveDatesToDraw(developmentsToDraw)
 			},
 			retrieveDatesToDraw(devs) {
+				console.log(devs)
 				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
 			},
 			drawOnGraph(devs) {
@@ -154,6 +159,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.connexion.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
 			},
 			gotSkills(skills) {
+				console.log(skills)
 				topic.publish('gotSkills', skills)
 			},
 			isAdded() {

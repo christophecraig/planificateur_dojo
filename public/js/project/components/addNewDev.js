@@ -31,19 +31,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           topic.publish('saveDev', dev)
         }
       }
+      topic.subscribe('openAddDev', lang.hitch(this, 'open'))
       this.createComponent()
     },
     closeAddDev() {
       this.data.isOpen = false
     },
     open() {
-      setTimeout(lang.hitch(this, function() {
-        this.data.isOpen = true
-        console.log(this)
         topic.publish('getSkills')
-      }), 10)},
+    },
     populate(skills) {
-      this.data.skills = skills
+      this.data.allSkills = skills
+      this.data.isOpen = true      
     },
     createComponent() {
       this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)

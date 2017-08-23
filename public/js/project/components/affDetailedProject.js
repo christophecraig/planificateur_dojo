@@ -8,14 +8,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				detailedProject: {
 					name: '',
 					developments: [],
-					developersMind: {},
-					isOpen: false
+					developersMind: {}
 				},
 				notification: ''
 			}
 			this.methods = {
 				openAddDev() {
-					this.$root.addDevIsOpen = true
+					topic.publish('openAddDev')
 				},
 				orderByAZ() {
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.alpha));

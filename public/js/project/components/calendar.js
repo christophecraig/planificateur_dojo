@@ -18,8 +18,38 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 		},
 		drawProjects (devs) {
 			this.data.devs = devs
-			document.getElementById('body').classList.remove('loading')
-			topic.publish('tasks', devs)
+			this.tasks = []
+			for (var dev in devs) {
+                this.tasks.push({}) // Pour ne pas se prendre un "undefined"
+                for (var prop in devs[dev]) {
+                    if (devs[dev][prop] !== null) {
+                        switch (prop) {
+                            case 'earlyStart':
+                            case 'plannedStart':
+                            case 'realStart':
+                            case 'lateStart':
+                                this.tasks[dev].start = devs[dev][prop]
+                                break
+                            case 'earlyEnd':
+                            case 'plannedEnd':
+                            case 'realEnd':
+                            case 'lateEnd':
+                                this.tasks[dev].end = devs[dev][prop]
+                                break
+                            case 'id':
+                                this.tasks[dev].id = devs[dev][prop]
+                                break
+                            case 'name':
+                                this.tasks[dev].name = devs[dev][prop]
+                                break
+                            case 'effort':
+                                this.tasks[dev].progress = devs[dev][prop]
+                                break
+                        }
+                    }
+                }
+			}
+			topic.publish('tasks', devs, this.tasks)
 		},
 		getColor (idProj) {
 			switch (idProj) {
