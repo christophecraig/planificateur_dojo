@@ -7,105 +7,29 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 devs: {}
             }
             this.methods = {
-                draw() {
-                    if (!document.getElementById('shape0')) {
-                        var svg = Snap(document.getElementById('svg'))
+                    draw() {
+                        if (!document.getElementById('shape0')) {
+                            var svg = Snap(document.getElementById('svg'))
 
-                        // this.drawing = svg.circle(100, 100, 100)
-                        // this.drawing.attr({
-                        //     fill: 'blue',
-                        //     stroke: '#000'
-                        // })
-                        for (var i = 0; i < this.data.devs.length; i++) {
-                            this['dev' + i] = Snap(document.getElementById(['dev' + i]))
-                            this['shape' + i] = this['dev' + i].rect(20, 20 + 40 * i, 160, 35)
-                            this['shape' + i].attr({
-                                id: ['shape' + i],
-                            })
-                            document.getElementById(['shape' + i]).addEventListener('click', lang.hitch(this, 'whoami'))
+                            // this.drawing = svg.circle(100, 100, 100)
+                            // this.drawing.attr({
+                            //     fill: 'blue',
+                            //     stroke: '#000'
+                            // })
+                            for (var i = 0; i < this.data.devs.length; i++) {
+                                this['dev' + i] = Snap(document.getElementById(['dev' + i]))
+                                this['shape' + i] = this['dev' + i].rect(20, 20 + 40 * i, 160, 35)
+                                this['shape' + i].attr({
+                                    id: ['shape' + i],
+                                })
+                                document.getElementById(['shape' + i]).addEventListener('click', lang.hitch(this, 'whoami'))
+                            }
                         }
+
                     }
                 },
-                whoami(e) {
-                    console.log('I am : ', e.target.id)
-                },
-                move() {
-
-                }
-            }
-            this.directives = {
-                fill(canvasEl, binding, _this) {
-                    console.log(_this.context.data.devs.length)
-                    // Get canvas context
-                    var ctx = canvasEl.getContext("2d");
-
-                    // Clear the canvas
-                    // for (var i = 0; i < _this.context.data.devs.length; i++) {
-                    // ctx.clearRect(15, 20, 300, 12)
-                    switch (_this.context.data.devs[i].id.fromProject) {
-                        case 'IIMPro':
-                            ctx.fillStyle = '#e03030'
-                            break
-                        case 'ReimsPro':
-                            ctx.fillStyle = 'green'
-                            break
-                        case 'CairnPro':
-                            ctx.fillStyle = 'blue'
-                            break
-                        case 'RAMEAUPro':
-                            ctx.fillStyle = 'orange'
-                            break
-                        case 'NumilogPro':
-                            ctx.fillStyle = 'purple'
-                            break
-                        case 'ModuleFRBRGestionPro':
-                            ctx.fillStyle = 'darkgrey'
-                            break
-                        case 'OptiPMBPro':
-                            ctx.fillStyle = 'darkblue'
-                            break
-                        case 'PHP7Pro':
-                            ctx.fillStyle = 'yellow'
-                            break
-                        case 'PMBKnowledgePro':
-                            ctx.fillStyle = '#e03030'
-                            break
-                        case 'CataAutoPro':
-                            ctx.fillStyle = '#e03030'
-                            break
-                        case 'RadioFrancePro':
-                            ctx.fillStyle = 'salmon'
-                            break
-                        case 'ModuleFRBRGestionPro':
-                            ctx.fillStyle = '#7f434f'
-                            break
-                        case 'RFDiversPro':
-                            ctx.fillStyle = '#47f2aa'
-                            break
-                        case 'ArteVODPro':
-                            ctx.fillStyle = '#47f2aa'
-                            break
-                        case 'Project_ID.1':
-                            ctx.fillStyle = '#47f2aa'
-                            break
-                        case 'trotroPro':
-                            ctx.fillStyle = 'red'
-                            break
-                    }
-                    ctx.fillRect(15, 20 + (40 * i), binding.value, 38)
-                    ctx.font = '18px Rubik, sans-serif'
-                    ctx.fillStyle = '#f2f2f2'
-                    ctx.fillText(_this.context.data.devs[i].id.fromProject, 20, 45 + (40 * i))
-                    // }
-                    for (var i = 0; i < _this.context.data.devs.length; i++) {
-                        Snap('#calendar')
-                    }
-                    // Récupérer les dates + 
-                    console.log('ok')
-                }
-            }
-            // topic.subscribe('drawProjects', lang.hitch(this, 'drawTasks')) 
-            this.level = 3
+                // topic.subscribe('drawProjects', lang.hitch(this, 'drawTasks')) 
+                this.level = 3
             this.levels = [
                 'Month',
                 'Week',
@@ -152,13 +76,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     }
                 }
                 this.__gantt = new Gantt('#gantt', this.tasks, {
-                    on_date_change: function(task, start, end) {
+                    on_date_change: function (task, start, end) {
                         console.log(task, start, end)
                     },
-                    on_progress_change: function(task, progress) {
+                    on_progress_change: function (task, progress) {
                         console.log(task, progress)
                     },
-                    on_view_change: function(mode) {
+                    on_view_change: function (mode) {
                         console.log(mode)
                     }
                 })
@@ -166,6 +90,19 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
+            this.expanded = false
+            document.getElementById('expand').addEventListener('click', lang.hitch(this, 'growGantt'))
+        },
+        growGantt() {
+            if (!this.expanded) {
+                document.getElementById('calendar').style = 'height:' + (window.innerHeight - 78) + 'px'
+                document.getElementById('expand').classList.add('fa-compress')
+                this.expanded = true
+            } else {
+                document.getElementById('calendar').style = 'height: 540px'
+                document.getElementById('expand').classList.remove('fa-compress')
+                this.expanded = false
+            }
         },
         setZoomLevel(arg) {
             if (arg === 1) {

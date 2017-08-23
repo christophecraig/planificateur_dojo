@@ -424,10 +424,13 @@ ul {
     display: inline-block; } }
 
 #calendar {
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch; }
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 540px;
+  max-height: 90%;
+  transition: height .5s; }
 
-.zoom {
+.controls {
   position: fixed;
   left: 10px; }
 
@@ -436,6 +439,9 @@ ul {
 
 #zoom-out {
   top: 140px; }
+
+#expand {
+  top: 190px; }
 
 #data::-webkit-scrollbar {
   height: 10px;

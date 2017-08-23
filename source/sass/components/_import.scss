@@ -1,5 +1,10 @@
-// Base 
-@import 'variables.scss';
+// Mixins 
+
+// Variables
+@import 'variables/_myvars.scss';
+
+// My Base 
+
 @import 'base.scss';
 
 // Animations

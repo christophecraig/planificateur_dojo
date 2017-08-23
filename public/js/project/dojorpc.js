@@ -7,7 +7,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			var _modal = new Modal('modal')
 			var leMenu = new menu('leMenu')
 			var _calendar = new calendar('calendar')
-			var _tasks = new tasks('task')
+			var _tasks = new tasks('tasks')
 			var loadWatcher = new eventLoad('loader') // Surveille les évènements et donc le chargement des données demandées
 			var detailedProject = new affDetailedProject('detailedProject')
 			var _resources = new resources('resources')

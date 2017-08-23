@@ -5,11 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Planificateur de tâches</title>
-	<!-- <script src="./js/libs/viewport-units-buggyfill.js"></script>
-	<script>
-		window.viewportUnitsBuggyfill.init();
-	</script> -->
-	<link rel="manifest" href="/manifest.json">
+	<link rel="stylesheet" href="./css/material.css">
+	<link rel="manifest" href="/manifest.json">	
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./css/fontello.css">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
@@ -45,7 +42,7 @@
 	<div id="app" @click="close">
 		<div id="sub-container">
 			<calendar>
-				<task></task>
+				<tasks></tasks>
 			</calendar>
 			<loader></loader>
 			<notification></notification>
@@ -61,9 +58,10 @@
 	<!-- TEMPLATE ZONE -->
 	<template id="_task">
 		<div>
-			<div class="fa fa-plus zoom btn" id="zoom-in"></div>
-			<div class="fa fa-minus zoom btn" id="zoom-out"></div>
+			<div class="fa fa-plus zoom btn controls" id="zoom-in"></div>
+			<div class="fa fa-minus zoom btn controls" id="zoom-out"></div>
 			<svg id="gantt"></svg>
+			<div class="fa fa-expand btn controls" id="expand"></div>
 			<!-- <canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas> -->
 		</div>
 	</template>
@@ -130,6 +128,7 @@
           </a>
 				</div>
 			</div>
+			<div id="slide-up">test</div>
 		</nav>
 	</template>
 	<template id="resource-tpl">

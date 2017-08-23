@@ -72,7 +72,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			},
 			gotFullProjects(projects) {
 				var developmentsToDraw = []
-				console.log(projects)
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
 						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
@@ -84,7 +83,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
 			},
 			drawOnGraph(devs) {
-				console.log(devs)
 				topic.publish('drawProjects', devs)
 			},
 			getDetailedProject(id) {

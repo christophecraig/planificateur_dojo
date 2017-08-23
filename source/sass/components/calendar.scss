@@ -1,9 +1,15 @@
 #calendar {
-    overflow-x: scroll;
+    overflow: scroll;
     -webkit-overflow-scrolling: touch;
+    height: 540px;
+    max-height: 90%;
+    transition: height .5s;
+    &.expanded {
+        
+    }
 }
 
-.zoom {
+.controls {
     position: fixed;
     left: 10px;
 }
@@ -14,4 +20,8 @@
 
 #zoom-out {
     top: 140px;
+}
+
+#expand {
+    top: 190px
 }
