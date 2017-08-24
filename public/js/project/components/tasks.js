@@ -18,11 +18,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             topic.subscribe('ganttLoaded', lang.hitch(this, 'storeDevs'))
             this.createComponent()
         },
-        storeDevs(devs, tasks) {
+        storeDevs(devs) {
+            console.log('ganttLoaded')
             moment.locale('fr')
-            console.log(devs, tasks)
-            this.data.devs = devs
-            this.tasks = tasks
             this.__gantt = new Gantt('#gantt', devs, {
                 on_date_change(task, start, end) {
                     console.log(task, start, end)
@@ -32,9 +30,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 },
                 on_view_change(mode) {
                     console.log(mode)
+                    topic.publish('ganttRendered')
                 }
             })
-            // this.__gantt.refresh(this.tasks)
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
             this.expanded = false

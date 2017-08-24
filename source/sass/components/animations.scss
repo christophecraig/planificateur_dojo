@@ -41,8 +41,8 @@ $light-green-ball: #d6de39;
 // LOADER 
 .load {
     background: #f9f9f9 url('../images/logo_pmb.png') no-repeat;
-    background-position: 50% 20%;
-    background-size: 30vw;
+    background-position: 50% 30%;
+    background-size: 18vw;
     position: fixed;
     z-index: 10;
     top: 0;
@@ -52,13 +52,14 @@ $light-green-ball: #d6de39;
     ul {
         display: flex;
         position: absolute;
-        top: 70%;
+        top: 60%;
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 55px 15px;
     }
     .ball {
         background-color: $orange-ball;
+        will-change: box-shadow;
         float: left;
         width: 25px;
         height: 25px;
@@ -97,35 +98,35 @@ $light-green-ball: #d6de39;
 
 @keyframes loading {
     to {
-        transform: translate3d(0, 30px, 10px);
+        transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($light-green-ball, 15%), 0 10px 20px darken($light-green-ball, 16%);
     }
 }
 
 @keyframes loading1 {
     to {
-        transform: translate3d(0, 30px, 10px);
+        transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($green-ball, 15%), 0 10px 20px darken($green-ball, 16%);
     }
 }
 
 @keyframes loading2 {
     to {
-        transform: translate3d(0, 30px, 10px);
+        transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($red-ball, 15%), 0 10px 20px darken($red-ball, 16%);
     }
 }
 
 @keyframes loading3 {
     to {
-        transform: translate3d(0, 30px, 10px);
+        transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($orange-ball, 15%), 0 10px 20px darken($orange-ball, 16%);
     }
 }
 
 @keyframes loading4 {
     to {
-        transform: translate3d(0, 30px, 10px);
+        transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($yellow-ball, 15%), 0 10px 20px darken($yellow-ball, 16%);
     }
 }

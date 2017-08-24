@@ -12,17 +12,12 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 		query(ids) {
 			this.data = []
 			var def = new Deferred()
-			if (ids[0].dev !== undefined) {
-				for (var i = 0; i < ids.length; i++) {
-					// var parentProject = proj ? proj : null
-					this.ws.getDetailedDevelopment(ids[i].dev).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
-				}
-			} else {
-				for (var i = 0; i < ids.length; i++) {
-					// var parentProject === proj ? proj : null
-					this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def), lang.hitch(this, 'reportError', def))
-				}
+
+			for (var i = 0; i < ids.length; i++) {
+				// var parentProject === proj ? proj : null
+				this.ws.getDetailedDevelopment(ids[i]).then(lang.hitch(this, 'gotDevs', def, ids.length), lang.hitch(this, 'reportError', def))
 			}
+
 			return def
 		},
 		add(dev) {
@@ -41,9 +36,11 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 		gotDev(def, dev) {
 			def.resolve(dev)
 		},
-		gotDevs(def, dev) {
+		gotDevs(def, nb, dev) {
 			this.data.push(dev)
-			def.resolve(this.data)
+			if (this.data.length === nb) {
+				def.resolve(this.data)
+			}
 		},
 		devAdded(def, dev) {
 			console.log('et on ajoute ceci', dev)

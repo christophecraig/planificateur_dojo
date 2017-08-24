@@ -113,8 +113,8 @@ ul {
 
 .load {
   background: #f9f9f9 url("../images/logo_pmb.png") no-repeat;
-  background-position: 50% 20%;
-  background-size: 30vw;
+  background-position: 50% 30%;
+  background-size: 18vw;
   position: fixed;
   z-index: 10;
   top: 0;
@@ -124,12 +124,13 @@ ul {
   .load ul {
     display: flex;
     position: absolute;
-    top: 70%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 55px 15px; }
   .load .ball {
     background-color: #f0a934;
+    will-change: box-shadow;
     float: left;
     width: 25px;
     height: 25px;
@@ -162,27 +163,27 @@ ul {
 
 @keyframes loading {
   to {
-    transform: translate3d(0, 30px, 10px);
+    transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #a7ae1d, 0 10px 20px #a2a91c; } }
 
 @keyframes loading1 {
   to {
-    transform: translate3d(0, 30px, 10px);
+    transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #2b7d48, 0 10px 20px #2a7945; } }
 
 @keyframes loading2 {
   to {
-    transform: translate3d(0, 30px, 10px);
+    transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #bb1513, 0 10px 20px #b71413; } }
 
 @keyframes loading3 {
   to {
-    transform: translate3d(0, 30px, 10px);
+    transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #c9820f, 0 10px 20px #c47f0e; } }
 
 @keyframes loading4 {
   to {
-    transform: translate3d(0, 30px, 10px);
+    transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #d2c506, 0 10px 20px #cdc006; } }
 
 .modal-container label {

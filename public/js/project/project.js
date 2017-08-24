@@ -50,7 +50,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				topic.publish('loading')
 				when(this.projectStore.query({
 						short: false
-					}), 
+					}),
 					lang.hitch(this, 'gotFullProjects'),
 					lang.hitch(this, 'reportError'))
 			},
@@ -62,7 +62,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				for (var prop in proj) {
 					this.ids.push(prop)
 				}
-				setTimeout(lang.hitch(this, function () { 
+				setTimeout(lang.hitch(this, function () {
 					this.projectsInSlider = document.querySelectorAll('.project')
 					for (var i = 0; i < this.projectsInSlider.length; i++) {
 						this.projectsInSlider[i].nb = i // On ajoute la propriété
@@ -75,16 +75,68 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				var developmentsToDraw = []
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
-						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
+						developmentsToDraw.push({
+							dev: projects[proj].developments[i],
+							fromProject: proj
+						})
 					}
 				}
 				this.retrieveDatesToDraw(developmentsToDraw)
 			},
 			retrieveDatesToDraw(devs) {
-				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
+				console.log(devs)
+				var ids = []
+				for (var i = 0; i < devs.length; i++) {
+					for (var i = 0; i < devs.length; i++) {
+						ids.push(devs[i].dev)
+					}
+					if (i === devs.length) {
+						when(this.devStore.query(ids, devs.length), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
+					}
+				}
 			},
 			drawOnGraph(devs) {
-				topic.publish('drawProjects', devs)
+				console.log(devs)
+
+				this.tasks = []
+				this.counter = 0
+
+				for (var dev in devs) {
+					this.tasks.push({})
+					if (this.counter !== (devs.length - 1)) {
+						for (var prop in devs[dev]) {
+							if (devs[dev][prop] !== null) {
+								switch (prop) {
+									case 'earlyStart':
+									case 'plannedStart':
+									case 'realStart':
+									case 'lateStart':
+										this.tasks[dev].start = devs[dev][prop]
+										break
+									case 'earlyEnd':
+									case 'plannedEnd':
+									case 'realEnd':
+									case 'lateEnd':
+										this.tasks[dev].end = devs[dev][prop]
+										break
+									case 'id':
+										this.tasks[dev].id = devs[dev][prop]
+										break
+									case 'name':
+										this.tasks[dev].name = devs[dev][prop]
+										break
+									case 'effort':
+										this.tasks[dev].progress = devs[dev][prop]
+										break
+								}
+							}
+						}
+						this.counter ++
+					} else {
+						topic.publish('drawProjects', this.tasks)						
+					}
+				}
+
 			},
 			getDetailedProject(id) {
 				topic.publish('loading')
