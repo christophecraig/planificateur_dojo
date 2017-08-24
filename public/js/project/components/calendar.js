@@ -46,7 +46,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				}
 			}), 2500)
 			setTimeout(lang.hitch(this, function() {
-				this.publish(this.tasks)				
+				this.publish(this.tasks)			
 			}), 2500)
 		},
 		publish(tasks) {
