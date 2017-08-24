@@ -15,7 +15,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         addProj() {
           topic.publish('addProj')
         },
-        openDev(id) {
+        openProject(id) {
           topic.publish('getDetailedProject', id)
           this.$root.changeView(this.$root.currentView,'./detailedProject')
         }
@@ -26,7 +26,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     },
     displayProj(proj) {
       this.data.project = proj
-      setTimeout(topic.publish('loaded'), 250)
     },
     alertError() {
       this.data.notification = 'Une erreur a eu lieu pendant le téléchargement.'

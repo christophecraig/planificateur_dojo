@@ -22,7 +22,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
     },
     showResources(resources) {
       this.data.resources = resources
-      setTimeout(topic.publish('loaded'), 200)
     },
     getHolidays(e) {
       // for (var i = 0; i < this.data.resources.length; i++) {

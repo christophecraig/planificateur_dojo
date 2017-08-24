@@ -60,7 +60,6 @@
 			<div class="fa fa-minus zoom btn controls" id="zoom-out"></div>
 			<svg id="gantt"></svg>
 			<div class="fa fa-expand btn controls" id="expand"></div>
-			<!-- <canvas id="canvas" v-fill="data.width" width="1920" :height="35 + 40*data.devs.length"></canvas> -->
 		</div>
 	</template>
 	<template id="calendar_tpl">
@@ -69,22 +68,24 @@
 		</div>
 	</template>
 	<template id="load_tpl">
-		<div class="load" v-if="data.isLoading">
-			<ul style="list-style-type:none">
-				<li class="ball light-green"></li>
-				<li class="ball green"></li>
-				<li class="ball red"></li>
-				<li class="ball orange"></li>
-				<li class="ball yellow"></li>
-			</ul>
-		</div>
+		<transition name="fade">
+			<div class="load" v-show="data.isLoading">
+				<ul style="list-style-type:none">
+					<li class="ball light-green"></li>
+					<li class="ball green"></li>
+					<li class="ball red"></li>
+					<li class="ball orange"></li>
+					<li class="ball yellow"></li>
+				</ul>
+			</div>
+		</transition>
 	</template>
 	<template id="projects_tpl">
 		<transition name="fade">
 			<div id="projects-slider">
 				<div id="data">
 					<div id="scroll_container">
-						<div class="project" v-for="project in data.project" :proj-id="project.id" @click="openDev(project.id)">
+						<div class="project" v-for="project in data.project" :proj-id="project.id" @click="openProject(project.id)">
 							<!-- PROJECT COLOR ICI -->{{project.name}}</div>
 						<div class="project" @click="addProj">Ajouter un projet</div>
 					</div>
@@ -124,15 +125,15 @@
 		<transition name="fade">
 			<div class="resources" ref="res">
 				<div class="resource" v-for="resource in data.resources" @click.capture="getDetailedResource(resource.id)">
-					<span class="color"></span><span class="name">{{resource.firstName}} {{resource.name}}</span>
+					<span class="name">{{resource.firstName}} {{resource.name}}</span>
 				</div>
 				<div class="btn" @click.stop="openAddRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
 				<add-resource></add-resource>
 				<detailed-res></detailed-res>
 			</div>
 		</transition>
-
 	</template>
+
 	<template id="detailed-resource-tpl">
 		<modal v-show="data.isOpen">
 			<div id="photo">
@@ -152,7 +153,7 @@
 					</svg>
 				</div>
 			</div>
-			<!-- <div class="btn" @click="editRes">Modifier</div> -->
+			<div class="btn" @click="editRes">Modifier</div>
 		</modal>
 	</template>
 	<template id="modal-tpl">

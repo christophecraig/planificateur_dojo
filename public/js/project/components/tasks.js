@@ -6,30 +6,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.data = {
                 devs: {}
             }
-            this.methods = {
-                    draw() {
-                        if (!document.getElementById('shape0')) {
-                            var svg = Snap(document.getElementById('svg'))
-
-                            // this.drawing = svg.circle(100, 100, 100)
-                            // this.drawing.attr({
-                            //     fill: 'blue',
-                            //     stroke: '#000'
-                            // })
-                            for (var i = 0; i < this.data.devs.length; i++) {
-                                this['dev' + i] = Snap(document.getElementById(['dev' + i]))
-                                this['shape' + i] = this['dev' + i].rect(20, 20 + 40 * i, 160, 35)
-                                this['shape' + i].attr({
-                                    id: ['shape' + i],
-                                })
-                                document.getElementById(['shape' + i]).addEventListener('click', lang.hitch(this, 'whoami'))
-                            }
-                        }
-
-                    }
-                },
-                // topic.subscribe('drawProjects', lang.hitch(this, 'drawTasks')) 
-                this.level = 3
+            this.level = 3
             this.levels = [
                 'Month',
                 'Week',
@@ -37,29 +14,27 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 'Half Day',
                 'Quarter Day'
             ]
-            topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')) // doesn't exist yet
-            topic.subscribe('tasks', lang.hitch(this, 'storeDevs'))
+            topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')) // doesn't exist yet, goal is to highlight the project in the calendar when we hover it in the developments view
+            topic.subscribe('ganttLoaded', lang.hitch(this, 'storeDevs'))
             this.createComponent()
         },
         storeDevs(devs, tasks) {
+            moment.locale('fr')
             console.log(devs, tasks)
             this.data.devs = devs
             this.tasks = tasks
-            this.__gantt = new Gantt('#gantt', this.tasks, {
-                on_date_change (task, start, end) {
+            this.__gantt = new Gantt('#gantt', devs, {
+                on_date_change(task, start, end) {
                     console.log(task, start, end)
                 },
-                on_progress_change (task, progress) {
+                on_progress_change(task, progress) {
                     console.log(task, progress)
                 },
-                on_view_change (mode) {
+                on_view_change(mode) {
                     console.log(mode)
-                    topic.publish('ganttLoaded')
                 }
             })
-            window.addEventListener('click', lang.hitch( this, function() {
-                this.__gantt.refresh(this.tasks)
-            }))
+            // this.__gantt.refresh(this.tasks)
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
             this.expanded = false

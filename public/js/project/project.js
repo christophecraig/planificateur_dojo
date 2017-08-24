@@ -8,10 +8,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// Stable unfinished work-conf : 
-				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
@@ -21,7 +21,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.getListOfProjects()
 				this.getProjects()
 				this.ids = []
-				this.projectIsLoading = false
 
 				// Listeners
 
@@ -51,40 +50,37 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				topic.publish('loading')
 				when(this.projectStore.query({
 						short: false
-					}), lang.hitch(this, 'gotFullProjects'),
+					}), 
+					lang.hitch(this, 'gotFullProjects'),
 					lang.hitch(this, 'reportError'))
 			},
 			gotListOfProjects(proj) {
-				topic.publish('loaded') // cet évènement indique que le chargement est terminé
+				// topic.publish('loaded') // cet évènement indique que le chargement est terminé
 				topic.publish('gotProjects', proj)
-				// On rassemble les ids des projets dans un tableau pour pouvoir les réutiliser pour le
-				// getDetailedProject(idDuProjet)
+				// On rassemble les ids des projets dans un tableau pour pouvoir les réutiliser pour le getDetailedProject(idDuProjet)
 				this.sliderWidth = 0
 				for (var prop in proj) {
 					this.ids.push(prop)
 				}
-				setTimeout(lang.hitch(this, function () { // setTimeout pour laisser le temps au tableau ids de se construire
-					this.sliderProjects = document.querySelectorAll('.project')
-					// tableau des divs .projet
-					for (var i = 0; i < this.sliderProjects.length; i++) {
-						this.sliderProjects[i].nb = i // On ajoute la propriété
-						this.sliderWidth += this.sliderProjects[i].clientWidth + 8 // Pour ajouter la marge
+				setTimeout(lang.hitch(this, function () { 
+					this.projectsInSlider = document.querySelectorAll('.project')
+					for (var i = 0; i < this.projectsInSlider.length; i++) {
+						this.projectsInSlider[i].nb = i // On ajoute la propriété
+						this.sliderWidth += this.projectsInSlider[i].clientWidth + 8 // Pour ajouter la marge
 					}
 					document.getElementById('scroll_container').style = 'width: ' + (this.sliderWidth) + 'px;'
-				}), 2500);
+				}), 2500); // setTimeout pour laisser le temps au tableau ids de se construire, à remplacer par un callback
 			},
 			gotFullProjects(projects) {
 				var developmentsToDraw = []
 				for (var proj in projects) {
 					for (var i = 0; i < projects[proj].developments.length; i++) {
 						developmentsToDraw.push({dev: projects[proj].developments[i], fromProject: proj})
-						// developmentsToDraw.push(projects[proj].developments[i])
 					}
 				}
 				this.retrieveDatesToDraw(developmentsToDraw)
 			},
 			retrieveDatesToDraw(devs) {
-				console.log(devs)
 				when(this.devStore.query(devs), lang.hitch(this, 'drawOnGraph'), lang.hitch(this, 'reportError'))
 			},
 			drawOnGraph(devs) {
@@ -92,7 +88,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			},
 			getDetailedProject(id) {
 				topic.publish('loading')
-				// this.project.getDetailedProject(this.ids[this.currentProject]).then(lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
 				when(this.projectStore.get(id), lang.hitch(this, 'gotDetailedProject'), lang.hitch(this, 'reportError'))
 			},
 			gotDetailedProject(proj) {
@@ -103,7 +98,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 					this.developmentsIds.push(proj.developments[i])
 				}
 				when(this.devStore.query(proj.developments), lang.hitch(this, 'gotDevelopment'), lang.hitch(this, 'reportError'))
-				this.projectIsLoading = false
 			},
 			getDetailedDevelopment(devId) {
 				when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
@@ -113,9 +107,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			},
 			gotDetailedDevelopment(dev) {
 				topic.publish('gotDetailedDevelopment', dev)
+				topic.publish('loaded')
 			},
 			deleteDev(dev, property) {
-				// this.project.deleteDevelopment().then(lang.hitch(this, ''), lang.hitch(this, 'reportError'))
 				console.log('évnènement bien reçu sur project.js ', dev)
 				when(this.devStore.remove(dev, property), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
 			},
@@ -129,7 +123,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.add(dev), lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
 			},
 			submitNewRes(id, name, firstName) {
-				console.log('ajout dune ressource')
+				// A revoir pour intégrer dans le store et non plus ici
+				console.log('ajout d\'une ressource : ' + firstName + ' ' + name)
 				this.connexion.addResource({
 					"id": id,
 					"name": name,
@@ -171,7 +166,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			},
 			gotResources(resources) {
 				topic.publish('gotResources', resources)
-				topic.publish('loaded')
 			},
 			getDetailedResource(id) {
 				when(this.resourceStore.get(id), lang.hitch(this, 'gotDetailedResource'), lang.hitch(this, 'reportError'))

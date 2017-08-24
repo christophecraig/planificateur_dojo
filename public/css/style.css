@@ -89,6 +89,9 @@ ul {
 .fade-enter-active {
   transition: all .5s; }
 
+.load.fade-leave-to {
+  transition: all .5s ease-out; }
+
 #developments span .fade-leave-active,
 #developments span .fade-leave-to {
   box-sizing: border-box; }
@@ -109,18 +112,25 @@ ul {
   opacity: 0; }
 
 .load {
-  background: #fff;
-  position: absolute;
+  background: #f9f9f9 url("../images/logo_pmb.png") no-repeat;
+  background-position: 50% 20%;
+  background-size: 30vw;
+  position: fixed;
   z-index: 10;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0; }
-  .load li {
-    background-color: #3949AB;
+  .load ul {
+    display: flex;
     position: absolute;
-    top: 50%;
-    left: 45%;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 55px 15px; }
+  .load .ball {
+    background-color: #f0a934;
+    float: left;
     width: 25px;
     height: 25px;
     content: "";
@@ -128,45 +138,52 @@ ul {
     border-radius: 100%;
     transform: translate3d(0px, -30px, 10px);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    animation: loading 1.15s ease-in-out infinite alternate; }
+    animation: loading3 1.15s ease-in-out infinite alternate; }
 
-.load li:nth-child(2) {
-  background-color: #e74c3c;
-  left: 50%;
-  animation: loading1 1.15s ease-in-out infinite alternate;
+.load .red.ball {
+  background-color: #ea3331;
+  animation: loading2 1.15s ease-in-out infinite alternate;
   animation-delay: 0.4s; }
 
-.load li:nth-child(3) {
-  background-color: #f1c40f;
-  left: 55%;
-  animation: loading2 1.15s ease-in-out infinite alternate;
+.load .yellow.ball {
+  background-color: #f9ec2b;
+  animation: loading4 1.15s ease-in-out infinite alternate;
   animation-delay: 0.8s; }
 
-.load li:nth-child(4) {
-  background-color: #2ecc71;
-  left: 60%;
-  animation: loading3 1.15s ease-in-out infinite alternate;
+.load .green.ball {
+  background-color: #3fb668;
+  animation: loading1 1.15s ease-in-out infinite alternate;
   animation-delay: 1.2s; }
+
+.load .light-green.ball {
+  background-color: #d6de39;
+  animation: loading 1.15s ease-in-out infinite alternate;
+  animation-delay: .8s; }
 
 @keyframes loading {
   to {
     transform: translate3d(0, 30px, 10px);
-    box-shadow: 10px 10px 30px #3498db, 0 10px 20px #3498db; } }
+    box-shadow: 10px 10px 30px #a7ae1d, 0 10px 20px #a2a91c; } }
 
 @keyframes loading1 {
   to {
     transform: translate3d(0, 30px, 10px);
-    box-shadow: 10px 10px 30px #bd081c, 0 10px 20px #bd081c; } }
+    box-shadow: 10px 10px 30px #2b7d48, 0 10px 20px #2a7945; } }
 
 @keyframes loading2 {
   to {
     transform: translate3d(0, 30px, 10px);
-    box-shadow: 10px 10px 30px #f39c12, 0 10px 20px #f39c12; } }
+    box-shadow: 10px 10px 30px #bb1513, 0 10px 20px #b71413; } }
 
 @keyframes loading3 {
   to {
     transform: translate3d(0, 30px, 10px);
-    box-shadow: 10px 10px 30px #27ae60, 0 10px 20px #27ae60; } }
+    box-shadow: 10px 10px 30px #c9820f, 0 10px 20px #c47f0e; } }
+
+@keyframes loading4 {
+  to {
+    transform: translate3d(0, 30px, 10px);
+    box-shadow: 10px 10px 30px #d2c506, 0 10px 20px #cdc006; } }
 
 .modal-container label {
   display: block;

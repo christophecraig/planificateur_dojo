@@ -11,7 +11,6 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 		},
 		query(ids) {
 			this.data = []
-			console.log(ids)
 			var def = new Deferred()
 			if (ids[0].dev !== undefined) {
 				for (var i = 0; i < ids.length; i++) {
@@ -43,7 +42,6 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 			def.resolve(dev)
 		},
 		gotDevs(def, dev) {
-			console.log(dev)
 			this.data.push(dev)
 			def.resolve(this.data)
 		},

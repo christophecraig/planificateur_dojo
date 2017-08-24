@@ -1,5 +1,15 @@
+$orange-ball: #f0a934;
+$red-ball: #ea3331;
+$yellow-ball: #f9ec2b;
+$green-ball: #3fb668;
+$light-green-ball: #d6de39;
+
 .fade-enter-active {
     transition: all .5s;
+}
+
+.load.fade-leave-to {
+    transition: all .5s ease-out;
 }
 
 #developments {
@@ -33,7 +43,7 @@
     background: #f9f9f9 url('../images/logo_pmb.png') no-repeat;
     background-position: 50% 20%;
     background-size: 30vw;
-    position: absolute;
+    position: fixed;
     z-index: 10;
     top: 0;
     left: 0;
@@ -48,7 +58,7 @@
         padding: 55px 15px;
     }
     .ball {
-        background-color: #f0a934;
+        background-color: $orange-ball;
         float: left;
         width: 25px;
         height: 25px;
@@ -62,60 +72,60 @@
 }
 
 .load .red.ball {
-    background-color: #ea3331;
+    background-color: $red-ball;
     animation: loading2 1.15s ease-in-out infinite alternate;
     animation-delay: 0.4s;
 }
 
 .load .yellow.ball {
-    background-color: #f9ec2b;
+    background-color: $yellow-ball;
     animation: loading4 1.15s ease-in-out infinite alternate;
     animation-delay: 0.8s;
 }
 
 .load .green.ball {
-    background-color: #3fb668;
+    background-color: $green-ball;
     animation: loading1 1.15s ease-in-out infinite alternate;
     animation-delay: 1.2s;
 }
 
 .load .light-green.ball {
-    background-color: #d6de39;
+    background-color: $light-green-ball;
     animation: loading 1.15s ease-in-out infinite alternate;
-    animation-delay: 1.6s;
+    animation-delay: .8s;
 }
 
 @keyframes loading {
     to {
         transform: translate3d(0, 30px, 10px);
-        box-shadow: 10px 10px 30px #d6de39, 0 10px 20px #d6de39;
+        box-shadow: 10px 10px 30px darken($light-green-ball, 15%), 0 10px 20px darken($light-green-ball, 16%);
     }
 }
 
 @keyframes loading1 {
     to {
         transform: translate3d(0, 30px, 10px);
-        box-shadow: 10px 10px 30px #3fb668, 0 10px 20px #3fb668;
+        box-shadow: 10px 10px 30px darken($green-ball, 15%), 0 10px 20px darken($green-ball, 16%);
     }
 }
 
 @keyframes loading2 {
     to {
         transform: translate3d(0, 30px, 10px);
-        box-shadow: 10px 10px 30px #ea3331, 0 10px 20px #ea3331;
+        box-shadow: 10px 10px 30px darken($red-ball, 15%), 0 10px 20px darken($red-ball, 16%);
     }
 }
 
 @keyframes loading3 {
     to {
         transform: translate3d(0, 30px, 10px);
-        box-shadow: 10px 10px 30px #f0a934, 0 10px 20px #f0a934;
+        box-shadow: 10px 10px 30px darken($orange-ball, 15%), 0 10px 20px darken($orange-ball, 16%);
     }
 }
 
 @keyframes loading4 {
     to {
         transform: translate3d(0, 30px, 10px);
-        box-shadow: 10px 10px 30px #f9ec2b, 0 10px 20px #f9ec2b;
+        box-shadow: 10px 10px 30px darken($yellow-ball, 15%), 0 10px 20px darken($yellow-ball, 16%);
     }
 }
