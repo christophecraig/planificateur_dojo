@@ -131,3 +131,10 @@ $light-green-ball: #d6de39;
         box-shadow: 10px 10px 30px darken($yellow-ball, 15%), 0 10px 20px darken($yellow-ball, 16%);
     }
 }
+
+#app {
+    transition: transform .5s ease-out;    
+}
+.slide-up {
+    transform: translate3d(0, -640px, 0);
+}

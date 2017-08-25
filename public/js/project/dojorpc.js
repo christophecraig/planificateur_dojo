@@ -26,7 +26,6 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					currentView: '',
 					lastView: '',
 					isLoading: false,
-					modalOpen: false,
 					addDevIsOpen: false,
 					addCustomerIsOpen: false,
 					editDevIsOpen: false,

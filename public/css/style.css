@@ -16,6 +16,9 @@ ul {
   padding: 0;
   overflow: hidden; }
 
+#top {
+  overflow: hidden; }
+
 #bottom {
   position: relative;
   padding: 20px 25px; }
@@ -187,6 +190,12 @@ ul {
     transform: translate3d(5px, 30px, 10px);
     box-shadow: 10px 10px 30px #d2c506, 0 10px 20px #cdc006; } }
 
+#app {
+  transition: transform .5s ease-out; }
+
+.slide-up {
+  transform: translate3d(0, -640px, 0); }
+
 .modal-container label {
   display: block;
   overflow: hidden;
@@ -206,14 +215,14 @@ ul {
   float: left; }
 
 .modal-mask {
-  position: fixed;
+  position: absolute;
   z-index: 9998;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  transition: opacity .3s ease; }
+  transition: opacity .3s ease-out; }
 
 .modal-wrapper {
   vertical-align: middle;
@@ -264,6 +273,19 @@ ul {
 @media screen and (min-width: 1024px) {
   .modal-container {
     max-height: 90%; } }
+
+#slide-up {
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+  width: 50px;
+  height: 26px;
+  line-height: 26px;
+  font-weight: bold;
+  font-size: 1.5em;
+  cursor: pointer;
+  background: #f2f2f2;
+  border-radius: 2px 2px 0 0; }
 
 @media screen and (min-width: 769px) {
   .menu-wrap {
@@ -506,7 +528,7 @@ ul {
   -webkit-overflow-scrolling: touch;
   height: 540px;
   max-height: 90%;
-  transition: height .5s; }
+  transition: height .5s ease-out; }
 
 .controls {
   position: fixed;

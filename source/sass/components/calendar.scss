@@ -3,7 +3,7 @@
     -webkit-overflow-scrolling: touch;
     height: 540px;
     max-height: 90%;
-    transition: height .5s;
+    transition: height .5s ease-out;
     &.expanded {
         
     }

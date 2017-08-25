@@ -39,21 +39,24 @@
 </head>
 
 <body id="body">
-	<div id="app" @click="close">
-		<calendar>
-			<tasks></tasks>
-		</calendar>
+	<div id="app">
 		<loader></loader>
-		<notification></notification>
-		<projects></projects>
+		<div id="top">
+			<calendar>
+				<tasks></tasks>
+			</calendar>
+			<notification></notification>
+			<projects></projects>
+		</div>
 		<le-menu></le-menu>
+		<div id="slide-up" class="fa fa-angle-up"></div>
 		<div id="bottom">
-			<component :is="currentView" transition="fade" transition-mode="out-in"></component>
+			<component @click="$root.close" :is="currentView" transition="fade" transition-mode="out-in"></component>
 		</div>
 	</div>
-	<!-- Browserify <script src="./build.js"></script>  -->
-	<!-- Webpack <script src="./bundle.js"></script> -->
 	<script src="./bundle.js"></script>
+	<!-- Le script ci-dessus contient tout les js utilisés. Il équivaut à mettre le dojorpc.js dans dojoConfig.deps -->
+
 	<!-- TEMPLATE ZONE -->
 	<template id="_task">
 		<div>
@@ -119,7 +122,6 @@
           </a>
 				</div>
 			</div>
-			<div id="slide-up">test</div>
 		</nav>
 	</template>
 	<template id="resource-tpl">
@@ -129,14 +131,14 @@
 					<span class="name">{{resource.firstName}} {{resource.name}}</span>
 				</div>
 				<div class="btn" @click.stop="openAddRes">Ajouter une ressource <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-				<add-resource></add-resource>
-				<detailed-res></detailed-res>
+				<add-resource :is-open="data.addIsOpen" @close="close"></add-resource>
+				<detailed-res :is-open="data.isOpen" @close="close"></detailed-res>
 			</div>
 		</transition>
 	</template>
 
 	<template id="detailed-resource-tpl">
-		<modal v-show="data.isOpen">
+		<modal v-if="_isOpen">
 			<div id="photo">
 				<!-- <img :src="data.res.photo" :alt="data.res.firstName + data.res.name"> Photo ici -->
 			</div>
@@ -154,15 +156,15 @@
 					</svg>
 				</div>
 			</div>
-			<div class="btn" @click="editRes">Modifier</div>
+			<!-- <div class="btn" @click="editRes">Modifier</div> -->
 		</modal>
 	</template>
 	<template id="modal-tpl">
 		<transition name="modal">
-			<div class="modal-mask">
+			<div class="modal-mask" @click="$parent.$emit('close')">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
-						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
+						<div class="btn btn--close" @click="$parent.$emit('close')"><i class="icon-cancel"></i></div>
 						<slot></slot>
 					</div>
 				</div>
@@ -170,7 +172,7 @@
 		</transition>
 	</template>
 	<template id="add-res-tpl">
-		<modal v-show="data.isOpen">
+		<modal v-if="_isOpen">
 			<h4>Ajouter une ressource</h4>
 			<div class="form-group">
 				<label for="newResourceFirstName">Prénom</label>
@@ -180,9 +182,9 @@
 				<label for="newResourceName">Nom</label>
 				<input type="text" class="form-control" id="newResourceName" placeholder="Nom">
 			</div>
-			<div class="form-group">
-				<label for="newResourceSkills">Compétences</label>
-				<input v-for="skill in data.allSkills" type="checkbox" class="form-control" id="newResourceSkills" placeholder="Compétences">
+			<div class="form-group" v-for="(skill, index) in data.allSkills">
+				<label :for="'newResourceSkills' + index">{{skill.name}}</label>
+				<input type="number" class="form-control" :id="'newResourceSkill' + index" min="0" max="1" step="0.01">
 			</div>
 			<div class="btn" @click="submitResource">Sauvegarder</div>
 		</modal>
@@ -200,20 +202,19 @@
 						<img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
 						<img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
 					</div>
-					<div class="btn" @click.stop="openAddDev">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+					<div class="btn" @click.stop="open">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
 					<div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
 					<div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
 				</div>
 				<development></development>
 			</div>
-			<add-dev></add-dev>
+			<add-dev :is-open="data.isOpen"></add-dev>
 		</div>
 	</template>
 	<template id="add-dev-tpl">
-		<modal v-show="data.isOpen">
+		<modal v-if="_isOpen" @close="close">
+			<h4>Ajouter un développement</h4>
 			<form name="addDev">
-				<h4>Ajouter un développement</h4>
-
 				<label>Titre</label>
 				<input type="text" v-model="data.dev.name" placeholder="Titre">
 
@@ -234,13 +235,13 @@
 				<input type="date" v-model="data.dev.realEnd">
 
 				<label>Priorité</label>
-				<select name="priority" v-model="data.dev.priority" class="form-group">
-								<option value="PrioTresHaute" class="form-control">Très Haute</option>
-								<option value="PrioHaute" class="form-control">Haute</option>
-								<option value="PrioNormale" class="form-control">Normale</option>
-								<option value="PrioBasse" class="form-control">Basse</option>
-								<option value="PrioTresBasse" class="form-control">Très Basse</option>
-							</select>
+				<select name="priority" v-model="data.dev.priority" class="form-control">
+									<option value="PrioTresHaute" >Très Haute</option>
+									<option value="PrioHaute" >Haute</option>
+									<option value="PrioNormale" >Normale</option>
+									<option value="PrioBasse" >Basse</option>
+									<option value="PrioTresBasse" >Très Basse</option>
+								</select>
 
 				<label>Facultatif</label>
 				<input type="checkbox" v-model="data.dev.optional">
@@ -249,7 +250,7 @@
 
 				<label>développement parent</label>
 
-				<label>Compétences</label>
+				<h5>Compétences</h5>
 				<div v-for="(skill, index) in data.allSkills" class="form-check">
 					<label for="" class="form-check-label">{{skill.name}}</label>
 					<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" class="form-check-input">
@@ -269,18 +270,17 @@
 					<div class="align-right">
 						<span class="skill-tag" v-for="skills in dev.skillTags">{{skills}}</span>
 						<span class="date">Du {{dev.plannedStart}} au {{dev.plannedEnd}}</span>
-						<span class="edit fa fa-pencil" @click.stop="openEditDev(dev.id)"></span>
+						<span class="edit fa fa-pencil" @click.stop="open(dev.id)"></span>
 						<span class="delete fa fa-trash" @click.stop="deleteDev(dev.id, dev.earlyStart)"></span>
 					</div>
 				</div>
 			</transition-group>
-			<edit-dev v-if="data.editDevIsOpen"></edit-dev>
+			<edit-dev :is-open="data.isOpen"></edit-dev>
 
 		</div>
 	</template>
 	<template id="edit_the_dev">
-		<modal>
-
+		<modal v-if="_isOpen">
 			<form name="editDev">
 				<h4>Modifier un développement</h4>
 				<label>Titre
@@ -352,23 +352,14 @@
 	</template>
 
 	<template id="add-customer-tpl">
-		<transition name="modal">
-			<div class="modal-mask" @click.stop="$root.close">
-				<div class="modal-wrapper">
-					<div class="modal-container" @click.stop>
-						<div class="btn btn--close" @click="$root.close"><i class="icon-cancel"></i></div>
-
-						<form name="addCustomer">
-							<h4>Ajouter un client</h4>
-							<label>Prénom<input type="text" name="firstName" v-model="data.formContent.firstName" placeholder="Prénom"></label>
-							<label>Nom<input type="text" name="name" v-model="data.formContent.name" placeholder="Nom"></label>
-							<div class="btn" @click="addCustomer(generateId, data.formContent)">Ajouter un client</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</transition>
-
+		<modal v-if="_isOpen">
+			<form name="addCustomer">
+				<h4>Ajouter un client</h4>
+				<label>Prénom<input type="text" name="firstName" v-model="data.formContent.firstName" placeholder="Prénom"></label>
+				<label>Nom<input type="text" name="name" v-model="data.formContent.name" placeholder="Nom"></label>
+				<div class="btn" @click="addCustomer(generateId, data.formContent)">Ajouter un client</div>
+			</form>
+		</modal>
 	</template>
 
 	<template id="_settings">

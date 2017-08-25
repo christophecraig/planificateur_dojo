@@ -16,7 +16,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				openEditDev(dev) {
 					this.data.editDevIsOpen = true
 					topic.publish('openEditDev', dev)
-				}
+				},
+				close () {
+					this.data.isOpen = false
+				  },
 			}
 			topic.subscribe('closeModal', lang.hitch(this, 'closeEditDev'))
 			this.createComponent()

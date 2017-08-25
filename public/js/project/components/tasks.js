@@ -36,17 +36,42 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
             this.expanded = false
+            this.hidden = false
+            this.expandBtn = document.getElementById('expand')
+            this.hideBtn = document.getElementById('slide-up')
+            this.cal = document.getElementById('calendar')
+            this.screen = document.getElementById('app')
             document.getElementById('expand').addEventListener('click', lang.hitch(this, 'expandGantt'))
+            document.getElementById('slide-up').addEventListener('click', lang.hitch(this, 'hideGantt'))
         },
         expandGantt() {
             if (!this.expanded) {
-                document.getElementById('calendar').style = 'height:' + (window.innerHeight - 78) + 'px'
-                document.getElementById('expand').classList.add('fa-compress')
+                var winH = window.innerHeight
+                this.cal.style = 'height:' + (winH - 78) + 'px'
+                this.expandBtn.classList.add('fa-compress')
+                this.hideBtn.classList.remove('fa-angle-down')
                 this.expanded = true
+                this.hidden = false
             } else {
-                document.getElementById('calendar').style = 'height: 540px'
-                document.getElementById('expand').classList.remove('fa-compress')
+                this.cal.style = 'height: 540px'
+                this.expandBtn.classList.remove('fa-compress')
                 this.expanded = false
+            }
+        },
+        hideGantt() {
+            if (!this.hidden) {
+                this.screen.classList.add('slide-up')
+                this.cal.style = 'height: 540px'
+                this.hideBtn.classList.add('fa-angle-down')
+                this.expandBtn.classList.remove('fa-compress')                
+                this.expanded = false
+                this.hidden = true
+                window.scrollTo(0, 0)
+            } else {
+                this.screen.classList.remove('slide-up')
+                this.hideBtn.classList.remove('fa-angle-down')
+                this.hidden = false
+                console.log('hidden')
             }
         },
         setZoomLevel(arg) {

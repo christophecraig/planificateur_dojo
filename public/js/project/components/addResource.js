@@ -5,13 +5,18 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.template = '#add-res-tpl'
             this.data = {
                 isOpen: false,
+                addIsOpen: false,
                 id: '',
                 name: '',
                 firstName: ''
             }
+            this.props = ['isOpen']
             this.computed = {
                 id () {
                     return this.data.firstName.slice(0, 1) + this.data.name
+                },
+                _isOpen () {
+                    return this.$props.isOpen
                 }
             }
             this.methods = {

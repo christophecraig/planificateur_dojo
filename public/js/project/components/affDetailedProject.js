@@ -5,6 +5,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			this.template = '#detailed_project'
 			// on initialise le data utilisé pour qu'il soit rendu dans la vue même s'il n'est pas encore rempli
 			this.data = {
+				isOpen: false,
 				detailedProject: {
 					name: '',
 					developments: [],
@@ -13,8 +14,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				notification: ''
 			}
 			this.methods = {
-				openAddDev() {
+				open() {
 					topic.publish('openAddDev')
+					this.data.isOpen = true
 				},
 				orderByAZ() {
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.alpha));
@@ -22,6 +24,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				orderByDate() {
 					// ne marche pas pour le moment
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.date))
+				},
+				close() {
+					this.data.isOpen = false
 				}
 			}
 			this.createComponent()

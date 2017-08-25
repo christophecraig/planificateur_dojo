@@ -3,8 +3,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 		constructor(compName) {
 			this.compName = compName
 			this.template = '#detailed-resource-tpl'
+			this.props = ['isOpen']
 			this.data = {
-				isOpen: false,
 				res: {
 					id: '',
 					name: '',
@@ -23,14 +23,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 			this.computed = {
 				fullName() {
 					return this.data.res.firstName + ' ' + this.data.res.name
+				},
+				_isOpen() {
+					return this.$props.isOpen
 				}
 			}
-			topic.subscribe('closeModal', lang.hitch(this, 'closeResource'))
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
 			this.createComponent()
-		},
-		closeResource() {
-			this.data.isOpen = false
 		},
 		showResource(res) {
 			this.data.isOpen = true

@@ -1,3 +1,17 @@
+#slide-up {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    width: 50px;
+    height: 26px;
+    line-height: 26px;
+    font-weight: bold;
+    font-size: 1.5em;
+    cursor: pointer;
+    background: #f2f2f2;
+    border-radius: 2px 2px 0 0;
+}
+
 @media screen and (min-width: 769px) {
     .menu-wrap {
         display: flex;

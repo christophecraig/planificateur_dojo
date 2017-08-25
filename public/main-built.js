@@ -631,17 +631,42 @@ define('project/components/tasks',['dojo/_base/declare', 'dojo/topic', 'dojo/_ba
             document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
             document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
             this.expanded = false
+            this.hidden = false
+            this.expandBtn = document.getElementById('expand')
+            this.hideBtn = document.getElementById('slide-up')
+            this.cal = document.getElementById('calendar')
+            this.screen = document.getElementById('app')
             document.getElementById('expand').addEventListener('click', lang.hitch(this, 'expandGantt'))
+            document.getElementById('slide-up').addEventListener('click', lang.hitch(this, 'hideGantt'))
         },
         expandGantt() {
             if (!this.expanded) {
-                document.getElementById('calendar').style = 'height:' + (window.innerHeight - 78) + 'px'
-                document.getElementById('expand').classList.add('fa-compress')
+                var winH = window.innerHeight
+                this.cal.style = 'height:' + (winH - 78) + 'px'
+                this.expandBtn.classList.add('fa-compress')
+                this.hideBtn.classList.remove('fa-angle-down')
                 this.expanded = true
+                this.hidden = false
             } else {
-                document.getElementById('calendar').style = 'height: 540px'
-                document.getElementById('expand').classList.remove('fa-compress')
+                this.cal.style = 'height: 540px'
+                this.expandBtn.classList.remove('fa-compress')
                 this.expanded = false
+            }
+        },
+        hideGantt() {
+            if (!this.hidden) {
+                this.screen.classList.add('slide-up')
+                this.cal.style = 'height: 540px'
+                this.hideBtn.classList.add('fa-angle-down')
+                this.expandBtn.classList.remove('fa-compress')                
+                this.expanded = false
+                this.hidden = true
+                window.scrollTo(0, 0)
+            } else {
+                this.screen.classList.remove('slide-up')
+                this.hideBtn.classList.remove('fa-angle-down')
+                this.hidden = false
+                console.log('hidden')
             }
         },
         setZoomLevel(arg) {
@@ -719,6 +744,7 @@ define('project/components/affDetailedProject',['dojo/_base/declare', 'dojo/topi
 			this.template = '#detailed_project'
 			// on initialise le data utilisé pour qu'il soit rendu dans la vue même s'il n'est pas encore rempli
 			this.data = {
+				isOpen: false,
 				detailedProject: {
 					name: '',
 					developments: [],
@@ -727,8 +753,9 @@ define('project/components/affDetailedProject',['dojo/_base/declare', 'dojo/topi
 				notification: ''
 			}
 			this.methods = {
-				openAddDev() {
+				open() {
 					topic.publish('openAddDev')
+					this.data.isOpen = true
 				},
 				orderByAZ() {
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.alpha));
@@ -736,6 +763,9 @@ define('project/components/affDetailedProject',['dojo/_base/declare', 'dojo/topi
 				orderByDate() {
 					// ne marche pas pour le moment
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.date))
+				},
+				close() {
+					this.data.isOpen = false
 				}
 			}
 			this.createComponent()
@@ -775,7 +805,10 @@ define('project/components/development',['dojo/_base/declare', 'dojo/topic', 'do
 				openEditDev(dev) {
 					this.data.editDevIsOpen = true
 					topic.publish('openEditDev', dev)
-				}
+				},
+				close () {
+					this.data.isOpen = false
+				  },
 			}
 			topic.subscribe('closeModal', lang.hitch(this, 'closeEditDev'))
 			this.createComponent()
@@ -800,16 +833,25 @@ define('project/components/resources',['dojo/_base/declare', 'dojo/topic', 'dojo
       this.compName = compName
       this.template = '#resource-tpl'
       this.data = {
+        isOpen: false,
+        addIsOpen: false,
         resources: {}
       }
       this.methods = {
         openAddRes() {
-          topic.publish('openAddRes')
+          // topic.publish('openAddRes')
+          this.data.addIsOpen = true
+        },
+        close () {
+          this.data.isOpen = false
+          this.data.addIsOpen = false
         },
         editRes(id) {
+          this.data.isOpen = true
           topic.publish('editRes')
         },
         getDetailedResource(id) {
+          this.data.isOpen = true
           topic.publish('getDetailedResource', id)          
         }
       }
@@ -837,8 +879,8 @@ define('project/components/detailedResource',['dojo/_base/declare', 'dojo/_base/
 		constructor(compName) {
 			this.compName = compName
 			this.template = '#detailed-resource-tpl'
+			this.props = ['isOpen']
 			this.data = {
-				isOpen: false,
 				res: {
 					id: '',
 					name: '',
@@ -857,14 +899,13 @@ define('project/components/detailedResource',['dojo/_base/declare', 'dojo/_base/
 			this.computed = {
 				fullName() {
 					return this.data.res.firstName + ' ' + this.data.res.name
+				},
+				_isOpen() {
+					return this.$props.isOpen
 				}
 			}
-			topic.subscribe('closeModal', lang.hitch(this, 'closeResource'))
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
 			this.createComponent()
-		},
-		closeResource() {
-			this.data.isOpen = false
 		},
 		showResource(res) {
 			this.data.isOpen = true
@@ -882,13 +923,18 @@ define('project/components/addResource',['dojo/_base/declare', 'dojo/topic', 'do
             this.template = '#add-res-tpl'
             this.data = {
                 isOpen: false,
+                addIsOpen: false,
                 id: '',
                 name: '',
                 firstName: ''
             }
+            this.props = ['isOpen']
             this.computed = {
                 id () {
                     return this.data.firstName.slice(0, 1) + this.data.name
+                },
+                _isOpen () {
+                    return this.$props.isOpen
                 }
             }
             this.methods = {
@@ -919,11 +965,10 @@ define('project/components/addResource',['dojo/_base/declare', 'dojo/topic', 'do
         }
     })
 });
-define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function(declare, lang, topic, vueComponent) {
+define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
   return declare(null, {
     constructor(compName) {
       this.compName = compName
-      topic.subscribe('closeModal', lang.hitch(this, 'closeAddDev'))
       topic.subscribe('gotSkills', lang.hitch(this, this.populate))
       this.template = '#add-dev-tpl'
       this.data = {
@@ -943,39 +988,40 @@ define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 
           "effort": 0,
           "skillTags": [],
           "project": ""
-        },
-        isOpen: false
+        }
       }
+      this.mounted = {
+        function () {
+          topic.publish('getSkills')
+        }
+      }
+      this.props = ['isOpen']
       this.methods = {
         submitNewDev(dev) {
           console.log(dev) // TODO: Trouver pourquoi le publish ne veut pas envoyer le dev
           topic.publish('saveDev', dev)
         }
       }
-      topic.subscribe('openAddDev', lang.hitch(this, 'open'))
+      this.computed = {
+        _isOpen () {
+          return this.$props.isOpen
+        }
+      }
       this.createComponent()
-    },
-    closeAddDev() {
-      this.data.isOpen = false
-    },
-    open() {
-      this.data.isOpen = true;
-        topic.publish('getSkills')
     },
     populate(skills) {
       this.data.allSkills = skills
-      this.data.isOpen = true      
     },
     createComponent() {
       this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
     }
   });
 });
-
 define('project/components/editDev',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
 	return declare(null, {
 		constructor(compName) {
 			this.compName = compName
+			this.props = ['isOpen']
 			this.data = {
 				show: false,
 				dev: {
@@ -1005,6 +1051,11 @@ define('project/components/editDev',['dojo/_base/declare', 'dojo/topic', 'dojo/_
 			this.methods = {
 				saveDev(dev) {
 
+				}
+			}
+			this.computed = {
+				_isOpen () {
+					return this.$props.isOpen
 				}
 			}
 			this.template = '#edit_the_dev'
@@ -1178,7 +1229,6 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					currentView: '',
 					lastView: '',
 					isLoading: false,
-					modalOpen: false,
 					addDevIsOpen: false,
 					addCustomerIsOpen: false,
 					editDevIsOpen: false,

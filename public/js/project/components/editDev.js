@@ -2,6 +2,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 	return declare(null, {
 		constructor(compName) {
 			this.compName = compName
+			this.props = ['isOpen']
 			this.data = {
 				show: false,
 				dev: {
@@ -31,6 +32,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			this.methods = {
 				saveDev(dev) {
 
+				}
+			}
+			this.computed = {
+				_isOpen () {
+					return this.$props.isOpen
 				}
 			}
 			this.template = '#edit_the_dev'

@@ -4,16 +4,25 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.compName = compName
       this.template = '#resource-tpl'
       this.data = {
+        isOpen: false,
+        addIsOpen: false,
         resources: {}
       }
       this.methods = {
         openAddRes() {
-          topic.publish('openAddRes')
+          // topic.publish('openAddRes')
+          this.data.addIsOpen = true
+        },
+        close () {
+          this.data.isOpen = false
+          this.data.addIsOpen = false
         },
         editRes(id) {
+          this.data.isOpen = true
           topic.publish('editRes')
         },
         getDetailedResource(id) {
+          this.data.isOpen = true
           topic.publish('getDetailedResource', id)          
         }
       }
