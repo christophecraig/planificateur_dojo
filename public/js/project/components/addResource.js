@@ -3,37 +3,41 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         constructor(compName) {
             this.compName = compName
             this.template = '#add-res-tpl'
-            this.props = ['addResIsOpen']
             this.data = {
                 isOpen: false,
-                id:'',
-                name:'',
+                id: '',
+                name: '',
                 firstName: ''
             }
             this.computed = {
-                id() {
-                    return this.data.firstName.slice(0,1) + this.data.name
+                id () {
+                    return this.data.firstName.slice(0, 1) + this.data.name
                 }
             }
             this.methods = {
-                close() {
+                close () {
                     console.log(this.id)
                 },
-                submitResource() {
+                submitResource () {
                     topic.publish('submitNewResource', this.id, this.name, this.firstName)
                 }
             }
             topic.subscribe('openAddRes', lang.hitch(this, 'open'))
             topic.subscribe('closeModal', lang.hitch(this, 'close'))
+            topic.subscribe('gotSkills', lang.hitch(this, 'populate'))
             this.createComponent()
         },
-        open() {
+        open () {
+            topic.publish('getSkills')
             this.data.isOpen = true
         },
-        close() {
+        close () {
             this.data.isOpen = false
-        }, 
-        createComponent() {
+        },
+        populate (skills) {
+            this.data.allSkills = skills
+        },
+        createComponent () {
             this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)
         }
     })

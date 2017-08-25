@@ -38,6 +38,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       this.data.isOpen = false
     },
     open() {
+      this.data.isOpen = true;
         topic.publish('getSkills')
     },
     populate(skills) {

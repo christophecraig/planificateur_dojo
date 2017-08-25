@@ -41,6 +41,7 @@ $light-green-ball: #d6de39;
 // LOADER 
 .load {
     background: #f9f9f9 url('../images/logo_pmb.png') no-repeat;
+    will-change: opacity;
     background-position: 50% 30%;
     background-size: 18vw;
     position: fixed;
