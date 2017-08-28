@@ -2,7 +2,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 	return declare(Store, {
 		constructor(ws) {
 			this.ws = ws
-			console.log(this)
+			console.log(this.data)
 		},
 		get(id) {
 			var def = new Deferred()

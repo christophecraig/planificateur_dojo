@@ -27,7 +27,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 					skillTags: [],
 					status: ''
 				},
-				allSkills: ['SQL', 'JS', 'AJAX', 'DOJO', 'PHP'] // TODO: peupler via le store de ressources
+				allSkills: [] // TODO: peupler via le store de ressources
 			}
 			this.methods = {
 				saveDev(dev) {

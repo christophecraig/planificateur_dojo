@@ -29,19 +29,20 @@
         height: 60px;
         line-height: 60px;
         display: block;
-        & .burger {
+        .burger {
             display: none;
         }
-        & li {
+        li {
             display: block;
         }
-        & a,
-        .back {
-            position: relative;
+        a {
+            &, &.back {
+                position: relative;
             display: block;
             color: inherit;
             line-height: 60px;
             padding: 0 20px;
+            }
             &::after {
                 content: '';
                 display: block;
@@ -64,6 +65,13 @@
                 &::after {
                     height: 4px;
                     width: 30px;
+                }
+            }
+            &.current {
+                &::after {
+                    height: 4px;
+                    width: 100%;
+                    border-radius: 0
                 }
             }
         }

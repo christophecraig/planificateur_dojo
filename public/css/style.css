@@ -308,37 +308,37 @@ ul {
       display: none; }
     #menu li {
       display: block; }
-    #menu a,
-    #menu .back {
+    #menu a, #menu a.back {
       position: relative;
       display: block;
       color: inherit;
       line-height: 60px;
       padding: 0 20px; }
-      #menu a::after,
-      #menu .back::after {
-        content: '';
-        display: block;
-        position: absolute;
-        background-color: #fff;
-        bottom: 0;
-        left: 50%;
-        z-index: 1;
-        transform: translateX(-50%);
-        width: 18px;
-        height: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 50%;
-        border-top-right-radius: 50%;
-        transition: .25s; }
-      #menu a:hover,
-      #menu .back:hover {
-        color: #fff; }
-        #menu a:hover::after,
-        #menu .back:hover::after {
-          height: 4px;
-          width: 30px; }
+    #menu a::after {
+      content: '';
+      display: block;
+      position: absolute;
+      background-color: #fff;
+      bottom: 0;
+      left: 50%;
+      z-index: 1;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: 50%;
+      border-top-right-radius: 50%;
+      transition: .25s; }
+    #menu a:hover {
+      color: #fff; }
+      #menu a:hover::after {
+        height: 4px;
+        width: 30px; }
+    #menu a.current::after {
+      height: 4px;
+      width: 100%;
+      border-radius: 0; }
   #settings .fa {
     font-size: 1.5em;
     font-weight: 100;

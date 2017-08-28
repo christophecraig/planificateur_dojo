@@ -17,7 +17,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         },
         openProject(id) {
           topic.publish('getDetailedProject', id)
-          this.$root.changeView(this.$root.currentView,'./detailedProject')
+          // this.$root.changeView(this.$root.currentView,'./detailedProject')
         }
       }
       this.createComponent()

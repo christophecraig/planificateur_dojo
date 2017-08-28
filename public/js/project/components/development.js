@@ -13,7 +13,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			}
 			this.updated = function () {
 				// initialisation du this.previousDev
-				console.log(this.previousDev, this.data.developments)
+				console.log(this.previousDev, this.data.developments[0].id)
 				if (this.previousDev !== null) {
 					console.log(this)
 					this.previousDev = this.data.developments[0].id

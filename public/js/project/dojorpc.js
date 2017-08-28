@@ -35,13 +35,8 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					close() {
 						document.getElementById('burger').classList.remove('is-open')
 					},
-					changeView(lastView, url) {
-						window.history.pushState(null, null, url);
-						this.currentView = window.location.pathname.slice(1)
-						this.lastView = lastView
-					},
-					back(lastView) {
-						this.changeView(lastView, this.lastView)
+					change() {
+						console.log('goto event')
 					},
 					alpha(a, b) {
 						if (a.name < b.name)
@@ -61,7 +56,14 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 				created() {
 					// Fonction appelée à la création de la vue
 					topic.publish('getResources')
-					this.currentView = window.location.pathname.slice(1)
+				},
+				mounted() {
+					this.currentView = window.location.pathname.slice(1)					
+					this.$on('changeView', function(lastView, currentView) {
+						window.history.pushState(null, null, currentView)
+						this.currentView = currentView
+						this.lastView = lastView
+					})
 				},
 				updated() {
 					topic.publish('useTemplate')

@@ -107,19 +107,19 @@
 				</div>
 			</div>
 			<div class="menu-wrap">
-				<div class="back fa fa-angle-left" @click.stop="$root.back($root.currentView)"></div>
+				<div class="back fa fa-angle-left" @click.stop="back(data.currentView)"></div>
 				<ul class="center">
 					<li v-for="item in data.menu" :key="item.id">
-						<a :href="'./' + item.path" @click.prevent="$root.changeView($root.currentView, item.path)" :class="data.current">
-						{{item.name}}
-					</a>
+						<a :href="'./' + item.path" :title="item.name" @click.prevent="changeView(data.currentView, item.path)" :class="data.active === item.path ? 'current' : ''">
+							{{item.name}}
+						</a>
 					</li>
 				</ul>
 				<div id="settings">
-					<a href="./settings" @click.prevent="$root.changeView($root.currentView, './settings'); changeActive();">
-            <span class="icon icon-cog"></span>
-            <span class="text">Paramètres</span>
-          </a>
+					<a href="./settings" @click.prevent="changeView(data.currentView, 'settings')">
+						<span class="icon icon-cog"></span>
+						<span class="text">Paramètres</span>
+					</a>
 				</div>
 			</div>
 		</nav>
