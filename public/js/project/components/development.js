@@ -5,21 +5,38 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			topic.subscribe('refreshDevs', lang.hitch(this, 'refreshDevs'))
 			topic.subscribe('gotDevelopment', lang.hitch(this, 'gotDev'))
 			this.data = {
-				editDevIsOpen: true
+				isOpen: false
 			}
 			this.template = '#development'
+			this.mounted = function () {
+				this.previousDev = null
+			}
+			this.updated = function () {
+				// initialisation du this.previousDev
+				console.log(this.previousDev, this.data.developments)
+				if (this.previousDev !== null) {
+					console.log(this)
+					this.previousDev = this.data.developments[0].id
+				}
+				if (this.data.developments[0].id !== this.previousDev) {
+					console.log('updated')
+					this.data.isOpen = false
+				}
+				this.previousDev = this.data.developments[0].id
+				
+			}
 			this.methods = {
 				deleteDev(dev, property) {
 					console.log('Préparation à la suppression du développement ayant l\'id :', dev)
 					topic.publish('deleteDev', dev, property)
 				},
-				openEditDev(dev) {
-					this.data.editDevIsOpen = true
+				open(dev) {
+					this.data.isOpen = true
 					topic.publish('openEditDev', dev)
 				},
-				close () {
+				close() {
 					this.data.isOpen = false
-				  },
+				},
 			}
 			topic.subscribe('closeModal', lang.hitch(this, 'closeEditDev'))
 			this.createComponent()
@@ -34,7 +51,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			this.data.developments = []
 		},
 		createComponent() {
-			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
+			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended, this.directives)
 		}
 	})
 })

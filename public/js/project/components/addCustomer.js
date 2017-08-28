@@ -3,8 +3,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         constructor(compName) {
             this.compName = compName
             this.template = '#add-customer-tpl'
+            this.props = ['isOpen']
             this.data = {
-                test: 'excellent',
                 formContent: {
                     name: '',
                     firstName: ''
@@ -22,6 +22,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.computed = {
                 generateId() {
                     return this.data.formContent.firstName.slice(0,1) + this.data.formContent.name
+                },
+                _isOpen() {
+                    return this.$props.isOpen
                 }
             }
             this.createComponent()

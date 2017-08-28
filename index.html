@@ -26,7 +26,7 @@
 				['momentjs', '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js'],
 				['frappe-gantt', 'http://192.168.0.46:8080/js/libs/frappe-gantt.js']
 			],
-			// deps: ['project/dojorpc', 'jquery'],
+			deps: ['project/dojorpc', 'jquery'],
 			isDebug: true
 		};
 	</script>
@@ -54,7 +54,7 @@
 			<component @click="$root.close" :is="currentView" transition="fade" transition-mode="out-in"></component>
 		</div>
 	</div>
-	<script src="./bundle.js"></script>
+	<!-- <script src="./bundle.js"></script> -->
 	<!-- Le script ci-dessus contient tout les js utilisés. Il équivaut à mettre le dojorpc.js dans dojoConfig.deps -->
 
 	<!-- TEMPLATE ZONE -->
@@ -190,7 +190,7 @@
 		</modal>
 	</template>
 	<template id="detailed_project">
-		<div id="detailed-project" v-if="data.detailedProject.id">
+		<div id="detailed-project" v-if="data.detailedProject.id" @click="$emit('close')">
 			<div class="project-infos">
 				<div class="project-top-infos">
 					<div class="project_name">
@@ -208,44 +208,52 @@
 				</div>
 				<development></development>
 			</div>
-			<add-dev :is-open="data.isOpen"></add-dev>
+			<add-dev :is-open="data.isOpen" @close="close"></add-dev>
 		</div>
 	</template>
 	<template id="add-dev-tpl">
-		<modal v-if="_isOpen" @close="close">
+		<modal v-if="_isOpen">
 			<h4>Ajouter un développement</h4>
 			<form name="addDev">
-				<label>Titre</label>
-				<input type="text" v-model="data.dev.name" placeholder="Titre">
-
-				<label>Au plus tôt</label>
-				<input type="date" v-model="data.dev.earlyStart">
-				<input type="date" v-model="data.dev.earlyEnd">
-
-				<label>Au plus tard</label>
-				<input type="date" v-model="data.dev.lateStart">
-				<input type="date" v-model="data.dev.lateEnd">
-
-				<label>Prévu</label>
-				<input type="date" v-model="data.dev.plannedStart">
-				<input type="date" v-model="data.dev.plannedEnd">
-
-				<label>Réel</label>
-				<input type="date" v-model="data.dev.realStart">
-				<input type="date" v-model="data.dev.realEnd">
-
-				<label>Priorité</label>
-				<select name="priority" v-model="data.dev.priority" class="form-control">
+				<div class="form-group">
+					<label>Titre</label>
+					<input type="text" class="form-control" v-model="data.dev.name" placeholder="Titre">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Au plus tôt</label>
+					<input type="date" class="form-control" placeholder="jj-mm-aaaa" type="date" v-model="data.dev.earlyEnd">
+					<input type="date" class="form-control" type="date" placeholder="jj-mm-aaaa" v-model="data.dev.earlyStart">
+				</div>
+				<div class="form-group">
+					<label>Au plus tard</label>
+					<input type="date" class="form-control" placeholder="jj-mm-aaaa" type="date" v-model="data.dev.lateEnd">
+					<input type="date" class="form-control" type="date" placeholder="jj-mm-aaaa" v-model="data.dev.lateStart">
+				</div>
+				<div class="form-group">
+					<label>Prévu</label>
+					<input type="date" class="form-control" placeholder="jj-mm-aaaa" type="date" v-model="data.dev.plannedEnd">
+					<input type="date" class="form-control" type="date" placeholder="jj-mm-aaaa" v-model="data.dev.plannedStart">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Réel</label>
+					<input type="date" class="form-control" placeholder="jj-mm-aaaa" type="date" v-model="data.dev.realEnd">
+					<input type="date" class="form-control" type="date" placeholder="jj-mm-aaaa" v-model="data.dev.realStart">
+				</div>
+				<div class="form-group">
+					<label>Priorité</label>
+					<select name="priority" v-model="data.dev.priority" class="form-control">
 									<option value="PrioTresHaute" >Très Haute</option>
 									<option value="PrioHaute" >Haute</option>
 									<option value="PrioNormale" >Normale</option>
 									<option value="PrioBasse" >Basse</option>
 									<option value="PrioTresBasse" >Très Basse</option>
 								</select>
-
-				<label>Facultatif</label>
-				<input type="checkbox" v-model="data.dev.optional">
-
+				</div>
+				<div class="form-check">
+					<label class="form-check-label">Facultatif
+						<input type="checkbox" class="form-check-input" v-model="data.dev.optional">
+					</label>
+				</div>
 				<label>développement nécessaire</label>
 
 				<label>développement parent</label>
@@ -275,7 +283,7 @@
 					</div>
 				</div>
 			</transition-group>
-			<edit-dev :is-open="data.isOpen"></edit-dev>
+			<edit-dev :is-open="data.isOpen" @close="close"></edit-dev>
 
 		</div>
 	</template>
@@ -345,7 +353,7 @@
 				<div id="add_customer" class="btn" @click.stop="openAddCustomer(this.data, 'addCustomer')">Ajouter un client
 					<i class="fa fa-plus-circle" aria-hidden="true"></i>
 				</div>
-				<add-customer v-if="data.addCustomerIsOpen"></add-customer>
+				<add-customer :is-open="data.addCustomerIsOpen" @close="close"></add-customer>
 
 			</div>
 		</transition>

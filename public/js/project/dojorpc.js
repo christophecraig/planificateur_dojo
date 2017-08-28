@@ -33,16 +33,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 				},
 				methods: {
 					close() {
-						topic.publish('closeModal')
-						this.addDevIsOpen = false
-						this.editDevIsOpen = false
 						document.getElementById('burger').classList.remove('is-open')
-					},
-					closeModal() {
-						this.modalOpen = false
-					},
-					loading() {
-						this.isLoading = true
 					},
 					changeView(lastView, url) {
 						window.history.pushState(null, null, url);
@@ -51,9 +42,6 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 					},
 					back(lastView) {
 						this.changeView(lastView, this.lastView)
-					},
-					loaded() {
-						this.isLoading = false
 					},
 					alpha(a, b) {
 						if (a.name < b.name)

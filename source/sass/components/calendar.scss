@@ -1,12 +1,9 @@
 #calendar {
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
-    height: 540px;
+    height: 420px;
     max-height: 90%;
     transition: height .5s ease-out;
-    &.expanded {
-        
-    }
 }
 
 .controls {
@@ -24,4 +21,10 @@
 
 #expand {
     top: 190px
+}
+
+@media #{$sm_screen} {
+#calendar {
+    height: 540px;
+}
 }

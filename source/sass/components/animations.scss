@@ -3,7 +3,6 @@ $red-ball: #ea3331;
 $yellow-ball: #f9ec2b;
 $green-ball: #3fb668;
 $light-green-ball: #d6de39;
-
 .fade-enter-active {
     transition: all .5s;
 }
@@ -133,8 +132,15 @@ $light-green-ball: #d6de39;
 }
 
 #app {
-    transition: transform .5s ease-out;    
+    transition: transform .5s ease-out;
 }
+
 .slide-up {
-    transform: translate3d(0, -640px, 0);
+    transform: translate3d(0, -520px, 0)
+}
+
+@media #{$sm_screen} {
+    .slide-up {
+        transform: translate3d(0, -640px, 0);
+    }
 }

@@ -511,7 +511,6 @@ define('project/components/customers',['dojo/_base/declare', 'dojo/_base/lang', 
 					topic.publish('getCustomers')
 				}
 				this.createComponent()
-				topic.subscribe('closeModal', lang.hitch(this, 'closeAddCustomer'))
 				topic.subscribe('gotCustomers', lang.hitch(this, 'showCustomers'))
 			},
 			showCustomers(customers) {
@@ -1127,6 +1126,7 @@ define('project/components/addCustomer',['dojo/_base/declare', 'dojo/topic', 'do
         constructor(compName) {
             this.compName = compName
             this.template = '#add-customer-tpl'
+            this.props = ['isOpen']
             this.data = {
                 test: 'excellent',
                 formContent: {
@@ -1146,6 +1146,9 @@ define('project/components/addCustomer',['dojo/_base/declare', 'dojo/topic', 'do
             this.computed = {
                 generateId() {
                     return this.data.formContent.firstName.slice(0,1) + this.data.formContent.name
+                },
+                _isOpen() {
+                    return this.$props.isOpen
                 }
             }
             this.createComponent()

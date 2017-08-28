@@ -84,7 +84,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.retrieveDatesToDraw(developmentsToDraw)
 			},
 			retrieveDatesToDraw(devs) {
-				console.log(devs)
 				var ids = []
 				for (var i = 0; i < devs.length; i++) {
 					for (var i = 0; i < devs.length; i++) {
@@ -96,8 +95,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				}
 			},
 			drawOnGraph(devs) {
-				console.log(devs)
-
 				this.tasks = []
 				this.counter = 0
 

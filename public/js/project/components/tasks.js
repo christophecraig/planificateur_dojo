@@ -29,7 +29,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     console.log(task, progress)
                 },
                 on_view_change(mode) {
-                    console.log(mode)
+                    console.log('Switched display mode to : ' + mode)
                     topic.publish('ganttRendered')
                 }
             })
@@ -53,7 +53,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 this.expanded = true
                 this.hidden = false
             } else {
-                this.cal.style = 'height: 540px'
+                this.cal.style = () => {
+                    if (window.innerWidth < 768) {
+                        return 'height: 420px'
+                    }
+                    else {
+                        return 'height: 540px'
+                    }
+                }
                 this.expandBtn.classList.remove('fa-compress')
                 this.expanded = false
             }
@@ -61,7 +68,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         hideGantt() {
             if (!this.hidden) {
                 this.screen.classList.add('slide-up')
-                this.cal.style = 'height: 540px'
+                this.cal.style = () => {
+                    if (window.innerWidth < 768) {
+                        return 'height: 420px'
+                    }
+                    else {
+                        return 'height: 540px'
+                    }
+                }
                 this.hideBtn.classList.add('fa-angle-down')
                 this.expandBtn.classList.remove('fa-compress')                
                 this.expanded = false
@@ -71,7 +85,6 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 this.screen.classList.remove('slide-up')
                 this.hideBtn.classList.remove('fa-angle-down')
                 this.hidden = false
-                console.log('hidden')
             }
         },
         setZoomLevel(arg) {

@@ -11,13 +11,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 				this.methods = {
 					openAddCustomer(data) {
 						this.data.addCustomerIsOpen = true
+					},
+					close() {
+						this.data.addCustomerIsOpen = false
 					}
 				}
 				this.created = function () {
 					topic.publish('getCustomers')
 				}
 				this.createComponent()
-				topic.subscribe('closeModal', lang.hitch(this, 'closeAddCustomer'))
 				topic.subscribe('gotCustomers', lang.hitch(this, 'showCustomers'))
 			},
 			showCustomers(customers) {

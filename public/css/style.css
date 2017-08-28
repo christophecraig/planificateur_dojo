@@ -39,9 +39,6 @@ ul {
     top: 20px;
     right: 25px; }
 
-#developments {
-  position: relative; }
-
 .back,
 #settings {
   align-self: center;
@@ -194,7 +191,11 @@ ul {
   transition: transform .5s ease-out; }
 
 .slide-up {
-  transform: translate3d(0, -640px, 0); }
+  transform: translate3d(0, -520px, 0); }
+
+@media screen and (min-width: 768px) {
+  .slide-up {
+    transform: translate3d(0, -640px, 0); } }
 
 .modal-container label {
   display: block;
@@ -526,7 +527,7 @@ ul {
 #calendar {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  height: 540px;
+  height: 420px;
   max-height: 90%;
   transition: height .5s ease-out; }
 
@@ -542,6 +543,10 @@ ul {
 
 #expand {
   top: 190px; }
+
+@media screen and (min-width: 768px) {
+  #calendar {
+    height: 540px; } }
 
 #data::-webkit-scrollbar {
   height: 10px;
