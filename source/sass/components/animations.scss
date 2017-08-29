@@ -5,6 +5,13 @@ $green-ball: #3fb668;
 $light-green-ball: #d6de39;
 .fade-enter-active {
     transition: all .5s;
+    position: absolute;
+    width: 100%;
+}
+.fade-leave-to {
+    position: absolute;
+    transition: all .5s;
+    width: 100%;
 }
 
 .load.fade-leave-to {
@@ -44,7 +51,7 @@ $light-green-ball: #d6de39;
     background-position: 50% 30%;
     background-size: 18vw;
     position: fixed;
-    z-index: 10;
+    z-index: 10001;
     top: 0;
     left: 0;
     right: 0;

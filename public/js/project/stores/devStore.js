@@ -27,7 +27,13 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 		},
 		remove(dev, property) {
 			console.log(dev, property)
-			if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
+			if (property === null) {
+				if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
+					var def = new Deferred()
+					this.ws.removeDevelopmentFromProject(dev).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
+					return def
+				}
+			} else {
 				var def = new Deferred()
 				this.ws.deleteSomething(dev, property).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
 				return def

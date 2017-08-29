@@ -87,7 +87,14 @@ ul {
   height: 50px; }
 
 .fade-enter-active {
-  transition: all .5s; }
+  transition: all .5s;
+  position: absolute;
+  width: 100%; }
+
+.fade-leave-to {
+  position: absolute;
+  transition: all .5s;
+  width: 100%; }
 
 .load.fade-leave-to {
   transition: all .5s ease-out; }
@@ -117,7 +124,7 @@ ul {
   background-position: 50% 30%;
   background-size: 18vw;
   position: fixed;
-  z-index: 10;
+  z-index: 10001;
   top: 0;
   left: 0;
   right: 0;
@@ -216,14 +223,23 @@ ul {
   float: left; }
 
 .modal-mask {
-  position: absolute;
-  z-index: 9998;
+  position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  z-index: 9998;
   background-color: rgba(0, 0, 0, 0.5);
   transition: opacity .3s ease-out; }
+
+@media screen and (min-width: 768px) {
+  .modal-mask {
+    position: absolute;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    height: 100vh; } }
 
 .modal-wrapper {
   vertical-align: middle;
@@ -253,7 +269,15 @@ ul {
     margin-top: 0; }
   .modal-container h4 {
     margin-top: 10px;
-    margin-bottom: 30px; }
+    margin-bottom: 30px;
+    padding: 0 30px 4px 0;
+    font-size: 1.6rem;
+    border-left: 4px solid #d03030;
+    padding-left: 10px; }
+    .modal-container h4 strong {
+      letter-spacing: 0;
+      display: inline-block;
+      transform: skewX(-5deg); }
 
 .modal-header h3 {
   margin-top: 0;
@@ -286,7 +310,11 @@ ul {
   font-size: 1.5em;
   cursor: pointer;
   background: #f2f2f2;
-  border-radius: 2px 2px 0 0; }
+  position: absolute;
+  border-radius: 0 0 2px 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000; }
 
 @media screen and (min-width: 769px) {
   .menu-wrap {

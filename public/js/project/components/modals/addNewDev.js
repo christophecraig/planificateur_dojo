@@ -17,6 +17,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           "realEnd": null,
           "plannedEnd": null,
           "status": 0,
+          "priority": "",
           "optional": false,
           "effort": 0,
           "skillTags": [],

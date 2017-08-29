@@ -20,6 +20,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 }, {
                     name: 'Clients',
                     path: 'customers'
+                }, {
+                    name: 'Paramètres',
+                    path: 'settings',
+                    icon: 'cog'
                 }] // A recupérer autrement ?
             };
             this.methods = {

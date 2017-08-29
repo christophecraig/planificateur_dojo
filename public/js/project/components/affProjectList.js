@@ -6,18 +6,21 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
       this.data = {
         project: {},
         notification: '',
-        modalIsOpen: false
+        isOpen: false
       }
       this.methods = {
-        openModal() {
-          this.data.modalIsOpen = true
+        open() {
+          this.data.isOpen = true
         },
-        addProj() {
-          topic.publish('addProj')
+        close() {
+          this.data.isOpen = false
+        },
+        sumbitProj() {
+          topic.publish('addProj', this.data.project)
         },
         openProject(id) {
           topic.publish('getDetailedProject', id)
-          // this.$root.changeView(this.$root.currentView,'./detailedProject')
+          this.$parent.$emit('changeView', this.$root.lastView, 'detailedProject')
         }
       }
       this.createComponent()

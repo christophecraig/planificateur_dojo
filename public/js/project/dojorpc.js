@@ -1,5 +1,5 @@
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
-	function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
+	function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
 			var socket = new webSocket()
@@ -16,6 +16,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			var modalAdd = new addNewDev('addDev')
 			var dev = new development('development')
 			var modalEdit = new editDev('editDev')
+			var _addProject = new addProject('addProject')
 			var _addClient = new addCustomer('addCustomer')
 			var customersPanel = new customers('customers')
 			var _settings = new settings('settings')

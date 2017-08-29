@@ -8,10 +8,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// Stable unfinished work-conf : 
-				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)

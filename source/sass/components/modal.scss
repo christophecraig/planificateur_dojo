@@ -17,14 +17,25 @@
 }
 
 .modal-mask {
-	position: absolute;
-	z-index: 9998;
+	position: fixed;
 	top: 0;
+	bottom: 0;
 	left: 0;
-	width: 100vw;
-	height: 100vh;
+	right: 0;
+	z-index: 9998;
 	background-color: rgba(0, 0, 0, .5); // display: table;
 	transition: opacity .3s ease-out;
+}
+
+@media #{$sm_screen} {
+	.modal-mask {
+		position: absolute;
+		top: 0;
+		bottom: auto;
+		left: 0;
+		right: 0;
+		height: 100vh;
+	}
 }
 
 .modal-wrapper {
@@ -61,19 +72,12 @@
 		margin-bottom: 30px;
 		padding: 0 30px 4px 0;
 		font-size: 1.6rem;
+		border-left: 4px solid #d03030;
+		padding-left: 10px;
 		strong {
 			letter-spacing: 0;
 			display: inline-block;
 			transform: skewX(-5deg)
-		}
-		&::after {
-			content: '';
-			height: 32px;
-			width: 4px;
-			display: block;
-			background: #d03030;
-			margin-right: 10px;
-			float: left;
 		}
 	}
 }
