@@ -13,17 +13,19 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			}
 			this.updated = function () {
 				// initialisation du this.previousDev
-				console.log(this.previousDev, this.data.developments[0].id)
-				if (this.previousDev !== null) {
-					console.log(this)
+				console.log(this.data)
+				// console.log(this.previousDev, this.data.developments[0].id)
+				if (this.data.developments[0].id !== this.previousDev) {
+
+					if (this.previousDev !== null) {
+						this.previousDev = this.data.developments[0].id
+					}
+					if (this.data.developments[0].id !== this.previousDev) {
+						console.log('updated')
+						this.data.isOpen = false
+					}
 					this.previousDev = this.data.developments[0].id
 				}
-				if (this.data.developments[0].id !== this.previousDev) {
-					console.log('updated')
-					this.data.isOpen = false
-				}
-				this.previousDev = this.data.developments[0].id
-				
 			}
 			this.methods = {
 				deleteDev(dev, property) {
