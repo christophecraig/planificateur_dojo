@@ -3,11 +3,17 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         constructor(compName) {
             this.compName = compName
             this.template = '#add-project'
+            this.props = ['isOpen']
             this.data = {
                 
             }
             this.methods = {
 
+            }
+            this.computed = {
+                _isOpen() {
+                    return this.$props.isOpen
+                }
             }
             this.createComponent()
         },

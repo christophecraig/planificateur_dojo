@@ -21,12 +21,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
           "effort": 0,
           "skillTags": [],
           "project": ""
-        }
-      }
-      this.mounted = {
-        function () {
-          topic.publish('getSkills')
-        }
+        },
+        allSkills: []
       }
       this.props = ['isOpen']
       this.methods = {
@@ -42,10 +38,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
       }
       this.createComponent()
     },
-    populate(skills) {
+    populate (skills) {
       this.data.allSkills = skills
     },
-    createComponent() {
+    createComponent () {
       this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
     }
   });

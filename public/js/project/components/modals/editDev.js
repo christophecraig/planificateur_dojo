@@ -43,6 +43,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			topic.subscribe('closeModal', lang.hitch(this, 'close'))
 			topic.subscribe('closeEditModal', lang.hitch(this, 'close'))
 			topic.subscribe('gotDetailedDevelopment', lang.hitch(this, 'populate'))
+			topic.subscribe('gotSkills', lang.hitch(this, 'populateSkills'))			
 			this.createComponent()
 		},
 		close(dev) {
@@ -50,6 +51,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				this.data.isOpen = false
 				topic.publish('stopEdit', dev)
 			}
+		},
+		populateSkills(skills) {
+			this.data.allSkills = skills
 		},
 		populate(dev) {
 			this.data.dev = dev
