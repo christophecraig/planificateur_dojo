@@ -46,7 +46,8 @@
 				<tasks></tasks>
 			</calendar>
 			<notification></notification>
-			<projects></projects>
+			<projects>
+			</projects>
 		</div>
 		<le-menu></le-menu>
 		<div id="slide-up" class="fa fa-angle-up"></div>
@@ -55,9 +56,16 @@
 		</div>
 	</div>
 	<!-- <script src="./bundle.js"></script> -->
-	<!-- Le script ci-dessus contient tout les js utilisés. Il équivaut à mettre le dojorpc.js dans dojoConfig.deps -->
+	<!-- Le script ci-dessus contient tout les js utilisés combinés et transpilés en ES5. Il équivaut à mettre le dojorpc.js dans dojoConfig.deps -->
 
 	<!-- TEMPLATE ZONE -->
+	<template id="add-project">
+		<modal v-if="_isOpen">
+			<div class="test">
+				ttttttttttttest
+			</div>
+		</modal>
+	</template>
 	<template id="_task">
 		<div>
 			<div class="fa fa-plus zoom btn controls" id="zoom-in"></div>
@@ -91,9 +99,11 @@
 					<div id="scroll_container">
 						<div class="project" v-for="project in data.project" :proj-id="project.id" @click="openProject(project.id)">
 							<!-- PROJECT COLOR ICI -->{{project.name}}</div>
-						<div class="project" @click="addProj">Ajouter un projet</div>
+						<div class="project" @click="open">Ajouter un projet</div>
 					</div>
 				</div>
+				<add-project :is-open="data.isOpen" @close="close"></add-project>
+
 			</div>
 		</transition>
 	</template>
@@ -106,22 +116,18 @@
 					<span class="menu-icon__line menu-icon__line-right"></span>
 				</div>
 			</div>
-			<div class="menu-wrap">
-				<div class="back fa fa-angle-left" @click.stop="back(data.currentView)"></div>
-				<ul class="center">
-					<li v-for="item in data.menu" :key="item.id">
-						<a :href="'./' + item.path" :title="item.name" @click.prevent="changeView(data.currentView, item.path)" :class="data.active === item.path ? 'current' : ''">
+			<ul class="center menu-wrap">
+				<li>
+					<a class="back fa fa-angle-left" @click.prevent.stop="back(data.currentView)"></a>
+				</li>
+
+				<li v-for="item in data.menu" :key="item.id">
+					<a :href="'./' + item.path" :title="item.name" @click.prevent="changeView(data.currentView, item.path)" :class="data.active === item.path ? 'current' : ''">
+							<span v-if="item.icon" :class="'icon icon-' + item.icon"></span>
 							{{item.name}}
 						</a>
-					</li>
-				</ul>
-				<div id="settings">
-					<a href="./settings" @click.prevent="changeView(data.currentView, 'settings')">
-						<span class="icon icon-cog"></span>
-						<span class="text">Paramètres</span>
-					</a>
-				</div>
-			</div>
+				</li>
+			</ul>
 		</nav>
 	</template>
 	<template id="resource-tpl">
@@ -173,7 +179,7 @@
 	</template>
 	<template id="add-res-tpl">
 		<modal v-if="_isOpen">
-			<h4>Ajouter une ressource</h4>
+			<h4><strong>Ajouter</strong> une ressource</h4>
 			<div class="form-group">
 				<label for="newResourceFirstName">Prénom</label>
 				<input type="text" class="form-control" id="newResourceFirstName" placeholder="Prénom">
@@ -213,7 +219,7 @@
 	</template>
 	<template id="add-dev-tpl">
 		<modal v-if="_isOpen">
-			<h4>Ajouter un développement</h4>
+			<h4><strong>Ajouter</strong> un développement</h4>
 			<form name="addDev">
 				<div class="form-group">
 					<label>Titre</label>
@@ -290,54 +296,70 @@
 	<template id="edit_the_dev">
 		<modal v-if="_isOpen">
 			<form name="editDev">
-				<h4>Modifier un développement</h4>
-				<label>Titre
-              <input type="text" v-model="data.dev.name" placeholder="Titre">
-            				</label>
-				<label @click="data.dev.earlyStart = '2017-06-09'">Au plus tôt
-									<input type="date" v-model="data.dev.earlyStart">
-									<input type="date" v-model="data.dev.earlyEnd">
+				<h4><strong>Modifier</strong> un développement</h4>
+				<div class="form-group"><label>Titre</label>
+					<input type="text" class="form-control" v-model="data.dev.name" placeholder="Titre">
+				</div>
+				<div class="form-group">
+					<label>Au plus tôt</label>
+
+					<input type="date" v-model="data.dev.earlyStart" class="form-control">
+					<input type="date" v-model="data.dev.earlyEnd" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Au plus tard</label>
+
+					<input type="date" v-model="data.dev.lateStart" class="form-control">
+					<input type="date" v-model="data.dev.lateEnd" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Prévu</label>
+
+					<input type="date" v-model="data.dev.plannedStart" class="form-control">
+					<input type="date" v-model="data.dev.plannedEnd" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Réel</label>
+
+					<input type="date" v-model="data.dev.realStart" class="form-control">
+					<input type="date" v-model="data.dev.realEnd" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Priorité</label>
+					<select name="priority" v-model="data.dev.priority" class="form-control">
+						<option value="PrioTresHaute">Très Haute</option>
+						<option value="PrioHaute">Haute</option>
+						<option value="PrioNormale">Normale</option>
+						<option value="PrioBasse">Basse</option>
+						<option value="PrioTresBasse">Très Basse</option>
+					</select>
+				</div>
+				<div class="form-check">
+					<label class="form-check-label">Facultatif
+							<input type="checkbox" class="form-check-input" v-model="data.dev.optional">
+						</label>
+				</div>
+				<div class="form-group">
+					<label for="neededDevelopments">Développement(s) requis</label>
+					<select multiple class="form-control" id="neededDevelopments">
+						<option value="" v-for="opt in data.dev.previousDevelopment"></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="parentDevelopment">Développement(s) requis</label>
+					<select class="form-control" id="parentDevelopment">
+							<option value="" v-for="opt in data.dev.parentDevelopment"></option>
+						</select>
+				</div>
+				<div class="form-group">
+					<label>Compétences
 							</label>
-				<label>Au plus tard
-								<input type="date" v-model="data.dev.lateStart">
-								<input type="date" v-model="data.dev.lateEnd">
-							</label>
-				<label>Prévu
-								<input type="date" v-model="data.dev.plannedStart">
-								<input type="date" v-model="data.dev.plannedEnd">
-							</label>
-				<label>Réel
-								<input type="date" v-model="data.dev.realStart">
-								<input type="date" v-model="data.dev.realEnd">
-							</label>
-				<label>Priorité
-								<select name="priority" v-model="data.dev.priority">
-									<option value="PrioTresHaute">Très Haute</option>
-									<option value="PrioHaute">Haute</option>
-									<option value="PrioNormale">Normale</option>
-									<option value="PrioBasse">Basse</option>
-									<option value="PrioTresBasse">Très Basse</option>
-								</select>
-							</label>
-				<label>Facultatif
-								<input type="checkbox" v-model="data.dev.optional">
-							</label>
-				<label>
-				développement nécessaire
-								<select multiple name="requiredDevs">
-									for
-								</select>
-							</label>
-				<label>
-                développement parent
-             				 </label>
-				<label>Compétences
-							</label>
-				<div>{{data.dev}}</div>
-				{{data.allSkills}}
-				<div v-for="(skill, index) in data.allSkills" class="form-check">
-					<label for="" class="form-check-label">{{skill.name}}</label>
-					<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" class="form-check-input">
+					<div>{{data.dev}}</div>
+					{{data.allSkills}}
+					<div v-for="(skill, index) in data.allSkills" class="form-check">
+						<label for="" class="form-check-label">{{skill.name}}</label>
+						<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" class="form-check-input">
+					</div>
 				</div>
 				<div id="saveDev" class="btn" @click="saveDev(data.dev.id)">Sauvegarder</div>
 			</form>
@@ -362,9 +384,15 @@
 	<template id="add-customer-tpl">
 		<modal v-if="_isOpen">
 			<form name="addCustomer">
-				<h4>Ajouter un client</h4>
-				<label>Prénom<input type="text" name="firstName" v-model="data.formContent.firstName" placeholder="Prénom"></label>
-				<label>Nom<input type="text" name="name" v-model="data.formContent.name" placeholder="Nom"></label>
+				<h4><strong>Ajouter</strong> un client</h4>
+				<div class="form-group">
+					<label for="newCustomerFirstName">Prénom</label>
+					<input type="text" class="form-control" id="newCustomerFirstName" placeholder="Prénom" v-model="data.formContent.firstName">
+				</div>
+				<div class="form-group">
+					<label for="newCustomerName">Nom</label>
+					<input type="text" class="form-control" id="newCustomerName" placeholder="Nom" v-model="data.formContent.name">
+				</div>
 				<div class="btn" @click="addCustomer(generateId, data.formContent)">Ajouter un client</div>
 			</form>
 		</modal>

@@ -53,12 +53,28 @@
 	box-sizing: border-box;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
-	& .btn {
+	.btn {
 		margin-top: 0;
 	}
-	& h4 {
+	h4 {
 		margin-top: 10px;
 		margin-bottom: 30px;
+		padding: 0 30px 4px 0;
+		font-size: 1.6rem;
+		strong {
+			letter-spacing: 0;
+			display: inline-block;
+			transform: skewX(-5deg)
+		}
+		&::after {
+			content: '';
+			height: 32px;
+			width: 4px;
+			display: block;
+			background: #d03030;
+			margin-right: 10px;
+			float: left;
+		}
 	}
 }
 
