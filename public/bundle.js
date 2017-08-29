@@ -96,7 +96,7 @@ define('project/stores/devStore', ['dojo/_base/declare', 'dojo/store/api/Store',
 	return declare(Store, {
 		constructor: function constructor(ws) {
 			this.ws = ws;
-			console.log(this);
+			console.log(this.data);
 		},
 		get: function get(id) {
 			var def = new Deferred();
@@ -275,7 +275,6 @@ define('project/project', ['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang'
 			this.retrieveDatesToDraw(developmentsToDraw);
 		},
 		retrieveDatesToDraw: function retrieveDatesToDraw(devs) {
-			console.log(devs);
 			var ids = [];
 			for (var i = 0; i < devs.length; i++) {
 				for (var i = 0; i < devs.length; i++) {
@@ -287,8 +286,6 @@ define('project/project', ['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang'
 			}
 		},
 		drawOnGraph: function drawOnGraph(devs) {
-			console.log(devs);
-
 			this.tasks = [];
 			this.counter = 0;
 
@@ -501,6 +498,9 @@ define('project/components/customers', ['dojo/_base/declare', 'dojo/_base/lang',
 			this.methods = {
 				openAddCustomer: function openAddCustomer(data) {
 					this.data.addCustomerIsOpen = true;
+				},
+				close: function close() {
+					this.data.addCustomerIsOpen = false;
 				}
 			};
 			this.created = function () {
@@ -540,7 +540,7 @@ define('project/components/affProjectList', ['dojo/_base/declare', 'dojo/topic',
 				},
 				openProject: function openProject(id) {
 					topic.publish('getDetailedProject', id);
-					this.$root.changeView(this.$root.currentView, './detailedProject');
+					this.$parent.$emit('changeView', this.$root.lastView, 'detailedProject');
 				}
 			};
 			this.createComponent();
@@ -613,7 +613,7 @@ define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_b
 					console.log(task, progress);
 				},
 				on_view_change: function on_view_change(mode) {
-					console.log(mode);
+					console.log('Switched display mode to : ' + mode);
 					topic.publish('ganttRendered');
 				}
 			});
@@ -637,7 +637,13 @@ define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_b
 				this.expanded = true;
 				this.hidden = false;
 			} else {
-				this.cal.style = 'height: 540px';
+				this.cal.style = function () {
+					if (window.innerWidth < 768) {
+						return 'height: 420px';
+					} else {
+						return 'height: 540px';
+					}
+				};
 				this.expandBtn.classList.remove('fa-compress');
 				this.expanded = false;
 			}
@@ -645,7 +651,13 @@ define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_b
 		hideGantt: function hideGantt() {
 			if (!this.hidden) {
 				this.screen.classList.add('slide-up');
-				this.cal.style = 'height: 540px';
+				this.cal.style = function () {
+					if (window.innerWidth < 768) {
+						return 'height: 420px';
+					} else {
+						return 'height: 540px';
+					}
+				};
 				this.hideBtn.classList.add('fa-angle-down');
 				this.expandBtn.classList.remove('fa-compress');
 				this.expanded = false;
@@ -655,7 +667,6 @@ define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_b
 				this.screen.classList.remove('slide-up');
 				this.hideBtn.classList.remove('fa-angle-down');
 				this.hidden = false;
-				console.log('hidden');
 			}
 		},
 		setZoomLevel: function setZoomLevel(arg) {
@@ -690,31 +701,48 @@ define('project/components/menu', ['dojo/_base/declare', 'dojo/topic', 'dojo/_ba
 			this.data = {
 				// TODO : pouvoir mettre les éléments du menu ici et plus dans le html
 				active: '',
+				lastView: '',
+				currentView: '',
 				menu: [{
 					name: 'Développements',
-					path: 'detailedProject',
-					active: false
+					path: 'detailedProject'
 				}, {
 					name: 'Ressources',
-					path: 'resources',
-					active: false
+					path: 'resources'
 				}, {
 					name: 'Infos pratiques',
-					path: 'infos',
-					active: false
+					path: 'infos'
 				}, {
 					name: 'Clients',
-					path: 'customers',
-					active: false
+					path: 'customers'
+				}, {
+					name: 'Paramètres',
+					path: 'settings',
+					icon: 'cog'
 				}] // A recupérer autrement ?
 			};
 			this.methods = {
 				toggleMenu: function toggleMenu() {
 					document.getElementById('burger').classList.toggle('is-open');
 				},
-				changeActive: function changeActive() {}
+				changeView: function changeView(lastView, url) {
+					console.log(url);
+					window.history.pushState(null, null, url);
+					this.data.currentView = window.location.pathname.slice(1);
+					this.data.lastView = lastView;
+					this.data.active = url;
+					this.$parent.$emit('changeView', lastView, url);
+				},
+				back: function back(lastView) {
+					this.changeView(lastView, this.data.lastView);
+				}
 			};
-			this.mounted = function () {};
+			this.mounted = function () {
+				console.log();
+			};
+			this.created = function () {
+				this.data.currentView = window.location.pathname.slice(1);
+			};
 			this.createComponent();
 		},
 		createComponent: function createComponent() {
@@ -780,16 +808,32 @@ define('project/components/development', ['dojo/_base/declare', 'dojo/topic', 'd
 			topic.subscribe('refreshDevs', lang.hitch(this, 'refreshDevs'));
 			topic.subscribe('gotDevelopment', lang.hitch(this, 'gotDev'));
 			this.data = {
-				editDevIsOpen: true
+				isOpen: false
 			};
 			this.template = '#development';
+			this.mounted = function () {
+				this.previousDev = null;
+			};
+			this.updated = function () {
+				// initialisation du this.previousDev
+				console.log(this.previousDev, this.data.developments[0].id);
+				if (this.previousDev !== null) {
+					console.log(this);
+					this.previousDev = this.data.developments[0].id;
+				}
+				if (this.data.developments[0].id !== this.previousDev) {
+					console.log('updated');
+					this.data.isOpen = false;
+				}
+				this.previousDev = this.data.developments[0].id;
+			};
 			this.methods = {
 				deleteDev: function deleteDev(dev, property) {
 					console.log('Préparation à la suppression du développement ayant l\'id :', dev);
 					topic.publish('deleteDev', dev, property);
 				},
-				openEditDev: function openEditDev(dev) {
-					this.data.editDevIsOpen = true;
+				open: function open(dev) {
+					this.data.isOpen = true;
 					topic.publish('openEditDev', dev);
 				},
 				close: function close() {
@@ -809,7 +853,7 @@ define('project/components/development', ['dojo/_base/declare', 'dojo/topic', 'd
 			this.data.developments = [];
 		},
 		createComponent: function createComponent() {
-			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended);
+			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended, this.directives);
 		}
 	});
 });
@@ -901,6 +945,20 @@ define('project/components/detailedResource', ['dojo/_base/declare', 'dojo/_base
 		}
 	});
 });
+define('project/components/addProject', ['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
+	return declare(null, {
+		constructor: function constructor(compName) {
+			this.compName = compName;
+			this.template = '#add-project';
+			this.data = {};
+			this.methods = {};
+			this.createComponent();
+		},
+		createComponent: function createComponent() {
+			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended);
+		}
+	});
+});
 define('project/components/addResource', ['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
 	return declare(null, {
 		constructor: function constructor(compName) {
@@ -973,7 +1031,8 @@ define('project/components/addNewDev', ['dojo/_base/declare', 'dojo/_base/lang',
 					"effort": 0,
 					"skillTags": [],
 					"project": ""
-				}
+				},
+				allSkills: []
 			};
 			this.mounted = {
 				function: function _function() {
@@ -1031,7 +1090,7 @@ define('project/components/editDev', ['dojo/_base/declare', 'dojo/topic', 'dojo/
 					skillTags: [],
 					status: ''
 				},
-				allSkills: ['SQL', 'JS', 'AJAX', 'DOJO', 'PHP'] // TODO: peupler via le store de ressources
+				allSkills: [] // TODO: peupler via le store de ressources
 			};
 			this.methods = {
 				saveDev: function saveDev(dev) {}
@@ -1045,6 +1104,7 @@ define('project/components/editDev', ['dojo/_base/declare', 'dojo/topic', 'dojo/
 			topic.subscribe('closeModal', lang.hitch(this, 'close'));
 			topic.subscribe('closeEditModal', lang.hitch(this, 'close'));
 			topic.subscribe('gotDetailedDevelopment', lang.hitch(this, 'populate'));
+			topic.subscribe('gotSkills', lang.hitch(this, 'populateSkills'));
 			this.createComponent();
 		},
 		close: function close(dev) {
@@ -1052,6 +1112,9 @@ define('project/components/editDev', ['dojo/_base/declare', 'dojo/topic', 'dojo/
 				this.data.isOpen = false;
 				topic.publish('stopEdit', dev);
 			}
+		},
+		populateSkills: function populateSkills(skills) {
+			this.data.allSkills = skills;
 		},
 		populate: function populate(dev) {
 			this.data.dev = dev;
@@ -1112,7 +1175,6 @@ define('project/components/addCustomer', ['dojo/_base/declare', 'dojo/topic', 'd
 			this.template = '#add-customer-tpl';
 			this.props = ['isOpen'];
 			this.data = {
-				test: 'excellent',
 				formContent: {
 					name: '',
 					firstName: ''
@@ -1182,7 +1244,7 @@ define('project/components/notification', ['dojo/_base/declare', 'dojo/topic', '
 		}
 	});
 });
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'], function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addProject', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'], function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
 	ready(function () {
 		var call = new project(); // nouvel appel Json RPC
 		var socket = new webSocket();
@@ -1199,6 +1261,7 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 		var modalAdd = new addNewDev('addDev');
 		var dev = new development('development');
 		var modalEdit = new editDev('editDev');
+		var _addProject = new addProject('addProject');
 		var _addClient = new addCustomer('addCustomer');
 		var customersPanel = new customers('customers');
 		var _settings = new settings('settings');
@@ -1216,27 +1279,10 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			},
 			methods: {
 				close: function close() {
-					topic.publish('closeModal');
-					this.addDevIsOpen = false;
-					this.editDevIsOpen = false;
 					document.getElementById('burger').classList.remove('is-open');
 				},
-				closeModal: function closeModal() {
-					this.modalOpen = false;
-				},
-				loading: function loading() {
-					this.isLoading = true;
-				},
-				changeView: function changeView(lastView, url) {
-					window.history.pushState(null, null, url);
-					this.currentView = window.location.pathname.slice(1);
-					this.lastView = lastView;
-				},
-				back: function back(lastView) {
-					this.changeView(lastView, this.lastView);
-				},
-				loaded: function loaded() {
-					this.isLoading = false;
+				change: function change() {
+					console.log('goto event');
 				},
 				alpha: function alpha(a, b) {
 					if (a.name < b.name) return -1;
@@ -1252,7 +1298,14 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			created: function created() {
 				// Fonction appelée à la création de la vue
 				topic.publish('getResources');
+			},
+			mounted: function mounted() {
 				this.currentView = window.location.pathname.slice(1);
+				this.$on('changeView', function (lastView, currentView) {
+					window.history.pushState(null, null, currentView);
+					this.currentView = currentView;
+					this.lastView = lastView;
+				});
 			},
 			updated: function updated() {
 				topic.publish('useTemplate');
