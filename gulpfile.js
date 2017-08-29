@@ -3,12 +3,20 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     watch = require('gulp-watch'),
     csso = require('gulp-csso'),
-    sassImportOnce = require('gulp-sass-import-once');
-
+    sassImportOnce = require('gulp-sass-import-once'),
+    Confirm = require('prompt-confirm'),
+    prompt = new Confirm('material too ?');
 
 // Watches every .scss file in public/sass/
 gulp.task('default', function () {
-    return gulp.watch('source/sass/**/*.scss', ['scss-compile', 'material-sass-compile'])
+    prompt.run()
+    .then(function(answer) {
+        if (answer) {
+            return gulp.watch('source/sass/**/*.scss', ['scss-compile', 'material-sass-compile'])
+        } else {
+            return gulp.watch('source/sass/**/*.scss', ['scss-compile'])
+        }
+    })
 })
 
 // Compiles scss files in public/sass/
