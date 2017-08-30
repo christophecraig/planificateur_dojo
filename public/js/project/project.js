@@ -1,5 +1,5 @@
-define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/customerStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'],
-	function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, when) {
+define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/customerStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'project/stores/skillStore', 'dojo/when'],
+	function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, skillStore, when) {
 		return declare(null, {
 			constructor() {
 				// this.connexion might change depending on your configuration and on your server
@@ -8,16 +8,17 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// Stable unfinished work-conf : 
-				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://localhost/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
 				this.devStore = new devStore(this.connexion)
 				this.resourceStore = new resourceStore(this.connexion)
 				this.customerStore = new customerStore(this.connexion)
+				this.skillStore = new skillStore(this.connexion)
 				this.getListOfProjects()
 				this.getProjects()
 				this.ids = []
@@ -128,9 +129,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 								}
 							}
 						}
-						this.counter ++
+						this.counter++
 					} else {
-						topic.publish('drawProjects', this.tasks)						
+						topic.publish('drawProjects', this.tasks)
 					}
 				}
 
@@ -158,9 +159,8 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				topic.publish('gotDetailedDevelopment', dev)
 				topic.publish('loaded')
 			},
-			deleteDev(dev, property) {
-				console.log('évnènement bien reçu sur project.js ', dev)
-				when(this.devStore.remove(dev, property), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
+			deleteDev(projId, devId) {
+				when(this.devStore.remove(projId, devId), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
 			},
 			devIsDeleted(dev) {
 				// Mettre ici un modal, ou plutôt une simple notification en haut à droite de quelques secondes indiquant que le développement a bien été supprimé 
@@ -200,14 +200,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				this.getListOfProjects()
 			},
 			getSkills() {
-				this.connexion.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
+				when(this.skillStore.query(), lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
 			},
 			gotSkills(skills) {
 				console.log(skills)
 				topic.publish('gotSkills', skills)
 			},
-			isAdded() {
-				console.log('Développement ajouté (normalement)')
+			isAdded(dev) {
+				console.log('Développement ajouté (normalement)', dev)
 			},
 			getResources() {
 				topic.publish('loading')
