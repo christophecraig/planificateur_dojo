@@ -17,7 +17,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				// console.log(this.previousDev, this.data.developments[0].id)
 				if (this.data.developments[0].id !== this.previousDev) {
 
-					if (this.previousDev !== null) {
+					if (this.previousDev === null) {
 						this.previousDev = this.data.developments[0].id
 					}
 					if (this.data.developments[0].id !== this.previousDev) {
@@ -33,11 +33,17 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 					topic.publish('deleteDev', dev, property)
 				},
 				open(dev) {
+					topic.publish('getSkills')
 					this.data.isOpen = true
 					topic.publish('openEditDev', dev)
 				},
 				close() {
 					this.data.isOpen = false
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
 				},
 			}
 			topic.subscribe('closeModal', lang.hitch(this, 'closeEditDev'))

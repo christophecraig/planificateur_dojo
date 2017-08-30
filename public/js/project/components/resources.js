@@ -16,6 +16,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         close () {
           this.data.isOpen = false
           this.data.addIsOpen = false
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
         },
         editRes(id) {
           this.data.isOpen = true

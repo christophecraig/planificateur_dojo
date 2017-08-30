@@ -27,6 +27,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     return this.$props.isOpen
                 }
             }
+            this.updated = function () {
+                window.scrollTo({
+                    left: 0,
+                    top: 640,
+                    behavior: 'smooth'
+                  })
+            }
             this.createComponent()
         },
         createComponent() {

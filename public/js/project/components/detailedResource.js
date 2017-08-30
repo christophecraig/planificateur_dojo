@@ -16,6 +16,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 			}
 			this.methods = {
 				drawBar(value) {
+					window.scrollTo({
+						left: 0,
+						top: 640,
+						behavior: 'smooth'
+					  })
 					var skill = 400 * value
 					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 40 L 0 40'
 				}

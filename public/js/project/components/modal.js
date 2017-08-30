@@ -9,9 +9,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 }
             }
             this.methods = {
-                closeModal() {
-                    this.$root.modalOpen = false
-                }
+
             }
             this.createComponent()
         },

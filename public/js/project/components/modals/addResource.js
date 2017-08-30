@@ -27,6 +27,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     topic.publish('submitNewResource', this.id, this.name, this.firstName)
                 }
             }
+            this.updated = function () {
+                window.scrollTo({
+                    left: 0,
+                    top: 640,
+                    behavior: 'smooth'
+                  })
+            }
             topic.subscribe('openAddRes', lang.hitch(this, 'open'))
             topic.subscribe('closeModal', lang.hitch(this, 'close'))
             topic.subscribe('gotSkills', lang.hitch(this, 'populate'))

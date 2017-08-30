@@ -55,6 +55,14 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 		populateSkills(skills) {
 			this.data.allSkills = skills
 		},
+		populateResources(resource) {
+			this.data.resource
+			window.scrollTo({
+				left: 0,
+				top: 540,
+				behavior: 'smooth'
+			  })
+		},
 		populate(dev) {
 			this.data.dev = dev
 		},

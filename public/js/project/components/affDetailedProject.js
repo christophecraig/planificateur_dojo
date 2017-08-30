@@ -15,6 +15,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 			}
 			this.methods = {
 				open() {
+					topic.publish('getSkills')
 					topic.publish('openAddDev')
 					this.data.isOpen = true
 				},
@@ -26,6 +27,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.date))
 				},
 				close() {
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
 					this.data.isOpen = false
 				}
 			}

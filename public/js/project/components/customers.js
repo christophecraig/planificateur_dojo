@@ -14,6 +14,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 					},
 					close() {
 						this.data.addCustomerIsOpen = false
+						window.scrollTo({
+							left: 0,
+							top: 0,
+							behavior: 'smooth'
+						  })
 					}
 				}
 				this.created = function () {
