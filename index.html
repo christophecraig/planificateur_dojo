@@ -188,7 +188,7 @@
 			<div class="modal-mask" @click="$parent.$emit('close')">
 				<div class="modal-wrapper">
 					<div class="modal-container" @click.stop>
-						<div class="btn btn--close" @click="$parent.$emit('close')"><i class="icon-cancel"></i></div>
+						<div class="btn btn--close" @click="$parent.$emit('close')"><img src="./material-icons/close.svg" alt="Fermer"></div>
 						<slot></slot>
 					</div>
 				</div>
@@ -444,10 +444,12 @@
 	</template>
 
 	<template id="notification-tpl">
-		<div class="notification" v-if="data.visible">
-			<h4>{{data.tit}}</h4>
-			<p>{{data.message}}</p>
-		</div>
+		<transition name="notification">
+			<div class="notification" v-if="data.visible">
+				<h4>{{data.tit}}</h4>
+				<p>{{data.message}}</p>
+			</div>
+		</transition>
 	</template>
 </body>
 

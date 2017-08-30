@@ -20,7 +20,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
         id: id,
         name: data.name,
         firstName: data.firstName
-      }).then(lang.hitch(this, 'customerAdded'), lang.hitch(this, 'reportError'))
+      }).then(lang.hitch(this, 'customerAdded', def), lang.hitch(this, 'reportError', def))
       return def
     },
     gotCustomers(def, res) {

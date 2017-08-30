@@ -37,17 +37,21 @@ ul {
     background: $bg_dark;
     color: $textColor_light;
     cursor: pointer;
-    border-radius: 3px;
     display: inline-block;
+    border-radius: 3px;
     margin-top: 10px;
     transition: .25s;
     &:hover {
-        background: lighten($bg_dark, 5%)
+        background: darken(cyan, 20%)
     }
     &--close {
         position: absolute;
         top: 20px;
         right: 25px;
+        border-radius: 50%;
+    }
+    &.controls {
+        border-radius: 50%;
     }
 }
 

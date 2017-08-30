@@ -29,9 +29,24 @@ $light-green-ball: #d6de39;
     opacity: 0;
 }
 
+.notification {
+    position: absolute;
+    left: 100%;
+    top: 60px;
+    transition: transform .5s;
+    transform: translate3d(-250px, 0, 0);
+}
+
+.notification-enter, .notification-leave-active, .notification-leave-to {
+    opacity: 0;
+    transform: translate3d(0,0,0);
+}
+
 .modal-enter-active .skill .bar {
     transform: translate3D(-400px, 0, 0);
 }
+
+
 
 .fill-bar-leave-active {
     transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);

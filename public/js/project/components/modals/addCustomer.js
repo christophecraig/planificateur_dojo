@@ -11,12 +11,10 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                 }
             }
             this.methods = {
-                closeModal() {
-                    this.$root.modalOpen = false
-                },
                 addCustomer(id, data) {
                     topic.publish('addCustomer', id, data)
                     topic.publish('refreshCustomers')
+                    this.$emit('close')
                 }
             }
             this.computed = {

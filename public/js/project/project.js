@@ -235,8 +235,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 			customerIsAdded(data) {
 				console.log('test')
 				console.log(data)
-				topic.publish('notifyCustomerAdded')
-				this.getCustomers()
+				topic.publish('notify', 'success', 'Client ajouté', 'Le client ' + data.firstName + ' ' + data.name + ' a bien été ajouté');			this.getCustomers()
 			},
 			notify(type, title, name) {
 				topic.publish('notify', type, title, name)
