@@ -1,18 +1,6 @@
 .modal-container {
-	& label {
-		display: block;
-		overflow: hidden;
-		margin: 16px 0;
-	}
 	& input {
 		margin: 0 10px;
-	}
-}
-
-.skills {
-	@include clearfix;
-	& label {
-		float: left;
 	}
 }
 

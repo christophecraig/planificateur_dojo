@@ -5,7 +5,6 @@ $green-ball: #3fb668;
 $light-green-ball: #d6de39;
 .fade-enter-active {
     transition: all .5s;
-    position: absolute;
     width: 100%;
 }
 .fade-leave-to {
@@ -135,6 +134,15 @@ $light-green-ball: #d6de39;
     to {
         transform: translate3d(5px, 30px, 10px);
         box-shadow: 10px 10px 30px darken($yellow-ball, 15%), 0 10px 20px darken($yellow-ball, 16%);
+    }
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translate3d(0, -100%, 0)
+    }
+    100% {
+        transform: translate3d(0, 0, 0)
     }
 }
 
