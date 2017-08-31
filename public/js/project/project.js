@@ -7,11 +7,11 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				// home-conf : 
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
-				// Stable unfinished work-conf : 
-				// this.connexion = new JsonService('http://localhost/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// Stable local dump : 
+				this.connexion = new JsonService('http://localhost/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
@@ -38,6 +38,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				topic.subscribe('saveNewDev', lang.hitch(this, 'submitNewDev'))
 				topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
 				topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
+				topic.subscribe('getHolidays', lang.hitch(this, 'getHolidays'))
 			},
 			getListOfProjects() {
 				topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
@@ -153,7 +154,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
 			},
 			gotDevelopment(dev) {
-				topic.publish('gotDevelopment', dev)
+				topic.publish('gotDevelopment', dev)					
 			},
 			gotDetailedDevelopment(dev) {
 				topic.publish('gotDetailedDevelopment', dev)
@@ -220,7 +221,18 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.resourceStore.get(id), lang.hitch(this, 'gotDetailedResource'), lang.hitch(this, 'reportError'))
 			},
 			gotDetailedResource(res) {
+				console.log(res)
+				res.holidays.forEach((item) => {
+					this.getHolidays(item)
+				})
 				topic.publish('gotDetailedResource', res)
+			},
+			getHolidays(id) {
+				this.connexion.getHolidays(id).then(lang.hitch(this, 'gotHolidays'), lang.hitch(this, 'reportError'))
+			},
+			gotHolidays (holidays) {
+				topic.publish('gotHolidays', holidays)
+				console.log(holidays)
 			},
 			getCustomers() {
 				when(this.customerStore.query(), lang.hitch(this, 'gotCustomers'), lang.hitch(this, 'reportError'))

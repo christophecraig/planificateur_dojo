@@ -180,6 +180,12 @@
 					</svg>
 				</div>
 			</div>
+			<div v-if="data.holidays[0]" class="holidays">
+				<h5>Vacances</h5>
+				<div class="holiday" v-for="holiday in data.holidays">
+					Du <time :datetime="holiday.beginning">{{holiday.beginning}}</time> au <time :datetime="holiday.ending">{{holiday.ending}}</time> 
+				</div>
+			</div>
 			<!-- <div class="btn" @click="editRes">Modifier</div> -->
 		</modal>
 	</template>
