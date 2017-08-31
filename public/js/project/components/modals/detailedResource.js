@@ -12,7 +12,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 					baseEfficiency: 0,
 					holidays: [],
 					skillEfficiency: []
-				}
+				},
+				holidays: []
 			}
 			this.methods = {
 				drawBar(value) {
@@ -34,11 +35,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueCompo
 				}
 			}
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
+			topic.subscribe('gotHolidays', lang.hitch(this, 'populateHolidays'))
 			this.createComponent()
 		},
 		showResource(res) {
 			this.data.isOpen = true
 			this.data.res = res
+			this.data.holidays = []
+		},
+		populateHolidays(holidays) {
+			holidays.beginning = new Date(holidays.beginning).toLocaleDateString()
+			holidays.ending = new Date(holidays.ending).toLocaleDateString()
+			this.data.holidays.push(holidays)
 		},
 		createComponent() {
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
