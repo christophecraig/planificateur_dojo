@@ -181,9 +181,10 @@
 				</div>
 			</div>
 			<div v-if="data.holidays[0]" class="holidays">
-				<h5>Vacances</h5>
+				<h5>Indisponibilités</h5>
 				<div class="holiday" v-for="holiday in data.holidays">
-					Du <time :datetime="holiday.beginning">{{holiday.beginning}}</time> au <time :datetime="holiday.ending">{{holiday.ending}}</time> 
+					<span class="reason">{{holiday.reason}}</span> -
+					<span class="date">Du <time :datetime="holiday.beginning">{{holiday.beginning}}</time> au <time :datetime="holiday.ending">{{holiday.ending}}</time></span>
 				</div>
 			</div>
 			<!-- <div class="btn" @click="editRes">Modifier</div> -->
@@ -213,33 +214,35 @@
 				<input type="text" class="form-control" id="newResourceName" placeholder="Nom">
 			</div>
 			<div class="form-check" v-for="(skill, index) in data.allSkills">
-				<label :for="'newResourceSkills' + index" class="form-check-label">{{skill.name}}</label>
+				<label :for="'newResourceSkill' + index" class="form-check-label">{{skill.name}}</label>
 				<input type="checkbox" class="form-check-input" :id="'newResourceSkill' + index" min="0" max="1" step="0.01">
 			</div>
 			<div class="btn" @click="submitResource">Sauvegarder</div>
 		</modal>
 	</template>
 	<template id="detailed_project">
-		<div id="detailed-project" v-if="data.detailedProject.id" @click="$emit('close')">
-			<div class="project-infos">
-				<div class="project-top-infos">
-					<div class="project_name">
-						<div id="color" class="color"></div>
-						{{data.detailedProject.name}}
+		<transition name="fade">
+			<div id="detailed-project" v-if="data.detailedProject.id" @click="$emit('close')">
+				<div class="project-infos">
+					<div class="project-top-infos">
+						<div class="project_name">
+							<div id="color" class="color"></div>
+							{{data.detailedProject.name}}
 
-						<img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
-						    alt="Humeur moyenne">
-						<img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
-						<img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
+							<img id="mood" v-if="data.detailedProject.developersMind==='Moy'" src="images/emoticon-square-smiling-face-with-closed-eyes.svg"
+							    alt="Humeur moyenne">
+							<img id="mood" v-else-if="data.detailedProject.developersMind==='Bon'" src="images/image.svg" alt="Bonne humeur">
+							<img id="mood" v-else-if="data.detailedProject.developersMind==='Nul'" src="images/image.svg" alt="Mauvaise humeur">
+						</div>
+						<div class="btn" @click.stop="open">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+						<div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
+						<div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
 					</div>
-					<div class="btn" @click.stop="open">Ajouter un développement <i class="fa fa-plus-circle" aria-hidden="true"></i></div>
-					<div @click.stop="orderByAZ">Trier par ordre alphabétique</div>
-					<div @click.stop="orderByDate">Trier du plus récent au plus ancien</div>
+					<development></development>
 				</div>
-				<development></development>
+				<add-dev :is-open="data.isOpen" @close="close"></add-dev>
 			</div>
-			<add-dev :is-open="data.isOpen" @close="close"></add-dev>
-		</div>
+		</transition>
 	</template>
 	<template id="add-dev-tpl">
 		<modal v-if="_isOpen">
@@ -292,8 +295,8 @@
 				</div>
 				<h5>Compétences</h5>
 				<div v-for="(skill, index) in data.allSkills" class="form-check">
-					<label for="" class="form-check-label">{{skill.name}}</label>
-					<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" class="form-check-input">
+					<label :for="'newResourceSkill' + index" class="form-check-label">{{skill.name}}</label>
+					<input type="checkbox" :value="skill.id" v-model="data.dev.skillTags" :id="'newResourceSkill' + index" class="form-check-input">
 				</div>
 				<h5>Ressources associées</h5>
 				<div class="form-check">
@@ -444,9 +447,17 @@
 	</template>
 
 	<template id="_settings">
-		<div>
-			<h2>Paramètres</h2>
-		</div>
+		<transition name="fade">
+			<div class="settings">
+				<h2>Paramètres</h2>
+				<div v-for="setting in data.settings" class="setting">
+					<label :for="setting.id">{{setting.label}}</label>
+					<input v-if="setting.type === 'text'" type="text" v-model="setting.value">
+					<input v-if="setting.type === 'color'" type="color" v-model="setting.value">
+					<input v-if="setting.type === 'checkbox'" type="checkbox" v-model="setting.value">
+				</div>
+			</div>
+		</transition>
 	</template>
 
 	<template id="notification-tpl">

@@ -4,7 +4,26 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.compName = compName
             this.template = '#_settings'
             this.data = {
-
+                settings: [
+                    {
+                        type: 'checkbox',
+                        label: 'Afficher les indisponibilités sur le calendrier',
+                        id: 'showHolidaysOnGantt',
+                        value: false
+                    },
+                    {
+                        type: 'color',
+                        label: 'Couleur de la barre de navigation',
+                        id: 'pickColor',
+                        value: '#454545'
+                    },
+                    {
+                        type: 'text',
+                        label: 'Nom d\'utilisateur',
+                        id: 'username',
+                        value: ''
+                    }
+                ]
             }
             this.methods = {
 

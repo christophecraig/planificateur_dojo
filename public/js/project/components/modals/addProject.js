@@ -5,7 +5,15 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
             this.template = '#add-project'
             this.props = ['isOpen']
             this.data = {
-                
+                project: {
+                    id: '',
+                    priority: '',
+                    customerSpirit: {
+                        client: '',
+                        spirit: '',
+                    },
+                    developersSpirit: ''
+                }
             }
             this.methods = {
 
