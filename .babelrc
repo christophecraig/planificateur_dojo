@@ -1,4 +1,3 @@
 {
-    "presets": ["env"]
-    // "presets": ["flow"]
+    "presets": ["es2015"]
 }

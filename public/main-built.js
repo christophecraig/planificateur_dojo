@@ -20,7 +20,7 @@ define('project/stores/customerStore',['dojo/_base/declare', 'dojo/store/api/Sto
         id: id,
         name: data.name,
         firstName: data.firstName
-      }).then(lang.hitch(this, 'customerAdded'), lang.hitch(this, 'reportError'))
+      }).then(lang.hitch(this, 'customerAdded', def), lang.hitch(this, 'reportError', def))
       return def
     },
     gotCustomers(def, res) {
@@ -102,6 +102,7 @@ define('project/stores/devStore',['dojo/_base/declare', 'dojo/store/api/Store', 
 			return def
 		},
 		query(ids) {
+			console.log('this is the devStore', this)
 			this.data = []
 			var def = new Deferred()
 
@@ -113,15 +114,16 @@ define('project/stores/devStore',['dojo/_base/declare', 'dojo/store/api/Store', 
 			return def
 		},
 		add(dev) {
+			console.log(dev)
 			var def = new Deferred()
 			this.ws.addDevelopment(dev).then(lang.hitch(this, 'devAdded', def), lang.hitch(this, 'reportError', def))
 			return def
 		},
-		remove(dev, property) {
-			console.log(dev, property)
+		remove(projId, devId) {
+			console.log(projId, devId)
 			if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
 				var def = new Deferred()
-				this.ws.deleteSomething(dev, property).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
+				this.ws.removeDevelopmentFromProject(projId, devId).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
 				return def
 			}
 		},
@@ -134,9 +136,9 @@ define('project/stores/devStore',['dojo/_base/declare', 'dojo/store/api/Store', 
 				def.resolve(this.data)
 			}
 		},
-		devAdded(def, dev) {
-			console.log('et on ajoute ceci', dev)
-			def.resolve(dev)
+		devAdded(def, res) {
+			console.log(def.resolve(res))
+			def.resolve(res)
 		},
 		devDeleted(def, dev) {
 			console.log('Suppression du développement ', dev)
@@ -192,8 +194,47 @@ define('project/stores/resourceStore',['dojo/_base/declare', 'dojo/store/api/Sto
     }
   })
 });
-define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/customerStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'dojo/when'],
-	function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, when) {
+define('project/stores/skillStore',['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_base/lang'], function (declare, Store, Deferred, lang) {
+    return declare(Store, {
+      constructor(ws) {
+        this.ws = ws
+        this.data = null
+      },
+      query() {
+        var def = new Deferred()
+        this.ws.getSkills().then(lang.hitch(this, 'gotSkills', def), lang.hitch(this, 'reportError'))
+        return def
+      },
+      put() {
+        var def = new Deferred()
+        this.ws.editCustomer().then(lang.hitch(this, 'gotCustomers', def), lang.hitch(this, 'reportError'))
+        return def
+      },
+      add(id, data) {
+        var def = new Deferred()
+        this.ws.addSkill({
+          id: id,
+          name: data.name,
+          parentSkillId: data.parentSkillId
+        }).then(lang.hitch(this, 'skillAdded'), lang.hitch(this, 'reportError'))
+        return def
+      },
+      gotSkills(def, res) {
+        def.resolve(res)
+      },
+      modifiedSkill(def, res) {
+        def.resolve(res)
+      },
+      skillAdded(def, res) {
+        def.resolve(res)
+      },
+      reportError(def) {
+        def.reject('not found')
+      }
+    })
+  });
+define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonService', 'project/stores/customerStore', 'project/stores/projectStore', 'project/stores/devStore', 'project/stores/resourceStore', 'project/stores/skillStore', 'dojo/when'],
+	function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, skillStore, when) {
 		return declare(null, {
 			constructor() {
 				// this.connexion might change depending on your configuration and on your server
@@ -201,17 +242,18 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 				// home-conf : 
 				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
-				// Stable unfinished work-conf : 
-				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// Stable local dump : 
+				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// conf maxime Dev : 
-				this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 				this.sliderProjects = []
 				this.color = ''
 				this.projectStore = new projectStore(this.connexion)
 				this.devStore = new devStore(this.connexion)
 				this.resourceStore = new resourceStore(this.connexion)
 				this.customerStore = new customerStore(this.connexion)
+				this.skillStore = new skillStore(this.connexion)
 				this.getListOfProjects()
 				this.getProjects()
 				this.ids = []
@@ -231,6 +273,7 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 				topic.subscribe('saveNewDev', lang.hitch(this, 'submitNewDev'))
 				topic.subscribe('getSkills', lang.hitch(this, 'getSkills'))
 				topic.subscribe('getDetailedResource', lang.hitch(this, 'getDetailedResource'))
+				topic.subscribe('getHolidays', lang.hitch(this, 'getHolidays'))
 			},
 			getListOfProjects() {
 				topic.publish('loading') // ici on met en place un petit loader pour indiquer que l'attente est normale
@@ -322,9 +365,9 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 								}
 							}
 						}
-						this.counter ++
+						this.counter++
 					} else {
-						topic.publish('drawProjects', this.tasks)						
+						topic.publish('drawProjects', this.tasks)
 					}
 				}
 
@@ -346,15 +389,14 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 				when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
 			},
 			gotDevelopment(dev) {
-				topic.publish('gotDevelopment', dev)
+				topic.publish('gotDevelopment', dev)					
 			},
 			gotDetailedDevelopment(dev) {
 				topic.publish('gotDetailedDevelopment', dev)
 				topic.publish('loaded')
 			},
-			deleteDev(dev, property) {
-				console.log('évnènement bien reçu sur project.js ', dev)
-				when(this.devStore.remove(dev, property), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
+			deleteDev(projId, devId) {
+				when(this.devStore.remove(projId, devId), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
 			},
 			devIsDeleted(dev) {
 				// Mettre ici un modal, ou plutôt une simple notification en haut à droite de quelques secondes indiquant que le développement a bien été supprimé 
@@ -394,14 +436,14 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 				this.getListOfProjects()
 			},
 			getSkills() {
-				this.connexion.getSkills().then(lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
+				when(this.skillStore.query(), lang.hitch(this, 'gotSkills'), lang.hitch(this, 'reportError'))
 			},
 			gotSkills(skills) {
 				console.log(skills)
 				topic.publish('gotSkills', skills)
 			},
-			isAdded() {
-				console.log('Développement ajouté (normalement)')
+			isAdded(dev) {
+				console.log('Développement ajouté (normalement)', dev)
 			},
 			getResources() {
 				topic.publish('loading')
@@ -414,7 +456,18 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 				when(this.resourceStore.get(id), lang.hitch(this, 'gotDetailedResource'), lang.hitch(this, 'reportError'))
 			},
 			gotDetailedResource(res) {
+				console.log(res)
+				res.holidays.forEach((item) => {
+					this.getHolidays(item)
+				})
 				topic.publish('gotDetailedResource', res)
+			},
+			getHolidays(id) {
+				this.connexion.getHolidays(id).then(lang.hitch(this, 'gotHolidays'), lang.hitch(this, 'reportError'))
+			},
+			gotHolidays (holidays) {
+				topic.publish('gotHolidays', holidays)
+				console.log(holidays)
 			},
 			getCustomers() {
 				when(this.customerStore.query(), lang.hitch(this, 'gotCustomers'), lang.hitch(this, 'reportError'))
@@ -429,8 +482,7 @@ define('project/project',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 			customerIsAdded(data) {
 				console.log('test')
 				console.log(data)
-				topic.publish('notifyCustomerAdded')
-				this.getCustomers()
+				topic.publish('notify', 'success', 'Client ajouté', 'Le client ' + data.firstName + ' ' + data.name + ' a bien été ajouté');			this.getCustomers()
 			},
 			notify(type, title, name) {
 				topic.publish('notify', type, title, name)
@@ -505,6 +557,11 @@ define('project/components/customers',['dojo/_base/declare', 'dojo/_base/lang', 
 					},
 					close() {
 						this.data.addCustomerIsOpen = false
+						window.scrollTo({
+							left: 0,
+							top: 0,
+							behavior: 'smooth'
+						  })
 					}
 				}
 				this.created = function () {
@@ -532,14 +589,17 @@ define('project/components/affProjectList',['dojo/_base/declare', 'dojo/topic', 
       this.data = {
         project: {},
         notification: '',
-        modalIsOpen: false
+        isOpen: false
       }
       this.methods = {
-        openModal() {
-          this.data.modalIsOpen = true
+        open() {
+          this.data.isOpen = true
         },
-        addProj() {
-          topic.publish('addProj')
+        close() {
+          this.data.isOpen = false
+        },
+        sumbitProj() {
+          topic.publish('addProj', this.data.project)
         },
         openProject(id) {
           topic.publish('getDetailedProject', id)
@@ -779,6 +839,7 @@ define('project/components/affDetailedProject',['dojo/_base/declare', 'dojo/topi
 			}
 			this.methods = {
 				open() {
+					topic.publish('getSkills')
 					topic.publish('openAddDev')
 					this.data.isOpen = true
 				},
@@ -790,6 +851,11 @@ define('project/components/affDetailedProject',['dojo/_base/declare', 'dojo/topi
 					this.data.detailedProject.developments.sort(lang.hitch(this, this.$root.date))
 				},
 				close() {
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
 					this.data.isOpen = false
 				}
 			}
@@ -827,17 +893,19 @@ define('project/components/development',['dojo/_base/declare', 'dojo/topic', 'do
 			}
 			this.updated = function () {
 				// initialisation du this.previousDev
-				console.log(this.previousDev, this.data.developments[0].id)
-				if (this.previousDev !== null) {
-					console.log(this)
+				console.log(this.data)
+				// console.log(this.previousDev, this.data.developments[0].id)
+				if (this.data.developments[0].id !== this.previousDev) {
+
+					if (this.previousDev === null) {
+						this.previousDev = this.data.developments[0].id
+					}
+					if (this.data.developments[0].id !== this.previousDev) {
+						console.log('updated')
+						this.data.isOpen = false
+					}
 					this.previousDev = this.data.developments[0].id
 				}
-				if (this.data.developments[0].id !== this.previousDev) {
-					console.log('updated')
-					this.data.isOpen = false
-				}
-				this.previousDev = this.data.developments[0].id
-				
 			}
 			this.methods = {
 				deleteDev(dev, property) {
@@ -845,11 +913,17 @@ define('project/components/development',['dojo/_base/declare', 'dojo/topic', 'do
 					topic.publish('deleteDev', dev, property)
 				},
 				open(dev) {
+					topic.publish('getSkills')
 					this.data.isOpen = true
 					topic.publish('openEditDev', dev)
 				},
 				close() {
 					this.data.isOpen = false
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
 				},
 			}
 			topic.subscribe('closeModal', lang.hitch(this, 'closeEditDev'))
@@ -887,6 +961,11 @@ define('project/components/resources',['dojo/_base/declare', 'dojo/topic', 'dojo
         close () {
           this.data.isOpen = false
           this.data.addIsOpen = false
+					window.scrollTo({
+						top:0,
+						left:0,
+						behavior: 'smooth'
+					})
         },
         editRes(id) {
           this.data.isOpen = true
@@ -916,7 +995,7 @@ define('project/components/resources',['dojo/_base/declare', 'dojo/topic', 'dojo
   })
 })
 ;
-define('project/components/detailedResource',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
+define('project/components/modals/detailedResource',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
 	return declare(null, {
 		constructor(compName) {
 			this.compName = compName
@@ -930,10 +1009,16 @@ define('project/components/detailedResource',['dojo/_base/declare', 'dojo/_base/
 					baseEfficiency: 0,
 					holidays: [],
 					skillEfficiency: []
-				}
+				},
+				holidays: []
 			}
 			this.methods = {
 				drawBar(value) {
+					window.scrollTo({
+						left: 0,
+						top: 640,
+						behavior: 'smooth'
+					  })
 					var skill = 400 * value
 					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 40 L 0 40'
 				}
@@ -947,27 +1032,48 @@ define('project/components/detailedResource',['dojo/_base/declare', 'dojo/_base/
 				}
 			}
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
+			topic.subscribe('gotHolidays', lang.hitch(this, 'populateHolidays'))
 			this.createComponent()
 		},
 		showResource(res) {
 			this.data.isOpen = true
 			this.data.res = res
+			this.data.holidays = []
+		},
+		populateHolidays(holidays) {
+			holidays.beginning = new Date(holidays.beginning).toLocaleDateString()
+			holidays.ending = new Date(holidays.ending).toLocaleDateString()
+			this.data.holidays.push(holidays)
 		},
 		createComponent() {
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
 		}
 	})
 });
-define('project/components/addProject',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
+define('project/components/modals/addProject',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
     return declare(null, {
         constructor(compName) {
             this.compName = compName
             this.template = '#add-project'
+            this.props = ['isOpen']
             this.data = {
-                
+                project: {
+                    id: '',
+                    priority: '',
+                    customerSpirit: {
+                        client: '',
+                        spirit: '',
+                    },
+                    developersSpirit: ''
+                }
             }
             this.methods = {
 
+            }
+            this.computed = {
+                _isOpen() {
+                    return this.$props.isOpen
+                }
             }
             this.createComponent()
         },
@@ -976,7 +1082,7 @@ define('project/components/addProject',['dojo/_base/declare', 'dojo/topic', 'doj
         }
     })
 });
-define('project/components/addResource',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
+define('project/components/modals/addResource',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
     return declare(null, {
         constructor(compName) {
             this.compName = compName
@@ -1005,6 +1111,13 @@ define('project/components/addResource',['dojo/_base/declare', 'dojo/topic', 'do
                     topic.publish('submitNewResource', this.id, this.name, this.firstName)
                 }
             }
+            this.updated = function () {
+                window.scrollTo({
+                    left: 0,
+                    top: 640,
+                    behavior: 'smooth'
+                  })
+            }
             topic.subscribe('openAddRes', lang.hitch(this, 'open'))
             topic.subscribe('closeModal', lang.hitch(this, 'close'))
             topic.subscribe('gotSkills', lang.hitch(this, 'populate'))
@@ -1025,7 +1138,7 @@ define('project/components/addResource',['dojo/_base/declare', 'dojo/topic', 'do
         }
     })
 });
-define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
+define('project/components/modals/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic', 'project/vueComponent'], function (declare, lang, topic, vueComponent) {
   return declare(null, {
     constructor(compName) {
       this.compName = compName
@@ -1044,22 +1157,21 @@ define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 
           "realEnd": null,
           "plannedEnd": null,
           "status": 0,
+          "priority": "",
           "optional": false,
           "effort": 0,
           "skillTags": [],
           "project": ""
         },
-        allSkills: []
-      }
-      this.mounted = {
-        function () {
-          topic.publish('getSkills')
-        }
+        allSkills: [],
+        showRes: false
       }
       this.props = ['isOpen']
       this.methods = {
-        submitNewDev(dev) {
+        submitNewDev(dev, projId) {
+          console.log(projId, ' will receive this dev :')
           console.log(dev) // TODO: Trouver pourquoi le publish ne veut pas envoyer le dev
+          this.dev = 
           topic.publish('saveDev', dev)
         }
       }
@@ -1068,17 +1180,26 @@ define('project/components/addNewDev',['dojo/_base/declare', 'dojo/_base/lang', 
           return this.$props.isOpen
         }
       }
+      topic.subscribe('gotProjects', lang.hitch(this, 'populateProjects'))
       this.createComponent()
     },
-    populate(skills) {
+    populate (skills) {
       this.data.allSkills = skills
+      window.scrollTo({
+        left: 0,
+        top: 540,
+        behavior: 'smooth'
+      })
     },
-    createComponent() {
+    populateProjects (projects) {
+      this.data.allProjects = projects 
+    },
+    createComponent () {
       this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
     }
   });
 });
-define('project/components/editDev',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
+define('project/components/modals/editDev',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
 	return declare(null, {
 		constructor(compName) {
 			this.compName = compName
@@ -1135,6 +1256,14 @@ define('project/components/editDev',['dojo/_base/declare', 'dojo/topic', 'dojo/_
 		populateSkills(skills) {
 			this.data.allSkills = skills
 		},
+		populateResources(resource) {
+			this.data.resource
+			window.scrollTo({
+				left: 0,
+				top: 540,
+				behavior: 'smooth'
+			  })
+		},
 		populate(dev) {
 			this.data.dev = dev
 		},
@@ -1176,9 +1305,7 @@ define('project/components/modal',['dojo/_base/declare', 'dojo/topic', 'dojo/_ba
                 }
             }
             this.methods = {
-                closeModal() {
-                    this.$root.modalOpen = false
-                }
+
             }
             this.createComponent()
         },
@@ -1187,7 +1314,7 @@ define('project/components/modal',['dojo/_base/declare', 'dojo/topic', 'dojo/_ba
         }
     })
 });
-define('project/components/addCustomer',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
+define('project/components/modals/addCustomer',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
     return declare(null, {
         constructor(compName) {
             this.compName = compName
@@ -1200,12 +1327,10 @@ define('project/components/addCustomer',['dojo/_base/declare', 'dojo/topic', 'do
                 }
             }
             this.methods = {
-                closeModal() {
-                    this.$root.modalOpen = false
-                },
                 addCustomer(id, data) {
                     topic.publish('addCustomer', id, data)
                     topic.publish('refreshCustomers')
+                    this.$emit('close')
                 }
             }
             this.computed = {
@@ -1215,6 +1340,13 @@ define('project/components/addCustomer',['dojo/_base/declare', 'dojo/topic', 'do
                 _isOpen() {
                     return this.$props.isOpen
                 }
+            }
+            this.updated = function () {
+                window.scrollTo({
+                    left: 0,
+                    top: 640,
+                    behavior: 'smooth'
+                  })
             }
             this.createComponent()
         },
@@ -1229,7 +1361,26 @@ define('project/components/settings',['dojo/_base/declare', 'dojo/topic', 'dojo/
             this.compName = compName
             this.template = '#_settings'
             this.data = {
-
+                settings: [
+                    {
+                        type: 'checkbox',
+                        label: 'Afficher les indisponibilités sur le calendrier',
+                        id: 'showHolidaysOnGantt',
+                        value: false
+                    },
+                    {
+                        type: 'color',
+                        label: 'Couleur de la barre de navigation',
+                        id: 'pickColor',
+                        value: '#454545'
+                    },
+                    {
+                        type: 'text',
+                        label: 'Nom d\'utilisateur',
+                        id: 'username',
+                        value: ''
+                    }
+                ]
             }
             this.methods = {
 
@@ -1263,13 +1414,16 @@ define('project/components/notification',['dojo/_base/declare', 'dojo/topic', 'd
             this.data.typ = type
             this.data.message = message
             this.data.visible = true
+            setTimeout(() => {
+                this.data.visible = false
+            }, 3000)
         },
         createComponent() {
             this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended)
         }
     })
 });
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/detailedResource', 'project/components/addProject', 'project/components/addResource', 'project/components/addNewDev', 'project/components/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/modals/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
 	function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
