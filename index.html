@@ -62,7 +62,6 @@
 		<loader></loader>
 		<div id="top">
 			<calendar>
-				<tasks></tasks>
 			</calendar>
 			<notification></notification>
 			<projects>
@@ -84,17 +83,13 @@
 			<div class="btn" @click.stop="addDev">Ajouter le projet</div>
 		</modal>
 	</template>
-	<template id="_task">
-		<div>
+
+	<template id="calendar_tpl">
+		<div id="calendar">
 			<div class="fa fa-plus zoom btn controls" id="zoom-in"></div>
 			<div class="fa fa-minus zoom btn controls" id="zoom-out"></div>
 			<svg id="gantt"></svg>
 			<div class="fa fa-expand btn controls" id="expand"></div>
-		</div>
-	</template>
-	<template id="calendar_tpl">
-		<div id="calendar">
-			<slot></slot>
 		</div>
 	</template>
 	<template id="load_tpl">
@@ -169,7 +164,7 @@
 			<h4>{{fullName}}</h4>
 			<div class="efficiency">Efficacité globale : {{data.res.baseEfficiency}}</div>
 			<div class="skills" v-if="data.res.skillEfficiency.length !== 0">
-				<h5>Compétences : </h5>
+				<h5>Compétences</h5>
 				<div class="skill" v-for="(value, key) in data.res.skillEfficiency">
 					<div class="text">{{key}}</div>
 					<div class="value">
@@ -184,7 +179,7 @@
 				<h5>Indisponibilités</h5>
 				<div class="holiday" v-for="holiday in data.holidays">
 					<span class="reason">{{holiday.reason}}</span> -
-					<span class="date">Du <time :datetime="holiday.beginning">{{holiday.beginning}}</time> au <time :datetime="holiday.ending">{{holiday.ending}}</time></span>
+					<span class="holiday-date">Du <time :datetime="holiday.beginning">{{holiday.beginning}}</time> au <time :datetime="holiday.ending">{{holiday.ending}}</time></span>
 				</div>
 			</div>
 			<!-- <div class="btn" @click="editRes">Modifier</div> -->
