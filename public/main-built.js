@@ -634,8 +634,105 @@ define('project/components/calendar',['dojo/_base/declare', 'dojo/topic', 'dojo/
 				devs: {},
 				fromProject: ''
 			}
-			this.createComponent()
+			this.level = 3
+			this.levels = [
+				'Month',
+				'Week',
+				'Day',
+				'Half Day',
+				'Quarter Day'
+			]
+			topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')) // doesn't exist yet, goal is to highlight the project in the calendar when we hover it in the developments view
 			topic.subscribe('drawProjects', lang.hitch(this, 'drawProjects'))
+			topic.subscribe('ganttLoaded', lang.hitch(this, 'storeDevs'))
+			this.createComponent()
+		},
+		storeDevs(devs) {
+			console.log('ganttLoaded')
+			moment.locale('fr')
+			this.data.devs = devs
+			this.__gantt = new Gantt('#gantt', this.data.devs, {
+				on_date_change(task, start, end) {
+					console.log(task, start, end)
+				},
+				on_progress_change(task, progress) {
+					console.log(task, progress)
+				},
+				on_view_change(mode) {
+					console.log('Switched display mode to : ' + mode)
+					topic.publish('ganttRendered')
+				}
+			})
+			document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
+			document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
+			this.expanded = false
+			this.hidden = false
+			this.expandBtn = document.getElementById('expand')
+			this.hideBtn = document.getElementById('slide-up')
+			this.cal = document.getElementById('calendar')
+			this.screen = document.getElementById('app')
+			document.getElementById('expand').addEventListener('click', lang.hitch(this, 'expandGantt'))
+			document.getElementById('slide-up').addEventListener('click', lang.hitch(this, 'hideGantt'))
+		},
+		expandGantt() {
+			if (!this.expanded) {
+				var winH = window.innerHeight
+				this.cal.style = 'height:' + (winH - 78) + 'px'
+				this.expandBtn.classList.add('fa-compress')
+				this.hideBtn.classList.remove('fa-angle-down')
+				this.expanded = true
+				this.hidden = false
+			} else {
+				this.cal.style = () => {
+					if (window.innerWidth < 768) {
+						return 'height: 420px'
+					} else {
+						return 'height: 540px'
+					}
+				}
+				this.expandBtn.classList.remove('fa-compress')
+				this.expanded = false
+			}
+		},
+		hideGantt() {
+			if (!this.hidden) {
+				this.screen.classList.add('slide-up')
+				this.cal.style = () => {
+					if (window.innerWidth < 768) {
+						return 'height: 420px'
+					} else {
+						return 'height: 540px'
+					}
+				}
+				this.hideBtn.classList.add('fa-angle-down')
+				this.expandBtn.classList.remove('fa-compress')
+				this.expanded = false
+				this.hidden = true
+				window.scrollTo(0, 0)
+			} else {
+				this.screen.classList.remove('slide-up')
+				this.hideBtn.classList.remove('fa-angle-down')
+				this.hidden = false
+			}
+		},
+		setZoomLevel(arg) {
+			if (arg === 1) {
+				if (this.level < 4) {
+					this.level++
+						return this.__gantt.change_view_mode(this.levels[this.level])
+				}
+			}
+			if (arg === 0) {
+				if (this.level > 0) {
+					this.level--
+						return this.__gantt.change_view_mode(this.levels[this.level])
+				}
+			}
+		},
+		applyClass(id) {
+			for (dev in this.tasks) {
+				this.tasks[dev].custom_class = (id === this.tasks[dev].id ? 'is-active' : '')
+			}
 		},
 		drawProjects(devs) {
 			topic.publish('ganttLoaded', devs)
@@ -651,119 +748,6 @@ define('project/components/calendar',['dojo/_base/declare', 'dojo/topic', 'dojo/
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extends)
 		}
 	})
-});
-define('project/components/tasks',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
-    return declare(null, {
-        constructor(compName) {
-            this.compName = compName
-            this.template = '#_task'
-            this.data = {
-                devs: {}
-            }
-            this.level = 3
-            this.levels = [
-                'Month',
-                'Week',
-                'Day',
-                'Half Day',
-                'Quarter Day'
-            ]
-            topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')) // doesn't exist yet, goal is to highlight the project in the calendar when we hover it in the developments view
-            topic.subscribe('ganttLoaded', lang.hitch(this, 'storeDevs'))
-            this.createComponent()
-        },
-        storeDevs(devs) {
-            console.log('ganttLoaded')
-            moment.locale('fr')
-            this.__gantt = new Gantt('#gantt', devs, {
-                on_date_change(task, start, end) {
-                    console.log(task, start, end)
-                },
-                on_progress_change(task, progress) {
-                    console.log(task, progress)
-                },
-                on_view_change(mode) {
-                    console.log('Switched display mode to : ' + mode)
-                    topic.publish('ganttRendered')
-                }
-            })
-            document.getElementById('zoom-in').addEventListener('click', lang.hitch(this, 'setZoomLevel', 1))
-            document.getElementById('zoom-out').addEventListener('click', lang.hitch(this, 'setZoomLevel', 0))
-            this.expanded = false
-            this.hidden = false
-            this.expandBtn = document.getElementById('expand')
-            this.hideBtn = document.getElementById('slide-up')
-            this.cal = document.getElementById('calendar')
-            this.screen = document.getElementById('app')
-            document.getElementById('expand').addEventListener('click', lang.hitch(this, 'expandGantt'))
-            document.getElementById('slide-up').addEventListener('click', lang.hitch(this, 'hideGantt'))
-        },
-        expandGantt() {
-            if (!this.expanded) {
-                var winH = window.innerHeight
-                this.cal.style = 'height:' + (winH - 78) + 'px'
-                this.expandBtn.classList.add('fa-compress')
-                this.hideBtn.classList.remove('fa-angle-down')
-                this.expanded = true
-                this.hidden = false
-            } else {
-                this.cal.style = () => {
-                    if (window.innerWidth < 768) {
-                        return 'height: 420px'
-                    }
-                    else {
-                        return 'height: 540px'
-                    }
-                }
-                this.expandBtn.classList.remove('fa-compress')
-                this.expanded = false
-            }
-        },
-        hideGantt() {
-            if (!this.hidden) {
-                this.screen.classList.add('slide-up')
-                this.cal.style = () => {
-                    if (window.innerWidth < 768) {
-                        return 'height: 420px'
-                    }
-                    else {
-                        return 'height: 540px'
-                    }
-                }
-                this.hideBtn.classList.add('fa-angle-down')
-                this.expandBtn.classList.remove('fa-compress')                
-                this.expanded = false
-                this.hidden = true
-                window.scrollTo(0, 0)
-            } else {
-                this.screen.classList.remove('slide-up')
-                this.hideBtn.classList.remove('fa-angle-down')
-                this.hidden = false
-            }
-        },
-        setZoomLevel(arg) {
-            if (arg === 1) {
-                if (this.level < 4) {
-                    this.level++
-                        return this.__gantt.change_view_mode(this.levels[this.level])
-                }
-            }
-            if (arg === 0) {
-                if (this.level > 0) {
-                    this.level--
-                        return this.__gantt.change_view_mode(this.levels[this.level])
-                }
-            }
-        },
-        applyClass(id) {
-            for (dev in this.tasks) {
-                this.tasks[dev].custom_class = (id === this.tasks[dev].id ? 'is-active' : '')
-            }
-        },
-        createComponent() {
-            this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended, this.directives)
-        }
-    })
 });
 define('project/components/menu',['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
     return declare(null, {
@@ -973,7 +957,8 @@ define('project/components/resources',['dojo/_base/declare', 'dojo/topic', 'dojo
         },
         getDetailedResource(id) {
           this.data.isOpen = true
-          topic.publish('getDetailedResource', id)          
+          topic.publish('getDetailedResource', id)
+          // topic.publish('getSkills')
         }
       }
       this.createComponent()
@@ -1010,7 +995,8 @@ define('project/components/modals/detailedResource',['dojo/_base/declare', 'dojo
 					holidays: [],
 					skillEfficiency: []
 				},
-				holidays: []
+				holidays: [],
+				allSkills: []
 			}
 			this.methods = {
 				drawBar(value) {
@@ -1021,7 +1007,10 @@ define('project/components/modals/detailedResource',['dojo/_base/declare', 'dojo
 					  })
 					var skill = 400 * value
 					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 40 L 0 40'
-				}
+				},
+				edit() {
+					this.data.edit = true
+				},
 			}
 			this.computed = {
 				fullName() {
@@ -1033,10 +1022,10 @@ define('project/components/modals/detailedResource',['dojo/_base/declare', 'dojo
 			}
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'))
 			topic.subscribe('gotHolidays', lang.hitch(this, 'populateHolidays'))
+			// topic.subscribe('gotSkills', lang.hitch(this, 'populateSkills'))
 			this.createComponent()
 		},
 		showResource(res) {
-			this.data.isOpen = true
 			this.data.res = res
 			this.data.holidays = []
 		},
@@ -1044,7 +1033,11 @@ define('project/components/modals/detailedResource',['dojo/_base/declare', 'dojo
 			holidays.beginning = new Date(holidays.beginning).toLocaleDateString()
 			holidays.ending = new Date(holidays.ending).toLocaleDateString()
 			this.data.holidays.push(holidays)
+			console.log(holidays)
 		},
+		// populateSkills(skills) {
+		// 	this.data.allSkills = skills
+		// },
 		createComponent() {
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended)
 		}
@@ -1423,8 +1416,8 @@ define('project/components/notification',['dojo/_base/declare', 'dojo/topic', 'd
         }
     })
 });
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/modals/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
-	function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/modals/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'],
+	function (project, webSocket, lang, topic, customers, affProjectList, calendar, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
 		ready(function () {
 			var call = new project() // nouvel appel Json RPC
 			var socket = new webSocket()
@@ -1432,7 +1425,6 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 			var _modal = new Modal('modal')
 			var leMenu = new menu('leMenu')
 			var _calendar = new calendar('calendar')
-			var _tasks = new tasks('tasks')
 			var loadWatcher = new eventLoad('loader') // Surveille les évènements et donc le chargement des données demandées
 			var detailedProject = new affDetailedProject('detailedProject')
 			var _resources = new resources('resources')

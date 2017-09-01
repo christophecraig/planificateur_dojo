@@ -632,42 +632,18 @@ define('project/components/calendar', ['dojo/_base/declare', 'dojo/topic', 'dojo
 				devs: {},
 				fromProject: ''
 			};
-			this.createComponent();
-			topic.subscribe('drawProjects', lang.hitch(this, 'drawProjects'));
-		},
-		drawProjects: function drawProjects(devs) {
-			topic.publish('ganttLoaded', devs);
-		},
-		getColor: function getColor(idProj) {
-			switch (idProj) {
-				case '':
-					return;
-					break;
-			}
-		},
-		createComponent: function createComponent() {
-			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extends);
-		}
-	});
-});
-define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueComponent'], function (declare, topic, lang, vueComponent) {
-	return declare(null, {
-		constructor: function constructor(compName) {
-			this.compName = compName;
-			this.template = '#_task';
-			this.data = {
-				devs: {}
-			};
 			this.level = 3;
 			this.levels = ['Month', 'Week', 'Day', 'Half Day', 'Quarter Day'];
 			topic.subscribe('highlightRelated', lang.hitch(this, 'applyClass')); // doesn't exist yet, goal is to highlight the project in the calendar when we hover it in the developments view
+			topic.subscribe('drawProjects', lang.hitch(this, 'drawProjects'));
 			topic.subscribe('ganttLoaded', lang.hitch(this, 'storeDevs'));
 			this.createComponent();
 		},
 		storeDevs: function storeDevs(devs) {
 			console.log('ganttLoaded');
 			moment.locale('fr');
-			this.__gantt = new Gantt('#gantt', devs, {
+			this.data.devs = devs;
+			this.__gantt = new Gantt('#gantt', this.data.devs, {
 				on_date_change: function on_date_change(task, start, end) {
 					console.log(task, start, end);
 				},
@@ -750,8 +726,18 @@ define('project/components/tasks', ['dojo/_base/declare', 'dojo/topic', 'dojo/_b
 				this.tasks[dev].custom_class = id === this.tasks[dev].id ? 'is-active' : '';
 			}
 		},
+		drawProjects: function drawProjects(devs) {
+			topic.publish('ganttLoaded', devs);
+		},
+		getColor: function getColor(idProj) {
+			switch (idProj) {
+				case '':
+					return;
+					break;
+			}
+		},
 		createComponent: function createComponent() {
-			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extended, this.directives);
+			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.updated, this.extends);
 		}
 	});
 });
@@ -965,6 +951,7 @@ define('project/components/resources', ['dojo/_base/declare', 'dojo/topic', 'doj
 				getDetailedResource: function getDetailedResource(id) {
 					this.data.isOpen = true;
 					topic.publish('getDetailedResource', id);
+					// topic.publish('getSkills')
 				}
 			};
 			this.createComponent();
@@ -1000,7 +987,8 @@ define('project/components/modals/detailedResource', ['dojo/_base/declare', 'doj
 					holidays: [],
 					skillEfficiency: []
 				},
-				holidays: []
+				holidays: [],
+				allSkills: []
 			};
 			this.methods = {
 				drawBar: function drawBar(value) {
@@ -1011,6 +999,9 @@ define('project/components/modals/detailedResource', ['dojo/_base/declare', 'doj
 					});
 					var skill = 400 * value;
 					return 'M 0 0 L ' + skill + ' 0 L ' + skill + ' 40 L 0 40';
+				},
+				edit: function edit() {
+					this.data.edit = true;
 				}
 			};
 			this.computed = {
@@ -1023,10 +1014,10 @@ define('project/components/modals/detailedResource', ['dojo/_base/declare', 'doj
 			};
 			topic.subscribe('gotDetailedResource', lang.hitch(this, 'showResource'));
 			topic.subscribe('gotHolidays', lang.hitch(this, 'populateHolidays'));
+			// topic.subscribe('gotSkills', lang.hitch(this, 'populateSkills'))
 			this.createComponent();
 		},
 		showResource: function showResource(res) {
-			this.data.isOpen = true;
 			this.data.res = res;
 			this.data.holidays = [];
 		},
@@ -1034,7 +1025,12 @@ define('project/components/modals/detailedResource', ['dojo/_base/declare', 'doj
 			holidays.beginning = new Date(holidays.beginning).toLocaleDateString();
 			holidays.ending = new Date(holidays.ending).toLocaleDateString();
 			this.data.holidays.push(holidays);
+			console.log(holidays);
 		},
+
+		// populateSkills(skills) {
+		// 	this.data.allSkills = skills
+		// },
 		createComponent: function createComponent() {
 			this.vue = new vueComponent(this.compName, this.template, this.data, this.methods, this.watch, this.mounted, this.computed, this.props, this.created, this.extended);
 		}
@@ -1400,7 +1396,7 @@ define('project/components/notification', ['dojo/_base/declare', 'dojo/topic', '
 		}
 	});
 });
-require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/tasks', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/modals/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'], function (project, webSocket, lang, topic, customers, affProjectList, calendar, tasks, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
+require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/topic', 'project/components/customers', 'project/components/affProjectList', 'project/components/calendar', 'project/components/menu', 'project/components/affDetailedProject', 'project/components/development', 'project/components/resources', 'project/components/modals/detailedResource', 'project/components/modals/addProject', 'project/components/modals/addResource', 'project/components/modals/addNewDev', 'project/components/modals/editDev', 'project/components/eventLoad', 'project/components/modal', 'project/components/modals/addCustomer', 'project/components/settings', 'project/components/notification', 'dojo/ready'], function (project, webSocket, lang, topic, customers, affProjectList, calendar, menu, affDetailedProject, development, resources, detailedResource, addProject, addResource, addNewDev, editDev, eventLoad, Modal, addCustomer, settings, notification, ready) {
 	ready(function () {
 		var call = new project(); // nouvel appel Json RPC
 		var socket = new webSocket();
@@ -1408,7 +1404,6 @@ require(['project/project', 'project/cli_webSocket', 'dojo/_base/lang', 'dojo/to
 		var _modal = new Modal('modal');
 		var leMenu = new menu('leMenu');
 		var _calendar = new calendar('calendar');
-		var _tasks = new tasks('tasks');
 		var loadWatcher = new eventLoad('loader'); // Surveille les évènements et donc le chargement des données demandées
 		var detailedProject = new affDetailedProject('detailedProject');
 		var _resources = new resources('resources');
