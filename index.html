@@ -35,14 +35,14 @@
 		var dojoConfig = {
 			packages: [{
 				name: "project",
-				location: "http://192.168.0.46:8080/js/project"
-				// location: "http://localhost:8080/js/project"
+				// location: "http://192.168.0.193:8080/js/project"
+				location: "http://localhost:8080/js/project"
 			}],
 			aliases: [
 				['jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'],
 				['snapSVG', '//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js'],
 				['momentjs', '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js'],
-				['frappe-gantt', 'http://192.168.0.46:8080/js/libs/frappe-gantt.js']
+				['frappe-gantt', 'http://localhost:8080/js/libs/frappe-gantt.js']
 			],
 			deps: ['project/dojorpc', 'jquery'],
 			isDebug: true

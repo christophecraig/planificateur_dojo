@@ -3,8 +3,10 @@ var app = express()
 var path = require('path')
 var http = require('http').createServer(app)
 var io = require('socket.io')(http)
+var cors = require('cors')
 var peopleConnected = 0
-
+app.use(cors())
+app.options('*', cors())
 app.use(express.static(path.join(__dirname, 'public'))) // Cette ligne permet de lire le contenu du dossier 'public'
 
 // Cela fait que sur localhost:8080, on retombera sur la page 'index.html'
