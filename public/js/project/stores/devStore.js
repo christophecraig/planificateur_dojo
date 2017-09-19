@@ -22,6 +22,7 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 			return def
 		},
 		remove(projId, devId) {
+			console.log(projId, devId)
 			if (window.confirm('Voulez-vous vraiment supprimer ce développement ?')) {
 				var def = new Deferred()
 				this.ws.removeDevelopmentFromProject(projId, devId).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
