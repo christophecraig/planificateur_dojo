@@ -26,7 +26,8 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 				var def = new Deferred()
 				this.ws.removeDevelopmentFromProject(projId, devId).then(lang.hitch(this, 'devDeleted', def), lang.hitch(this, 'reportError', def))
 				return def
-			}
+			} 
+			console.log('suppression annulée')
 		},
 		gotDev(def, dev) {
 			def.resolve(dev)

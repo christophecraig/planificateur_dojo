@@ -28,9 +28,9 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
 				}
 			}
 			this.methods = {
-				deleteDev(dev, property) {
-					console.log('Préparation à la suppression du développement ayant l\'id :', dev)
-					topic.publish('deleteDev', dev, property)
+				deleteDev(projectId, devId) {
+					console.log('Préparation à la suppression du développement ayant l\'id :', devId)
+					topic.publish('deleteDev', projectId, devId)
 				},
 				open(dev) {
 					topic.publish('getSkills')
