@@ -2,32 +2,26 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 	function (declare, topic, lang, JsonService, customerStore, projectStore, devStore, resourceStore, skillStore, when) {
 		return declare(null, {
 			constructor() {
-				// this.connexion might change depending on your configuration and on your server
+				// this.connexion might need a change depending on your configuration and on your server
+				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
-				// home-conf : 
-				// this.connexion = new JsonService('http://192.168.0.44:8888/macro_planning/viewOnto/classes/dataset/ws-serv.php')
-
-				// Stable local dump : 
-				this.connexion = new JsonService('http://localhost/planificateur/macro_planning/viewOnto/classes/dataset/ws-serv.php')
-
-				// Stable local dump : 
-				// this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
-
-				// conf maxime Dev : 
-				// this.connexion = new JsonService('http://192.168.0.80/mbeacco/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				// Initializations
 				this.sliderProjects = []
 				this.color = ''
+				this.ids = []				
+
+				// Stores
 				this.projectStore = new projectStore(this.connexion)
 				this.devStore = new devStore(this.connexion)
 				this.resourceStore = new resourceStore(this.connexion)
 				this.customerStore = new customerStore(this.connexion)
 				this.skillStore = new skillStore(this.connexion)
+
+				// Functions to be launched at start
 				this.getListOfProjects()
 				this.getProjects()
-				this.ids = []
 
 				// Listeners
-
 				topic.subscribe('saveDev', lang.hitch(this, 'submitNewDev'))
 				topic.subscribe('addCustomer', lang.hitch(this, 'submitNewCustomer'))
 				topic.subscribe('deleteDev', lang.hitch(this, 'deleteDev'))
@@ -167,12 +161,13 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.remove(projId, devId), lang.hitch(this, 'devIsDeleted'), lang.hitch(this, 'reportError'))
 			},
 			devIsDeleted(dev) {
-				// Mettre ici un modal, ou plutôt une simple notification en haut à droite de quelques secondes indiquant que le développement a bien été supprimé 
-				console.log('Le développement suivant a bien été supprimé ', dev)
+				// Mettre ici un modal, ou plutôt une simple notification en haut à droite de quelques secondes indiquant que le développement a bien été supprimé
+				console.log('suppression du développement', dev)
+				console.log('______________')
+				console.log('rechargement des développements')
 			},
 			submitNewDev(dev) {
 				// On aura besoin d'une vérification de la validité des données.
-				console.log(dev)
 				when(this.devStore.add(dev), lang.hitch(this, 'isAdded'), lang.hitch(this, 'reportError'))
 			},
 			submitNewRes(id, name, firstName) {
