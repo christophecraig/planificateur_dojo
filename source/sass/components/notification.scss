@@ -1,0 +1,31 @@
+#notification {
+    z-index: 100000;
+    position: fixed;
+    top: 15px;
+    left: auto;
+    right: 15px;
+    color: #fff;
+    display: flex;
+    min-width: 340px;
+    border-radius: 3px;
+    overflow: hidden;
+    .message {
+        justify-content: flex-start;
+        align-content: center;
+        margin: 0;
+        padding: 10px 12px;
+        font-size: 1.25em;
+    }
+    .icon {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        min-width: 18%;
+    }
+    &.success {
+        background: $successColor;
+        .icon {
+            background: darken($successColor, 6%);
+        }
+    }
+}
