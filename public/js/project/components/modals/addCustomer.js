@@ -15,6 +15,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     topic.publish('addCustomer', id, data)
                     topic.publish('refreshCustomers')
                     this.$emit('close')
+                    this.data.formContent.name = this.data.formContent.firstName = ''
                 }
             }
             this.computed = {
