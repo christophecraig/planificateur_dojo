@@ -34,7 +34,6 @@ define(['dojo/_base/declare', 'dojo/store/api/Store', 'dojo/Deferred', 'dojo/_ba
 			def.resolve(dev)
 		},
 		gotDevs(def, nb, dev) {
-			console.log(dev.id)
 			this.data.push(dev)
 			if (this.data.length === nb) {
 				def.resolve(this.data)
