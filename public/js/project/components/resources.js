@@ -29,6 +29,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
         getDetailedResource(id) {
           this.data.isOpen = true
           topic.publish('getDetailedResource', id)
+          topic.publish('notify', 'success', 'Got resource !')
           // topic.publish('getSkills')
         }
       }
