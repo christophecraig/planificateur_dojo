@@ -1,6 +1,6 @@
 body {
   background: #fff;
-  font-family: 'PT Sans', sans-serif;
+  font-family: Roboto, sans-serif;
   margin: 0; }
 
 input[type="text"] {
@@ -109,16 +109,12 @@ ul {
 .fade-leave-to {
   opacity: 0; }
 
-.notification {
-  position: absolute;
-  left: 100%;
-  top: 60px;
-  transition: transform .5s;
-  transform: translate3d(-250px, 0, 0); }
-
-.notification-enter, .notification-leave-active, .notification-leave-to {
-  opacity: 0;
+#notification {
+  transition: transform .35s;
   transform: translate3d(0, 0, 0); }
+
+#notification.notification-enter, #notification.notification-leave-active {
+  transform: translate3d(350px, 0, 0); }
 
 .modal-enter-active .skill .bar {
   transform: translate3D(-400px, 0, 0); }
@@ -585,6 +581,33 @@ ul {
 @media screen and (min-width: 768px) {
   #calendar {
     height: 540px; } }
+
+#notification {
+  z-index: 100000;
+  position: fixed;
+  top: 15px;
+  left: auto;
+  right: 15px;
+  color: #fff;
+  display: flex;
+  min-width: 340px;
+  border-radius: 3px;
+  overflow: hidden; }
+  #notification .message {
+    justify-content: flex-start;
+    align-content: center;
+    margin: 0;
+    padding: 10px 12px;
+    font-size: 1.25em; }
+  #notification .icon {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    min-width: 18%; }
+  #notification.success {
+    background: #43A047; }
+    #notification.success .icon {
+      background: #3a8a3d; }
 
 #data::-webkit-scrollbar {
   height: 10px;
