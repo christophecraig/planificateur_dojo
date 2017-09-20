@@ -27,7 +27,7 @@
 	<meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./css/fontello.css">
-	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
 	<link rel="stylesheet" href="./css/style.css">
 	<!-- <link rel="stylesheet" href="http://localhost:8080/css/style.css"> -->
 
@@ -430,7 +430,7 @@
 				<h4><strong>Ajouter</strong> un client</h4>
 				<div class="form-group">
 					<label for="newCustomerFirstName">Prénom</label>
-					<input type="text" class="form-control" id="newCustomerFirstName" placeholder="Prénom" v-model="data.formContent.firstName">
+					<input type="text" class="form-control" id="newCustomerFirstName" placeholder="Prénom" v-model="data.formContent.firstName" autofocus>
 				</div>
 				<div class="form-group">
 					<label for="newCustomerName">Nom</label>
@@ -457,9 +457,13 @@
 
 	<template id="notification-tpl">
 		<transition name="notification">
-			<div class="notification" v-if="data.visible">
-				<h4>{{data.tit}}</h4>
-				<p>{{data.message}}</p>
+			<div id="notification" v-show="data.visible">
+				<div v-if="data.typ === 'success'" class="icon success"><span class="fa fa-check fa-2x"></span></div>
+				<div v-else-if="data.typ === 'failure'" class="icon failure"><span class="fa fa-close fa-2x"></span></div>
+				<div v-else-if="data.typ === 'warning'" class="icon warning"><span class="fa fa-check fa-2x"></span></div>
+				<div class="message">
+					{{data.message}}
+			</div>
 			</div>
 		</transition>
 	</template>
