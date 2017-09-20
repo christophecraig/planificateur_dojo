@@ -3,12 +3,12 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 		return declare(null, {
 			constructor() {
 				// this.connexion might need a change depending on your configuration and on your server
-				this.connexion = new JsonService('http://192.168.0.46/~pmbconfig/macro_planning/viewOnto/classes/dataset/ws-serv.php')
+				this.connexion = new JsonService('http://192.168.0.50/macro_planning/viewOnto/classes/dataset/ws-serv.php')
 
 				// Initializations
 				this.sliderProjects = []
 				this.color = ''
-				this.ids = []				
+				this.ids = []
 
 				// Stores
 				this.projectStore = new projectStore(this.connexion)
@@ -151,7 +151,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'dojo/rpc/JsonSer
 				when(this.devStore.get(devId), lang.hitch(this, 'gotDetailedDevelopment'), lang.hitch(this, 'reportError'))
 			},
 			gotDevelopment(dev) {
-				topic.publish('gotDevelopment', dev)					
+				topic.publish('gotDevelopment', dev)
 			},
 			gotDetailedDevelopment(dev) {
 				topic.publish('gotDetailedDevelopment', dev)
