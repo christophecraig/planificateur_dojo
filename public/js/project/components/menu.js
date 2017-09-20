@@ -37,6 +37,7 @@ define(['dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang', 'project/vueCompo
                     this.data.lastView = lastView
                     this.data.active = url
                     this.$parent.$emit('changeView', lastView, url)
+                    document.getElementById('burger').classList.remove('is-open')
                 },
                 back(lastView) {
                     this.changeView(lastView, this.data.lastView)
